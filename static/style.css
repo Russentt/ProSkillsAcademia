@@ -7,6 +7,14 @@
   .navbar-nav .btn {
     padding: 8px 16px !important;
   }
+
+  html,
+  body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden; /* Prevents unwanted horizontal scrolling */
+  }
 }
 
 @media (min-width: 992px) {
