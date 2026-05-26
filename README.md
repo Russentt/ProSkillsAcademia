@@ -1,7 +1,3 @@
-Aquí tienes el archivo **`README.md`** completo y unificado para tu repositorio de GitHub, combinando el diseño del proyecto, las especificaciones técnicas y los módulos clave con los textos breves y refinados que acabamos de definir.
-
-Puedes copiar y pegar el siguiente bloque directamente en tu archivo:
-
 ```markdown
 # ProSkills Academia (SGAP) 🚀
 
