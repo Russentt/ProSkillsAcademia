@@ -7,6 +7,15 @@
   .navbar-nav .btn {
     padding: 8px 16px !important;
   }
+  .mobile-hero-bg {
+    background-image: url("https://res.cloudinary.com/vistaprint/images/f_auto,q_auto/v1706687909/ideas-and-advice-prod/en-us/BUILD-GREAT-CORPORATE-DESIGN/BUILD-GREAT-CORPORATE-DESIGN.jpg?_i=AA") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    width: 100% !important;
+    height: 250px !important;
+    display: block !important;
+  }
 }
 
 @media (min-width: 992px) {
