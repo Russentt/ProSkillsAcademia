@@ -8,3 +8,6 @@ Jinja2==3.1.6
 MarkupSafe==3.0.3
 packaging==26.2
 Werkzeug==3.1.8
+Flask-JWT-Extended==4.7.4
+PyJWT==2.13.0
+PyMySQL==1.2.0
