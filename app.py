@@ -14,7 +14,10 @@ app.config["JWT_TOKEN_LOCATION"] = ["cookies"] # Guarda los token de forma autom
 jwt = JWTManager(app) # Activa el uso de admimistracion de los token
 
 # Conexion a BD
-DATABASE_URL = os.environ.get('DATABASE_URL') 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 conexion_db = psycopg2.connect(DATABASE_URL)
 
 @app.route('/')
