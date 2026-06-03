@@ -24,7 +24,7 @@ conexion_db = psycopg2.connect(DATABASE_URL)
 def home():
     return render_template('index.html')
 
-@app.rout('/account')
+@app.route('/account')
 def account():
     return render_template('account.html')
 
