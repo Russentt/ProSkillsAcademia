@@ -37,19 +37,22 @@
           <h4 class="fw-bold text-dark mb-1">Ingresa a tu cuenta</h4>
           <p class="text-muted small">SGAP - Sistema de Gestión Académica</p>
         </div>
-
+        {% with messages = get_flashed_messages() %} {% if messages %} {% for
+        msg in messages %}
+        <p style="color: red">{{ msg }}</p>
+        {% endfor %} {% endif %} {% endwith %}
         <form action="/login" method="POST">
           <div class="form-floating mb-3">
             <input
               type="email"
-              name = "user"
+              name="user"
               class="form-control"
               id="floatingInput"
               placeholder="correo@ejemplo.com"
               required
             />
             <label for="floatingInput" class="text-muted small"
-              >Correo electrónico o RUN</label
+              >Correo electrónico</label
             >
           </div>
 
@@ -76,13 +79,6 @@
                 Recordarme
               </label>
               <!--Muestra los mensajes de flask que coincidan con el usuario y si hay un mensaje el login fallo-->
-              {% with messages = get_flashed_messages() %} 
-                {% if messages %}
-                  {% for msg in messages %}
-                    <p style="color:red">{{ msg }}</p>
-                  {% endfor %}
-                {% endif %}
-              {% endwith %}
             </div>
             <a
               href="about.html#soporte"
