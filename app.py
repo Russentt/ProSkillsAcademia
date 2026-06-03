@@ -29,12 +29,19 @@ jwt = JWTManager(app)
 
 
 # Conexion a BD
-DATABASE_URL = os.environ.get('DATABASE_URL') 
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 conexion_db = psycopg2.connect(DATABASE_URL)
 
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/account')
+def account():
+    return render_template('account.html')
 
 @app.route('/about')
 def about():
