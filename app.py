@@ -28,6 +28,14 @@ def home():
 def account():
     return render_template('account.html')
 
+@app.route('/sign')
+def signup():
+    return render_template('sign-up.html')
+
+@app.route('/recover')
+def password_recover():
+    return render_template('password-recover.html')
+
 @app.route('/about')
 def about():
     return render_template('about.html')
