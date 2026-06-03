@@ -29,6 +29,12 @@ app.config["JWT_CSRF_IN_COOKIES"] = True
 jwt = JWTManager(app)
 
 
+@jwt.unauthorized_loader
+def sin_token(error_string):
+    flash("debes iniciar sesion para acceder")
+    return redirect(url_for('login'))
+
+
 # Conexion a BD
 DATABASE_URL = os.environ.get('DATABASE_URL')
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
@@ -45,9 +51,11 @@ def home():
 def signup():
     return render_template('sign-up.html')
 
+
 @app.route('/recover')
 def password_recover():
-    return render_template('password-recover.html')
+    return render_template('password-recover.html')    
+    
 
 @app.route('/about')
 def about():
@@ -91,9 +99,9 @@ def login():
                     flash("Usuario o contraseña incorrectos")
                     return redirect(url_for('login'))
             except Exception as ex:
-               print(f"Error en el servidor: {ex}") 
-            flash("Ocurrió un error inesperado en el servidor.")
-            return redirect(url_for('login'))
+                print(f"Error en el servidor: {ex}") 
+                flash("Ocurrió un error inesperado en el servidor.")
+                return redirect(url_for('login'))
 
 @app.route('/account', methods=["GET"])
 @jwt_required()
