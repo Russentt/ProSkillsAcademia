@@ -152,6 +152,7 @@
           >
             <h2 class="fw-semibold">Información</h2>
             <div class="mb-2">
+              {% if usuario %}
               <label for="formControlNombre" class="form-label fw-semibold"
                 >Nombre</label
               >
@@ -159,7 +160,7 @@
                 type="text"
                 class="text-dark form-control-plaintext"
                 id="formControlNombre"
-                value="Nombre"
+                value="{{ usuario.nombre }}"
                 readonly
               />
             </div>
@@ -171,7 +172,7 @@
                 type="text"
                 class="text-dark form-control-plaintext"
                 id="formControlApellido"
-                value="Apellido"
+                value="{{ usuario.apellido }}"
                 readonly
               />
             </div>
@@ -183,7 +184,7 @@
                 type="email"
                 class="text-dark form-control-plaintext"
                 id="formControlEmail"
-                value="Correo"
+                value="{{ usuario.correo }}"
                 readonly
               />
             </div>
@@ -195,7 +196,7 @@
                 type="text"
                 class="text-dark form-control-plaintext"
                 id="formControlEstado"
-                value="Cuenta activa"
+                value="{{ usuario.estado }}"
                 readonly
               />
             </div>
@@ -207,9 +208,14 @@
                 type="text"
                 class="text-dark form-control-plaintext fst-italic"
                 id="formControlRegistro"
-                value="12/04/2025"
+                value="{{ usuario.fecha_registro }}"
                 readonly
               />
+              {% else %}
+                <div class="alert alert-danger my-3" role="alert">
+                No se pudo cargar la información del perfil. Por favor, inicia sesión nuevamente.
+                </div>
+              {% endif %}
             </div>
           </div>
           <div

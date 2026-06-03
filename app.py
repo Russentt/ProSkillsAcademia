@@ -4,6 +4,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, f
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies
 from dotenv import load_dotenv
 from config import config
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 load_dotenv()
@@ -39,9 +40,6 @@ conexion_db = psycopg2.connect(DATABASE_URL)
 def home():
     return render_template('index.html')
 
-@app.route('/account')
-def account():
-    return render_template('account.html')
 
 @app.route('/about')
 def about():
@@ -65,15 +63,18 @@ def login():
                 
                 # Conexion y consulta a la BD
                 cursor = conexion_db.cursor() 
-                sql = "SELECT correo FROM USUARIOS WHERE correo = %s AND password = %s" 
-                cursor.execute(sql, (user, password))
+                sql = """
+                SELECT id, correo FROM usuarios 
+                WHERE (correo = %s OR id::text = %s) AND password = %s;
+            """ 
+                cursor.execute(sql, (user, user, password))
                 usuario_encontrado = cursor.fetchone()
                 cursor.close()
                 
                 # Si el usuario es encontrado se le asigna un token de acceso y se le redirecciona al home
                 if usuario_encontrado is not None:
-                    token = create_access_token(identity=user)
-                    respuesta = redirect(url_for('home'))
+                    token = create_access_token(identity=str(usuario_encontrado[0]))
+                    respuesta = redirect(url_for('cuenta'))
                     set_access_cookies(respuesta, token)
                 
                     return respuesta
@@ -82,7 +83,42 @@ def login():
                     flash("Usuario o contraseña incorrectos")
                     return redirect(url_for('login'))
             except Exception as ex:
-               return flash("Servidor Caido"), 500
+               print(f"Error en el servidor: {ex}") 
+            flash("Ocurrió un error inesperado en el servidor.")
+            return redirect(url_for('login'))
+
+@app.route('/account', methods=["GET"])
+@jwt_required()
+def cuenta():
+    try:
+        usuario = get_jwt_identity() 
+        
+        cursor = conexion_db.cursor()
+        sql = """SELECT nombre, apellido, correo, estado, fecha_registro FROM usuarios WHERE id = %s::int;"""
+        cursor.execute(sql, (usuario,))
+        datos = cursor.fetchone()
+        cursor.close()
+        
+        if not datos:
+            flash("usuario no encontrado")
+            return redirect(url_for("home"))
+            
+        encontrado = {
+            "nombre": datos[0],
+            "apellido": datos[1],
+            "correo": datos[2],
+            "estado": datos[3],
+            "fecha_registro": datos[4].strftime('%d/%m/%Y')
+        }   
+        
+        return render_template('account.html', usuario=encontrado)
+        
+    except Exception as ex:
+        print(f"Error al cargar la cuenta {ex}")
+        flash("Error al cargar la informacion")
+        return redirect(url_for("home"))
+        
+
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
