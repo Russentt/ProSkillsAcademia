@@ -1,11 +1,11 @@
 import os
 import psycopg2
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
-from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies
+from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 from dotenv import load_dotenv
 from config import config
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
+from datetime import timedelta
 
 load_dotenv()
 
@@ -25,15 +25,20 @@ app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
 app.config["JWT_COOKIE_SECURE"] = os.environ.get("FLASK_ENV") == "production"
 app.config["JWT_COOKIE_CSRF_PROTECT"] = True
 app.config["JWT_CSRF_IN_COOKIES"] = True
-
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
 jwt = JWTManager(app)
 
-
+# Si no tiene token los redirige al login
 @jwt.unauthorized_loader
 def sin_token(error_string):
     flash("debes iniciar sesion para acceder")
     return redirect(url_for('login'))
 
+# Redirige al home cuando el token expire
+@jwt.expired_token_loader
+def token_expirado_callback(jwt_header, jwt_payload):
+    flash("Tu sesión ha expirado por inactividad. Por favor, vuelve a ingresar.")
+    return redirect(url_for('login'))
 
 # Conexion a BD
 DATABASE_URL = os.environ.get('DATABASE_URL')
@@ -134,7 +139,12 @@ def cuenta():
         flash("Error al cargar la informacion")
         return redirect(url_for("home"))
         
-
+@app.route('/logout', methods=['GET'])
+def logout():
+    respuesta = redirect(url_for('login'))
+    unset_jwt_cookies(respuesta)
+    flash("Sesión cerrada correctamente.")
+    return respuesta
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
