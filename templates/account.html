@@ -131,13 +131,14 @@
             >
               Transacciones
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              disabled
-            >
-              Cerrar Sesión
-            </button>
+            <div id="btnGroup" class="list-group">
+              <a
+                href="{{ url_for('logout') }}"
+                class="list-group-item list-group-item-action text-danger fw-semibold"
+              >
+                Cerrar Sesión
+              </a>
+            </div>
           </div>
         </div>
         <div
@@ -212,9 +213,10 @@
                 readonly
               />
               {% else %}
-                <div class="alert alert-danger my-3" role="alert">
-                No se pudo cargar la información del perfil. Por favor, inicia sesión nuevamente.
-                </div>
+              <div class="alert alert-danger my-3" role="alert">
+                No se pudo cargar la información del perfil. Por favor, inicia
+                sesión nuevamente.
+              </div>
               {% endif %}
             </div>
           </div>
@@ -543,13 +545,6 @@
             <p class="text-muted">
               Historial de pagos, recibos de compra y facturas.
             </p>
-          </div>
-          <div id="btnGroup" class="list-group">
-          <a href="{{ url_for('logout') }}"
-           class="list-group-item list-group-item-action text-danger fw-semibold"
-           >
-              Cerrar Sesión
-            </a>
           </div>
         </div>
       </div>

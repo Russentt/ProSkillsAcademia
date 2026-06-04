@@ -31,7 +31,7 @@ jwt = JWTManager(app)
 # Si no tiene token los redirige al login
 @jwt.unauthorized_loader
 def sin_token(error_string):
-    flash("debes iniciar sesion para acceder")
+    flash("Debes iniciar sesion para acceder")
     return redirect(url_for('login'))
 
 # Redirige al home cuando el token expire
