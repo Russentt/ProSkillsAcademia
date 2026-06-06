@@ -52,7 +52,6 @@ def home():
     return render_template('index.html')
 
 
-
 @app.route('/sign', methods=['GET', 'POST'])
 def signup():
     if request.method == 'GET':
@@ -72,8 +71,7 @@ def signup():
             
             if re_password != password and password != re_password:
                 flash("La contraseña debe ser igual en los 2 campos")
-                return redirect(url_for('signup'))
-            
+                return redirect(url_for('signup'))    
            
             partes = nombre_apellido.strip().split(" ", 1)
             nombre = partes[0]
@@ -178,12 +176,10 @@ def cuenta():
         sql = """SELECT nombre, apellido, correo, estado, fecha_registro FROM usuarios WHERE id = %s::int;"""
         cursor.execute(sql, (usuario,))
         datos = cursor.fetchone()
-        cursor.close()
         
         if not datos:
             flash("usuario no encontrado")
             return redirect(url_for("home"))
-            
         encontrado = {
             "nombre": datos[0],
             "apellido": datos[1],
