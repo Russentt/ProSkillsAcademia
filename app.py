@@ -79,7 +79,7 @@ def signup():
             cursor = conexion_db.cursor()
 
             sql_usuario = """ INSERT INTO usuarios (nombre, apellido, correo, password, estado)
-                              VALUES (%s, %s, %s, %s, 'ACTIVO') RETURNING id; """
+                              VALUES (%s, %s, %s, %s, 'Activo') RETURNING id; """
 
             cursor.execute(sql_usuario, (nombre, apellido, correo, password))
             new_id = cursor.fetchone()[0]
@@ -105,7 +105,7 @@ def signup():
 
             conexion_db.commit()
             cursor.close()
-            flash("Cuenta Creada correctamente")
+            flash("Cuenta creada correctamente")
             return redirect(url_for('login'))
 
         except Exception as ex:
@@ -117,7 +117,11 @@ def signup():
 
 @app.route('/recover')
 def password_recover():
-    return render_template('password-recover.html')    
+    return render_template('password-recover.html')
+
+@app.route('/accTeacher')
+def instructor():
+    return render_template('acc-instructor.html')    
     
 
 @app.route('/about')
