@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProSkills - Panel Docente</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" type="image/x-icon" href="static/SGAP.svg" />
+  </head>
+  <body>
+    <header>
+      <nav
+        class="navbar navbar-expand-lg bg-body-primary py-2 border-bottom shadow-sm"
+      >
+        <div class="container-fluid px-3 px-lg-4">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div
+              class="d-flex flex-column flex-lg-row align-items-center justify-content-between w-100 mt-3 mt-lg-0"
+            >
+              <a
+                class="navbar-brand d-flex align-items-center mb-3 mb-lg-0"
+                href="index.html"
+              >
+                <img
+                  src="static/ProSkills.png"
+                  alt="Logo"
+                  width="40"
+                  height="32"
+                  class="img-fluid me-2"
+                />
+                <span class="text-primary fw-bold fs-5"
+                  >ProSkills Academia</span
+                >
+              </a>
+              <ul
+                class="navbar-nav d-flex flex-column flex-lg-row gap-2 gap-lg-4 justify-content-center align-items-center"
+              >
+                <li class="nav-item">
+                  <a class="nav-link text-dark fw-medium" href="#"
+                    >Portal Institucional</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark fw-medium" href="/about#soporte"
+                    >Soporte TI</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="bg-body-tertiary min-vh-100 py-4">
+      <div
+        class="container d-flex flex-column flex-md-row gap-4 align-items-start px-0 mx-auto"
+      >
+        <div class="col-12 col-md-3 col-lg-2 px-3 px-md-0">
+          <h4 class="fw-bold mb-3 text-dark">Portal Docente</h4>
+          <div
+            class="list-group p-2 rounded-3 shadow-sm bg-white"
+            id="btnGroup"
+            role="tablist"
+          >
+            <button
+              type="button"
+              class="list-group-item list-group-item-action border-0 active"
+              id="tab-informacion"
+              data-bs-toggle="list"
+              data-bs-target="#content-informacion"
+              role="tab"
+            >
+              Perfil Profesional
+            </button>
+            <button
+              type="button"
+              class="list-group-item list-group-item-action border-0"
+              id="tab-impartidos"
+              data-bs-toggle="list"
+              data-bs-target="#content-impartidos"
+              role="tab"
+            >
+              Asignaturas Impartidas
+            </button>
+            <button
+              type="button"
+              class="list-group-item list-group-item-action border-0"
+              id="tab-desempeno"
+              data-bs-toggle="list"
+              data-bs-target="#content-desempeno"
+              role="tab"
+            >
+              Métricas Docentes
+            </button>
+            <button
+              type="button"
+              class="list-group-item list-group-item-action border-0"
+              id="tab-configuracion"
+              data-bs-toggle="list"
+              data-bs-target="#content-configuracion"
+              role="tab"
+            >
+              Configuración
+            </button>
+            <div class="mt-2 border-top pt-2">
+              <a
+                href="/logout"
+                class="list-group-item list-group-item-action border-0 text-danger fw-semibold"
+              >
+                Cerrar Sesión
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-9 col-lg-10">
+          <div
+            class="tab-content bg-white p-4 rounded-4 shadow-sm min-vh-50"
+            id="nav-tabContent"
+          >
+            <div
+              class="tab-pane fade show active"
+              id="content-informacion"
+              role="tabpanel"
+            >
+              <h3 class="fw-semibold mb-4 border-bottom pb-2">
+                Información del Instructor
+              </h3>
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <label
+                    class="form-label text-muted small text-uppercase fw-bold"
+                    >Nombre Completo</label
+                  >
+                  <p class="fs-5 text-dark mb-0">Beatriz Mendoza</p>
+                </div>
+                <div class="col-md-6">
+                  <label
+                    class="form-label text-muted small text-uppercase fw-bold"
+                    >Correo Electrónico</label
+                  >
+                  <p class="fs-5 text-dark mb-0">b.mendoza@proskills.cl</p>
+                </div>
+                <div class="col-md-6">
+                  <label
+                    class="form-label text-muted small text-uppercase fw-bold"
+                    >Especialidad</label
+                  >
+                  <p class="fs-5 text-dark mb-0">
+                    Arquitectura de Software y Bases de Datos
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <label
+                    class="form-label text-muted small text-uppercase fw-bold"
+                    >Estado de Cuenta</label
+                  >
+                  <p class="mb-0">
+                    <span
+                      class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 text-uppercase"
+                      >Activo</span
+                    >
+                  </p>
+                </div>
+                <div class="col-12 mt-4">
+                  <label
+                    class="form-label text-muted small text-uppercase fw-bold"
+                    >Biografía y Experiencia Profesional</label
+                  >
+                  <div class="p-4 bg-light rounded-3 border-0">
+                    <p
+                      class="text-dark mb-0 font-monospace small"
+                      style="white-space: pre-line"
+                    >
+                      Ingeniera Civil Informática con más de 10 años de
+                      experiencia en la industria tecnológica. Especializada en
+                      el diseño de bases de datos relacionales y ecosistemas de
+                      alta disponibilidad. Apasionada por la docencia técnica y
+                      la formación de profesionales mediante metodologías ágiles
+                      y proyectos aplicados al mundo real.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="content-impartidos" role="tabpanel">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2"
+              >
+                <h3 class="fw-semibold mb-0">Asignaturas Activas</h3>
+                <span class="badge bg-primary rounded-pill px-3 py-2"
+                  >2 Cursos Asignados</span
+                >
+              </div>
+
+              <div class="d-flex flex-column gap-3">
+                <div
+                  class="card border border-light-subtle rounded-3 shadow-sm p-3"
+                >
+                  <div class="row align-items-center g-3">
+                    <div class="col-12 col-md-5">
+                      <h5 class="fw-bold mb-1 text-dark">
+                        Desarrollo Web Full Stack con Bootstrap 5
+                      </h5>
+                      <p class="text-muted small mb-0">
+                        Código:
+                        <span class="font-monospace text-secondary"
+                          >DWFS-2026</span
+                        >
+                      </p>
+                    </div>
+                    <div
+                      class="col-6 col-md-2 text-center border-start border-end"
+                    >
+                      <span class="text-muted d-block small"
+                        >Alumnos Inscritos</span
+                      >
+                      <span class="fw-bold fs-5 text-dark">32</span>
+                    </div>
+                    <div class="col-6 col-md-2 text-center">
+                      <span class="text-muted d-block small mb-1"
+                        >Evaluaciones</span
+                      >
+                      <span class="badge bg-warning text-dark">Pendientes</span>
+                    </div>
+                    <div class="col-12 col-md-3 text-md-end">
+                      <a
+                        href="#"
+                        class="btn btn-primary btn-sm w-100 rounded-2 py-2"
+                        >Gestionar Notas</a
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="card border border-light-subtle rounded-3 shadow-sm p-3"
+                >
+                  <div class="row align-items-center g-3">
+                    <div class="col-12 col-md-5">
+                      <h5 class="fw-bold mb-1 text-dark">
+                        Introducción a Bases de Datos Relacionales
+                      </h5>
+                      <p class="text-muted small mb-0">
+                        Código:
+                        <span class="font-monospace text-secondary"
+                          >BDDR-2026</span
+                        >
+                      </p>
+                    </div>
+                    <div
+                      class="col-6 col-md-2 text-center border-start border-end"
+                    >
+                      <span class="text-muted d-block small"
+                        >Alumnos Inscritos</span
+                      >
+                      <span class="fw-bold fs-5 text-dark">45</span>
+                    </div>
+                    <div class="col-6 col-md-2 text-center">
+                      <span class="text-muted d-block small mb-1"
+                        >Evaluaciones</span
+                      >
+                      <span class="badge bg-success">Al día</span>
+                    </div>
+                    <div class="col-12 col-md-3 text-md-end">
+                      <a
+                        href="#"
+                        class="btn btn-outline-secondary btn-sm w-100 rounded-2 py-2"
+                        >Ver Panel</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="content-desempeno" role="tabpanel">
+              <h3 class="fw-semibold mb-4 border-bottom pb-2">
+                Métricas y Carga Académica
+              </h3>
+              <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-lg-4">
+                  <div
+                    class="card h-100 border-0 bg-light p-4 rounded-3 shadow-sm text-center"
+                  >
+                    <span class="text-muted small fw-bold text-uppercase"
+                      >Estudiantes Totales</span
+                    >
+                    <h2 class="fw-bold text-primary my-2">77</h2>
+                    <p class="text-muted small mb-0">Semestre en curso</p>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-4">
+                  <div
+                    class="card h-100 border-0 bg-light p-4 rounded-3 shadow-sm text-center"
+                  >
+                    <span class="text-muted small fw-bold text-uppercase"
+                      >Tasa de Aprobación</span
+                    >
+                    <h2 class="fw-bold text-success my-2">85%</h2>
+                    <p class="text-muted small mb-0">Promedio histórico</p>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-4">
+                  <div
+                    class="card h-100 border border-warning bg-warning bg-opacity-10 p-4 rounded-3 shadow-sm text-center"
+                  >
+                    <span class="text-dark small fw-bold text-uppercase"
+                      >Actas Pendientes</span
+                    >
+                    <h2 class="fw-bold text-warning-emphasis my-2">1</h2>
+                    <p class="text-dark small mb-0">Requiere cierre</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="tab-pane fade"
+              id="content-configuracion"
+              role="tabpanel"
+            >
+              <h3 class="fw-semibold mb-3 border-bottom pb-2">
+                Configuración de Cuenta
+              </h3>
+              <p class="text-muted mb-4">
+                Gestiona la seguridad y los datos públicos de tu perfil docente.
+              </p>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <button class="btn btn-outline-dark w-100 py-2">
+                    Cambiar Contraseña
+                  </button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-outline-primary w-100 py-2">
+                    Actualizar Biografía
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
