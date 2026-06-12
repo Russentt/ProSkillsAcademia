@@ -122,7 +122,10 @@ def password_recover():
 @app.route('/accTeacher')
 def instructor():
     return render_template('acc-instructor.html')    
-    
+
+@app.route('/skills')
+def programas():
+    return render_template('skills.html')
 
 @app.route('/about')
 def about():
