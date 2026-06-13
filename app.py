@@ -34,7 +34,7 @@ def sin_token(error_string):
     flash("debes iniciar sesion para acceder")
     return redirect(url_for('login'))
 
-# Redirige al home cuando el token expire
+# Redirige al login cuando el token expire
 @jwt.expired_token_loader
 def token_expirado_callback(jwt_header, jwt_payload):
     flash("Tu sesión ha expirado por inactividad. Por favor, vuelve a ingresar.")
