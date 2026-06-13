@@ -143,30 +143,34 @@
               <h3 class="fw-semibold mb-4 border-bottom pb-2">
                 Información del Instructor
               </h3>
+
               <div class="row g-4">
                 <div class="col-md-6">
                   <label
                     class="form-label text-muted small text-uppercase fw-bold"
                     >Nombre Completo</label
                   >
-                  <p class="fs-5 text-dark mb-0">Beatriz Mendoza</p>
+                  <p class="fs-5 text-dark mb-0"> {{ profesor.nombre_completo }} </p>
                 </div>
+                
                 <div class="col-md-6">
                   <label
                     class="form-label text-muted small text-uppercase fw-bold"
                     >Correo Electrónico</label
                   >
-                  <p class="fs-5 text-dark mb-0">b.mendoza@proskills.cl</p>
+                  <p class="fs-5 text-dark mb-0"> {{ profesor.correo }} </p>
                 </div>
+
                 <div class="col-md-6">
                   <label
                     class="form-label text-muted small text-uppercase fw-bold"
                     >Especialidad</label
                   >
                   <p class="fs-5 text-dark mb-0">
-                    Arquitectura de Software y Bases de Datos
+                    {{ profesor.especialidad }}
                   </p>
                 </div>
+
                 <div class="col-md-6">
                   <label
                     class="form-label text-muted small text-uppercase fw-bold"
@@ -175,10 +179,11 @@
                   <p class="mb-0">
                     <span
                       class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 text-uppercase"
-                      >Activo</span
+                      > {{ profesor.estado }} </span
                     >
                   </p>
                 </div>
+
                 <div class="col-12 mt-4">
                   <label
                     class="form-label text-muted small text-uppercase fw-bold"
@@ -189,12 +194,7 @@
                       class="text-dark mb-0 font-monospace small"
                       style="white-space: pre-line"
                     >
-                      Ingeniera Civil Informática con más de 10 años de
-                      experiencia en la industria tecnológica. Especializada en
-                      el diseño de bases de datos relacionales y ecosistemas de
-                      alta disponibilidad. Apasionada por la docencia técnica y
-                      la formación de profesionales mediante metodologías ágiles
-                      y proyectos aplicados al mundo real.
+                      {{ profesor.biografia }}
                     </p>
                   </div>
                 </div>

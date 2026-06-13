@@ -4,7 +4,8 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, f
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 from dotenv import load_dotenv
 from config import config
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import create_access_token
 from datetime import timedelta, datetime
  
 load_dotenv()
@@ -103,6 +104,10 @@ def signup():
                                 VALUES (%s ,'Completo'); """
                 cursor.execute(sql_admin, (new_id,))
 
+            else:
+                flash("Debe escojer un ROL!")
+                return redirect(url_for('signup'))
+            
             conexion_db.commit()
             cursor.close()
             flash("Cuenta creada correctamente")
@@ -119,9 +124,65 @@ def signup():
 def password_recover():
     return render_template('password-recover.html')
 
-@app.route('/accTeacher')
+#Perfil profesor
+@app.route('/accTeacher', methods=['GET'])
+@jwt_required()
 def instructor():
-    return render_template('acc-instructor.html')    
+    try:
+        # Token profesor
+        profesor_id = get_jwt_identity()
+        claims = get_jwt()
+        rol_usuario = claims.get("rol") 
+        
+        # Si el rol no es instructor lo redirige al home
+        if rol_usuario != 'instructor':
+            flash("Acceso denegado")
+            return redirect(url_for('home'))
+        
+        # Conexion BD
+        cursor = conexion_db.cursor()
+        cursor.execute("SELECT correo FROM usuarios WHERE id = %s::int;", (profesor_id,)) # Traer correo de usuario
+        usuario_base = cursor.fetchone()
+        
+        # Si el usuario no se encuentra redireccion al home
+        if not usuario_base:
+            cursor.close()
+            flash("usuario no encontrado")
+            return redirect(url_for('home'))
+        
+        # valor del correo -> (posicion del correo )
+        correo_profesor = usuario_base[0]
+        
+        # Consulta a la vista
+        sql = """SELECT nombre_completo, correo, estado, especialidad, biografia FROM V_INSTRUCTOR WHERE correo = %s;"""
+        
+        # Executar la consulta donde el correo ingresado sea igual al del instructor
+        cursor.execute(sql, (correo_profesor,))
+        datos_profe = cursor.fetchone()
+        cursor.close()
+        
+        # Si no se encuentra los datos redireccion al home
+        if not datos_profe:
+            flash("No se encontraron datos")
+            return redirect(url_for('home'))
+        
+        # Asignar posicion de los datos del instructor
+        profe = {
+            "nombre_completo": datos_profe[0],
+            "correo":          datos_profe[1],
+            "estado":          datos_profe[2],
+            "especialidad":    datos_profe[3],
+            "biografia":       datos_profe[4]
+        }
+        
+        # Redireccion al html de la cuenta de instructor 
+        return render_template('acc-instructor.html', profesor = profe)
+        
+    except Exception as ex:
+        print(f"Error al cargar {ex}")
+        flash("Intente de nuevo mas tarde")
+        return redirect(url_for('login'))   
+    
 
 @app.route('/skills')
 def programas():
@@ -153,21 +214,63 @@ def login():
                 SELECT id, correo FROM usuarios 
                 WHERE (correo = %s OR id::text = %s) AND password = %s;
             """ 
+                # Execucion de la consulta 
                 cursor.execute(sql, (user, user, password))
                 usuario_encontrado = cursor.fetchone()
+                
+                # Si no se encuentra el usuario retorna al login
+                if usuario_encontrado is None:
+                    cursor.close
+                    flash("Usuario o Contraseña incorrectos")
+                    return redirect(url_for('login'))
+                
+                # valor del id 
+                user_id = usuario_encontrado[0]
+                rol = None # Asignar un rol por defecto
+                
+                # Rol admin            
+                cursor.execute("SELECT id_administrador from administrador WHERE id_administrador = %s::int;", (user_id,))  
+                if cursor.fetchone() is not None:
+                    rol = 'admin'
+                    
+                else: # Rol instructor
+                    cursor.execute("SELECT id_instructor from instructor WHERE id_instructor = %s::int;", (user_id,))              
+                    if cursor.fetchone() is not None:
+                        rol = 'instructor'
+                    
+                    else: # Rol estudiante
+                        cursor.execute("SELECT id_estudiante from estudiante WHERE id_estudiante = %s::int;", (user_id,))
+                        if cursor.fetchone() is not None:
+                            rol = 'estudiante'
+
                 cursor.close()
                 
-                # Si el usuario es encontrado se le asigna un token de acceso y se le redirecciona al home
-                if usuario_encontrado is not None:
-                    token = create_access_token(identity=str(usuario_encontrado[0]))
-                    respuesta = redirect(url_for('cuenta'))
-                    set_access_cookies(respuesta, token)
+                if rol is None:
+                    flash("Tu cuenta no tiene un rol asignado en el sistema.")
+                    return redirect(url_for('login'))    
                 
-                    return respuesta
-                # Si el usuario no coincide se le redirecciona al login con un mensaje de error
+                # Asignar rol para despues asignarlo al token
+                rol_token = {
+                "rol": rol
+                } 
+                
+                # Token con el rol asignado
+                token = create_access_token(identity=str(user_id), additional_claims=rol_token)
+                
+                # Redireccion dependiendo del rol
+                if rol == 'administrador':
+                    respuesta = redirect(url_for('cuenta')) # Ignacio haz la cuenta del admin pronto, agarra la pala
+                    
+                elif rol == 'instructor':
+                    respuesta = redirect(url_for('instructor'))
+                
                 else:
-                    flash("Usuario o contraseña incorrectos")
-                    return redirect(url_for('login'))
+                    respuesta = redirect(url_for('cuenta'))
+
+                # Guardar el token 
+                set_access_cookies(respuesta, token)                
+                return respuesta
+                
             except Exception as ex:
                 print(f"Error en el servidor: {ex}") 
                 flash("Ocurrió un error inesperado en el servidor.")
@@ -178,6 +281,12 @@ def login():
 def cuenta():
     try:
         usuario = get_jwt_identity() 
+        claims = get_jwt()
+        rol_usuario = claims.get("rol")
+        
+        if rol_usuario == 'instructor':
+            return redirect(url_for('instructor'))
+
         
         cursor = conexion_db.cursor()
         sql = """SELECT nombre, apellido, correo, estado, fecha_registro FROM usuarios WHERE id = %s::int;"""
@@ -187,13 +296,14 @@ def cuenta():
         if not datos:
             flash("usuario no encontrado")
             return redirect(url_for("home"))
+        
         encontrado = {
             "nombre": datos[0],
             "apellido": datos[1],
             "correo": datos[2],
             "estado": datos[3],
             "fecha_registro": datos[4].strftime('%d/%m/%Y')
-        }   
+        } 
         
         return render_template('account.html', usuario=encontrado)
         
