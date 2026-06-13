@@ -56,7 +56,9 @@
                   <a class="nav-link text-dark" href="#">Programas</a>
                 </li>
                 <li class="nav-item text-center">
-                  <a class="nav-link text-dark" href="#">Contacto</a>
+                  <a class="nav-link text-dark" href="/about#soporte"
+                    >Contacto</a
+                  >
                 </li>
               </ul>
             </div>
@@ -65,8 +67,10 @@
       </nav>
     </header>
     <main class="bg-body-tertiary mt-3 min-vh-100 py-1">
-      <div class="container d-flex row flex-row align-items-start px-0 mx-auto">
-        <div class="col-md-2 mt-3 me-lg-4 ms-5 p-0">
+      <div class="container row align-items-start mx-auto px-0">
+        <div
+          class="col-12 col-md-3 col-lg-2 mt-3 me-lg-4 ms-md-4 p-0 px-3 px-md-0"
+        >
           <div class="row mb-3">
             <h1 class="fw-semibold">Mi Cuenta</h1>
           </div>
@@ -131,17 +135,18 @@
             >
               Transacciones
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              disabled
-            >
-              Cerrar Sesión
-            </button>
+            <div id="btnGroup" class="list-group">
+              <a
+                href="{{ url_for('logout') }}"
+                class="list-group-item list-group-item-action text-danger fw-semibold"
+              >
+                Cerrar Sesión
+              </a>
+            </div>
           </div>
         </div>
         <div
-          class="col flex-grow-1 rounded-4 bg-white p-4 pt-4 mt-5 tab-content"
+          class="col-12 col-md flex-grow-1 rounded-4 bg-white p-4 pt-4 mt-5 tab-content"
           id="nav-tabContent"
         >
           <div
@@ -212,9 +217,10 @@
                 readonly
               />
               {% else %}
-                <div class="alert alert-danger my-3" role="alert">
-                No se pudo cargar la información del perfil. Por favor, inicia sesión nuevamente.
-                </div>
+              <div class="alert alert-danger my-3" role="alert">
+                No se pudo cargar la información del perfil. Por favor, inicia
+                sesión nuevamente.
+              </div>
               {% endif %}
             </div>
           </div>
@@ -543,13 +549,6 @@
             <p class="text-muted">
               Historial de pagos, recibos de compra y facturas.
             </p>
-          </div>
-          <div id="btnGroup" class="list-group">
-          <a href="{{ url_for('logout') }}"
-           class="list-group-item list-group-item-action text-danger fw-semibold"
-           >
-              Cerrar Sesión
-            </a>
           </div>
         </div>
       </div>

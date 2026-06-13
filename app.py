@@ -5,8 +5,8 @@ from flask_jwt_extended import JWTManager, create_access_token, set_access_cooki
 from dotenv import load_dotenv
 from config import config
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from datetime import timedelta
-
+from datetime import timedelta, datetime
+ 
 load_dotenv()
 
 app = Flask(__name__)
@@ -31,7 +31,7 @@ jwt = JWTManager(app)
 # Si no tiene token los redirige al login
 @jwt.unauthorized_loader
 def sin_token(error_string):
-    flash("debes iniciar sesion para acceder")
+    flash("Debes iniciar sesion para acceder")
     return redirect(url_for('login'))
 
 # Redirige al login cuando el token expire
@@ -52,15 +52,80 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/sign')
+@app.route('/sign', methods=['GET', 'POST'])
 def signup():
-    return render_template('sign-up.html')
+    if request.method == 'GET':
+        return render_template('sign-up.html')
+    
+    if request.method == 'POST':
+        try:
+            nombre_apellido = request.form.get("nombre_apellido")
+            correo = request.form.get("correo")
+            rol = request.form.get("rol")
+            password = request.form.get("password")
+            re_password = request.form.get("re_password")
+
+            if not nombre_apellido or not correo or not password or not rol:
+                flash("todos los campos son obligatorios")
+                return redirect(url_for('signup'))
+            
+            if re_password != password and password != re_password:
+                flash("La contraseña debe ser igual en los 2 campos")
+                return redirect(url_for('signup'))    
+           
+            partes = nombre_apellido.strip().split(" ", 1)
+            nombre = partes[0]
+            apellido = partes[1] if len(partes) > 1 else ""
+            cursor = conexion_db.cursor()
+
+            sql_usuario = """ INSERT INTO usuarios (nombre, apellido, correo, password, estado)
+                              VALUES (%s, %s, %s, %s, 'Activo') RETURNING id; """
+
+            cursor.execute(sql_usuario, (nombre, apellido, correo, password))
+            new_id = cursor.fetchone()[0]
+
+            if rol == 'estudiante':
+                fecha_actual = datetime.now().date()
+                id_pago_defecto = 1
+
+                sql_estudiante = """ INSERT INTO estudiante (id_estudiante, fecha_ingreso, id_pago)
+                                     VALUES (%s, %s, %s); """
+                cursor.execute(sql_estudiante, (new_id, fecha_actual, id_pago_defecto))
+
+            elif rol == 'instructor':
+
+                sql_profesor = """ INSERT INTO instructor (id_instructor ,especialidad, biografia)
+                                   VALUES (%s, 'Profesor', 'Hacealgo'); """
+                cursor.execute(sql_profesor, (new_id,))
+
+            elif rol == 'administrador':
+                sql_admin = """ INSERT INTO administrador (id_administrador,nivel_acceso)
+                                VALUES (%s ,'Completo'); """
+                cursor.execute(sql_admin, (new_id,))
+
+            conexion_db.commit()
+            cursor.close()
+            flash("Cuenta creada correctamente")
+            return redirect(url_for('login'))
+
+        except Exception as ex:
+            conexion_db.rollback()
+            print(f"Detalle técnico: {ex}\n") 
+            flash("Error intente de nuevo mas tarde {ex}")
+            return redirect(url_for('signup'))
 
 
 @app.route('/recover')
 def password_recover():
-    return render_template('password-recover.html')    
-    
+    return render_template('password-recover.html')
+
+@app.route('/accTeacher')
+def instructor():
+    return render_template('acc-instructor.html')    
+
+@app.route('/skills')
+def programas():
+    return render_template('skills.html')
 
 @app.route('/about')
 def about():
@@ -118,12 +183,10 @@ def cuenta():
         sql = """SELECT nombre, apellido, correo, estado, fecha_registro FROM usuarios WHERE id = %s::int;"""
         cursor.execute(sql, (usuario,))
         datos = cursor.fetchone()
-        cursor.close()
         
         if not datos:
             flash("usuario no encontrado")
             return redirect(url_for("home"))
-            
         encontrado = {
             "nombre": datos[0],
             "apellido": datos[1],
