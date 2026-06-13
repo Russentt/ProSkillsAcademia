@@ -1,16 +1,23 @@
 import os
 import psycopg2
-from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 from dotenv import load_dotenv
 from config import config
 from flask_jwt_extended import jwt_required, get_jwt_identity, get_jwt
 from flask_jwt_extended import create_access_token
 from datetime import timedelta, datetime
- 
+import smtplib
+from email.mime.text import MIMEText
+from flask import request, redirect, url_for, flash, render_template
+from flask_jwt_extended import create_access_token, decode_token
+
 load_dotenv()
 
+
 app = Flask(__name__)
+
+
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY")
@@ -120,10 +127,86 @@ def signup():
             return redirect(url_for('signup'))
 
 
-@app.route('/recover')
+# Recuperar Contraseña
+@app.route('/recover', methods=['GET', 'POST'])
 def password_recover():
-    return render_template('password-recover.html')
-
+    
+    if request.method == 'GET':
+        return render_template('password-recover.html')
+    
+    if request.method == 'POST':
+        usuario = None
+        user_id = None
+        correo = request.form.get("correo")
+        
+        if correo:
+            correo = correo.strip().lower()
+        
+        try:
+            
+            cursor = conexion_db.cursor()
+            cursor.execute("SELECT id FROM usuarios WHERE LOWER(correo) = %s;", (correo,))
+            usuario = cursor.fetchone()
+            cursor.close()
+            
+        except Exception as db_ex:
+            print(f"Error en consulta SQL: {db_ex}")
+            flash("Error de conexión con la base de datos.")
+            return redirect(url_for('password_recover'))
+            
+        
+        if not usuario:
+            print(f"Usuario no encontrado: '{correo}'")
+            flash("Correo no encontrado, intente de nuevo más tarde.")
+            return redirect(url_for('password_recover'))
+            
+        user_id = usuario[0]
+        
+        # generar el token
+        try:
+            import datetime
+            tiempo_tok = datetime.timedelta(minutes=15)
+            token_temp = create_access_token(identity=str(user_id), expires_delta=tiempo_tok)
+            
+            flash("Usuario verificado.")
+            return redirect(url_for('change_password', token=token_temp))
+            
+        except Exception as jwt_ex:
+            print(f"Error al crear el Token JWT: {jwt_ex}")
+            flash("Intente de nuevo más tarde.")
+            return redirect(url_for('password_recover'))
+        
+        
+@app.route('/change-password/<token>', methods=['GET', 'POST']) 
+def change_password(token):
+    
+    try:
+        
+        datos_token = decode_token(token)
+        user_id = datos_token['sub']
+        
+        if request.method == 'GET':
+            # Enviar token al html
+            return render_template('change-password.html', token=token)
+            
+        if request.method == 'POST':
+            nueva_password = request.form.get("password")
+            
+            cursor = conexion_db.cursor()
+            sql = "UPDATE usuarios SET password = %s WHERE id = %s::int;"
+            cursor.execute(sql, (nueva_password, user_id))
+            conexion_db.commit()
+            cursor.close()
+            
+            flash("Contraseña actualizada correctamente.")
+            return redirect(url_for('login'))
+            
+    except Exception as e:
+        print(f"ERROR EN VALIDA TOKEN: {e}")
+        flash("El token de acceso ha expirado o es inválido.")
+        return redirect(url_for('password-recover')) 
+        
+        
 #Perfil profesor
 @app.route('/accTeacher', methods=['GET'])
 @jwt_required()
@@ -321,6 +404,7 @@ def logout():
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):
+    print(f"error {error}")
     return redirect(url_for('home'))
 
 app.config.from_object(config['development'])
