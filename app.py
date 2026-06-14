@@ -1,6 +1,6 @@
 import os
 import psycopg2
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from flask_jwt_extended import JWTManager, create_access_token, set_access_cookies, unset_jwt_cookies
 from dotenv import load_dotenv
 from config import config
@@ -72,6 +72,8 @@ def signup():
             rol = request.form.get("rol")
             password = request.form.get("password")
             re_password = request.form.get("re_password")
+            especialidad = request.form.get("especialidad", "")
+            biografia = request.form.get("biografia", "")
 
             if not nombre_apellido or not correo or not password or not rol:
                 flash("todos los campos son obligatorios")
@@ -91,7 +93,7 @@ def signup():
 
             cursor.execute(sql_usuario, (nombre, apellido, correo, password))
             new_id = cursor.fetchone()[0]
-
+            
             if rol == 'estudiante':
                 fecha_actual = datetime.now().date()
                 id_pago_defecto = 1
@@ -101,10 +103,9 @@ def signup():
                 cursor.execute(sql_estudiante, (new_id, fecha_actual, id_pago_defecto))
 
             elif rol == 'instructor':
-
                 sql_profesor = """ INSERT INTO instructor (id_instructor ,especialidad, biografia)
-                                   VALUES (%s, 'Profesor', 'Hacealgo'); """
-                cursor.execute(sql_profesor, (new_id,))
+                                   VALUES (%s, %s, %s); """
+                cursor.execute(sql_profesor, (new_id, especialidad, biografia))
 
             elif rol == 'administrador':
                 sql_admin = """ INSERT INTO administrador (id_administrador,nivel_acceso)
@@ -123,7 +124,7 @@ def signup():
         except Exception as ex:
             conexion_db.rollback()
             print(f"Detalle técnico: {ex}\n") 
-            flash("Error intente de nuevo mas tarde {ex}")
+            flash("Error intente de nuevo mas tarde. ")
             return redirect(url_for('signup'))
 
 
@@ -209,47 +210,39 @@ def change_password(token):
         
 #Perfil profesor
 @app.route('/accTeacher', methods=['GET'])
-@jwt_required()
+@jwt_required() 
 def instructor():
     try:
-        # Token profesor
         profesor_id = get_jwt_identity()
         claims = get_jwt()
         rol_usuario = claims.get("rol") 
         
-        # Si el rol no es instructor lo redirige al home
         if rol_usuario != 'instructor':
             flash("Acceso denegado")
             return redirect(url_for('home'))
         
-        # Conexion BD
         cursor = conexion_db.cursor()
-        cursor.execute("SELECT correo FROM usuarios WHERE id = %s::int;", (profesor_id,)) # Traer correo de usuario
+        
+        cursor.execute("SELECT correo FROM usuarios WHERE id = %s::int;", (profesor_id,))
         usuario_base = cursor.fetchone()
         
-        # Si el usuario no se encuentra redireccion al home
         if not usuario_base:
             cursor.close()
-            flash("usuario no encontrado")
+            flash("Usuario no encontrado")
             return redirect(url_for('home'))
         
-        # valor del correo -> (posicion del correo )
         correo_profesor = usuario_base[0]
         
-        # Consulta a la vista
-        sql = """SELECT nombre_completo, correo, estado, especialidad, biografia FROM V_INSTRUCTOR WHERE correo = %s;"""
-        
-        # Executar la consulta donde el correo ingresado sea igual al del instructor
-        cursor.execute(sql, (correo_profesor,))
+        sql_perfil = """SELECT nombre_completo, correo, estado, especialidad, biografia 
+                        FROM V_INSTRUCTOR WHERE correo = %s;"""
+        cursor.execute(sql_perfil, (correo_profesor,)) # <-- Pasamos el parámetro real
         datos_profe = cursor.fetchone()
-        cursor.close()
         
-        # Si no se encuentra los datos redireccion al home
         if not datos_profe:
-            flash("No se encontraron datos")
+            cursor.close()
+            flash("No se encontraron datos de perfil")
             return redirect(url_for('home'))
         
-        # Asignar posicion de los datos del instructor
         profe = {
             "nombre_completo": datos_profe[0],
             "correo":          datos_profe[1],
@@ -258,13 +251,28 @@ def instructor():
             "biografia":       datos_profe[4]
         }
         
-        # Redireccion al html de la cuenta de instructor 
-        return render_template('acc-instructor.html', profesor = profe)
+        sql_cursos = """SELECT id_curso, titulo, fecha_inicio, estado 
+                        FROM vista_curso WHERE id_instructor = %s::int;"""
+        cursor.execute(sql_cursos, (profesor_id,)) # <-- Pasamos el parámetro real (ahora con id_curso)
+        curso_base = cursor.fetchall()
+        
+        cursor.close()
+        
+        lista_cursos = []
+        for fila in curso_base:
+            lista_cursos.append({
+                "id_curso": fila[0],
+                "titulo": fila[1],
+                "fecha_inicio": fila[2].strftime('%d/%m/%Y') if fila[2] else 'Sin fecha',
+                "estado": fila[3]
+            })        
+            
+        return render_template('acc-instructor.html', profesor=profe, cursos=lista_cursos)
         
     except Exception as ex:
-        print(f"Error al cargar {ex}")
-        flash("Intente de nuevo mas tarde")
-        return redirect(url_for('login'))   
+        print(f"--- ERROR REAL EN LA TERMINAL: {ex} ---")
+        flash("Ocurrió un error inesperado en el servidor.")
+        return redirect(url_for('login'))
     
 
 @app.route('/skills')
@@ -342,7 +350,7 @@ def login():
                 
                 # Redireccion dependiendo del rol
                 if rol == 'administrador':
-                    respuesta = redirect(url_for('cuenta')) # Ignacio haz la cuenta del admin pronto, agarra la pala
+                    respuesta = redirect(url_for('cuenta')) 
                     
                 elif rol == 'instructor':
                     respuesta = redirect(url_for('instructor'))
@@ -401,6 +409,64 @@ def logout():
     unset_jwt_cookies(respuesta)
     flash("Sesión cerrada correctamente.")
     return respuesta
+
+@app.route('/asignar_notas', methods=['GET', 'POST'])
+def asignar_notas():
+    if request.method == 'GET':
+        return render_template('asignar_notas.html')
+    
+    if request.method == 'POST':
+        try:
+            flash("¡Calificaciones guardadas correctamente!", "success")
+            return redirect(url_for('asignar_notas'))
+            
+        except Exception as e:
+            print(f"Error al guardar notas: {e}")
+            flash("Error al procesar las calificaciones.", "danger")
+            return redirect(url_for('asignar_notas'))
+
+
+@app.route('/curso/<nombre_curso>')
+def mostrar_curso(nombre_curso):
+    try:
+        nombre_limpio = nombre_curso.replace('.html', '')
+        
+        return render_template(f'{nombre_limpio}.html')
+    except Exception as ex:
+        print(f"Error al buscar plantilla: {ex}")
+        return "Curso no encontrado", 404
+
+
+@app.route('/aula/<nombre_curso>', methods=['GET'])
+@jwt_required()  
+def aula_virtual(nombre_curso):
+    try:
+        alumno_id = get_jwt_identity()
+        claims = get_jwt()
+        rol_usuario = claims.get("rol")
+        
+        if rol_usuario != 'estudiante' and rol_usuario != 'instructor':
+            flash("Acceso denegado a las aulas virtuales.")
+            return redirect(url_for('home'))
+
+        plantillas_validas = {
+    'java': 'aula-java.html.html',  
+    'marketing': 'aula-marketing.html',
+    'diseno': 'aula-diseno.html'
+}
+
+        curso_clave = nombre_curso.strip().lower()
+
+        if curso_clave in plantillas_validas:
+            return render_template(plantillas_validas[curso_clave])
+        else:
+            return "Aula virtual no encontrada .", 404
+
+    except Exception as ex:
+        print(f"--- ERROR : {ex} ---")
+        flash("Ocurrió un error al conectar con el aula virtual.")
+        return redirect(url_for('home'))
+
 
 @app.errorhandler(404)
 def pagina_no_encontrada(error):

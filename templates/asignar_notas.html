@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProSkills - Asignar Notas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .input-nota {
+      width: 80px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container py-5">
+    
+    <div class="card shadow-sm border-0 mb-4 bg-white rounded-3">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+          <div>
+            <span class="badge bg-primary mb-2 px-3 py-2">ID Instructor: 128</span>
+            <h1 class="fw-bold text-dark h3">Modelamiento y Administración en Oracle SQL</h1>
+            <p class="text-muted mb-0">Listado oficial de alumnos inscritos para el ingreso de calificaciones parciales.</p>
+          </div>
+          <div class="text-end mt-3 mt-sm-0">
+            <span class="text-secondary small d-block">Periodo Académico</span>
+            <strong class="text-dark">Julio - Octubre 2026</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm border-0 bg-white rounded-3">
+      <div class="card-header bg-dark text-white py-3 px-4 rounded-top-3">
+        <h5 class="mb-0 fw-semibold"><i class="bi bi-people-fill me-2"></i> Alumnos Registrados</h5>
+      </div>
+      
+      <form action="{{ url_for('asignar_notas') }}" method="POST">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 px-4">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="ps-4" style="width: 10%;">ID Alumno</th>
+                <th scope="col" style="width: 40%;">Nombre Completo</th>
+                <th scope="col" style="width: 30%;">Correo Electrónico</th>
+                <th scope="col" class="text-center" style="width: 20%;">Nota Final</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td class="fw-bold ps-4 text-secondary">1001</td>
+                <td>
+                  <div class="fw-semibold text-dark">Benjamin Mendoza</div>
+                </td>
+                <td class="text-muted">b.mendoza@proskills.cl</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <input 
+                      type="number" 
+                      name="nota_1001" 
+                      class="form-control input-nota fw-bold" 
+                      min="1.0" 
+                      max="7.0" 
+                      step="0.1" 
+                      placeholder="0.0"
+                      required
+                    >
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="fw-bold ps-4 text-secondary">1002</td>
+                <td>
+                  <div class="fw-semibold text-dark">Ignacio Battistoni</div>
+                </td>
+                <td class="text-muted">i.battistoni@proskills.cl</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <input 
+                      type="number" 
+                      name="nota_1002" 
+                      class="form-control input-nota fw-bold" 
+                      min="1.0" 
+                      max="7.0" 
+                      step="0.1" 
+                      placeholder="0.0"
+                      required
+                    >
+                  </div>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="fw-bold ps-4 text-secondary">1003</td>
+                <td>
+                  <div class="fw-semibold text-dark">Alexander Mejias</div>
+                </td>
+                <td class="text-muted">a.mejias@proskills.cl</td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <input 
+                      type="number" 
+                      name="nota_1003" 
+                      class="form-control input-nota fw-bold" 
+                      min="1.0" 
+                      max="7.0" 
+                      step="0.1" 
+                      placeholder="0.0"
+                      required
+                    >
+                  </div>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card-footer bg-light p-4 text-end border-top-0 rounded-bottom-3">
+          <button type="submit" class="btn btn-dark px-5 py-2 fw-bold shadow-sm">
+            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Guardar Calificaciones
+          </button>
+        </div>
+      </form>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div id="toastFlask" class="toast align-items-center text-white bg-{{ 'success' if category == 'success' else 'danger' }} border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body fw-medium">
+                <i class="bi {{ 'bi-check-circle-fill' if category == 'success' else 'bi-exclamation-triangle-fill' }} me-2"></i> 
+                {{ message }}
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toastElement = document.getElementById("toastFlask");
+      if (toastElement) {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastElement);
+        toastBootstrap.show();
+      }
+    });
+  </script>
+</body>
+</html>
