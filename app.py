@@ -503,20 +503,19 @@ def descargar_diploma(curso_id):
         pdf.set_line_width(2)
         pdf.rect(14, 14, 269, 182)
 
-        
+        # Contenido de ProSkills Academia
         pdf.set_font("Helvetica", "B", 32)
         pdf.cell(0, 40, "PROSKILLS ACADEMIA", ln=True, align="C")
         
         pdf.set_font("Helvetica", "I", 18)
         pdf.cell(0, 20, "Otorga el presente Diploma de Honor a:", ln=True, align="C")
         
-        
+        # Nombre del Estudiante
         pdf.set_font("Helvetica", "B", 26)
         pdf.cell(0, 25, nombre_completo.upper(), ln=True, align="C")
         
         pdf.set_font("Helvetica", "", 16)
         pdf.cell(0, 15, "Por haber aprobado exitosamente el plan de estudios del curso:", ln=True, align="C")
-        
         
         pdf.set_font("Helvetica", "B", 22)
         pdf.cell(0, 20, f"'{nombre_curso}'", ln=True, align="C")
