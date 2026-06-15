@@ -150,15 +150,17 @@
                     class="form-label text-muted small text-uppercase fw-bold"
                     >Nombre Completo</label
                   >
-                  <p class="fs-5 text-dark mb-0"> {{ profesor.nombre_completo }} </p>
+                  <p class="fs-5 text-dark mb-0">
+                    {{ profesor.nombre_completo }}
+                  </p>
                 </div>
-                
+
                 <div class="col-md-6">
                   <label
                     class="form-label text-muted small text-uppercase fw-bold"
                     >Correo Electrónico</label
                   >
-                  <p class="fs-5 text-dark mb-0"> {{ profesor.correo }} </p>
+                  <p class="fs-5 text-dark mb-0">{{ profesor.correo }}</p>
                 </div>
 
                 <div class="col-md-6">
@@ -166,9 +168,7 @@
                     class="form-label text-muted small text-uppercase fw-bold"
                     >Especialidad</label
                   >
-                  <p class="fs-5 text-dark mb-0">
-                    {{ profesor.especialidad }}
-                  </p>
+                  <p class="fs-5 text-dark mb-0">{{ profesor.especialidad }}</p>
                 </div>
 
                 <div class="col-md-6">
@@ -179,8 +179,9 @@
                   <p class="mb-0">
                     <span
                       class="badge bg-success bg-opacity-10 text-success border border-success px-3 py-2 text-uppercase"
-                      > {{ profesor.estado }} </span
                     >
+                      {{ profesor.estado }}
+                    </span>
                   </p>
                 </div>
 
@@ -212,65 +213,67 @@
               </div>
 
               <div class="d-flex flex-column gap-3">
-                {% if cursos %}
-                  {% for curso in cursos %}
-                    <div
-                      class="card border border-light-subtle rounded-3 shadow-sm p-3"
-                    >
-                      <div class="row align-items-center g-3">
-                        <div class="col-12 col-md-5">
-                          <h5 class="fw-bold mb-1 text-dark">
-                            {{ curso.titulo }}
-                          </h5>
-                          <p class="text-muted small mb-0">
-                            Código:
-                            <span class="font-monospace text-secondary"
-                              >PS-2026-{{ curso.id_curso }}</span
-                            >
-                          </p>
-                        </div>
-                        <div
-                          class="col-6 col-md-2 text-center border-start border-end"
+                {% if cursos %} {% for curso in cursos %}
+                <div
+                  class="card border border-light-subtle rounded-3 shadow-sm p-3"
+                >
+                  <div class="row align-items-center g-3">
+                    <div class="col-12 col-md-5">
+                      <h5 class="fw-bold mb-1 text-dark">{{ curso.titulo }}</h5>
+                      <p class="text-muted small mb-0">
+                        Código:
+                        <span class="font-monospace text-secondary"
+                          >PS-2026-{{ curso.id_curso }}</span
                         >
-                          <span class="text-muted d-block small"
-                            >Alumnos Inscritos</span
-                          >
-                          <span class="fw-bold fs-5 text-dark">
-                            {% if curso.id_curso == 1 %} 32 {% elif curso.id_curso == 2 %} 45 {% else %} 0 {% endif %}
-                          </span>
-                        </div>
-                        <div class="col-6 col-md-2 text-center">
-                          <span class="text-muted d-block small mb-1"
-                            >Evaluaciones</span
-                          >
-                          {% if curso.estado == 'Abierta' or curso.estado == 'Activo' %}
-                            <span class="badge bg-warning text-dark">Pendientes</span>
-                          {% else %}
-                            <span class="badge bg-success">Al día</span>
-                          {% endif %}
-                        </div>
-                        <div class="col-12 col-md-3 text-md-end">
-                          {% if curso.estado == 'Abierta' or curso.estado == 'Activo' %}
-                            <a
-                              href="asignar_notas.html"
-                              class="btn btn-primary btn-sm w-100 rounded-2 py-2"
-                              >Gestionar Notas</a
-                            >
-                          {% else %}
-                            <a
-                              href="#"
-                              class="btn btn-outline-secondary btn-sm w-100 rounded-2 py-2"
-                              >Ver Panel</a
-                            >
-                          {% endif %}
-                        </div>
-                      </div>
+                      </p>
                     </div>
-                  {% endfor %}
-                {% else %}
-                  <div class="text-center py-4 text-muted bg-light rounded-3 border">
-                    No registras asignaturas activas asignadas a tu perfil docente.
+                    <div
+                      class="col-6 col-md-2 text-center border-start border-end"
+                    >
+                      <span class="text-muted d-block small"
+                        >Alumnos Inscritos</span
+                      >
+                      <span class="fw-bold fs-5 text-dark">
+                        {% if curso.id_curso == 1 %} 32 {% elif curso.id_curso
+                        == 2 %} 45 {% else %} 0 {% endif %}
+                      </span>
+                    </div>
+                    <div class="col-6 col-md-2 text-center">
+                      <span class="text-muted d-block small mb-1"
+                        >Evaluaciones</span
+                      >
+                      {% if curso.estado == 'Abierta' or curso.estado ==
+                      'Activo' %}
+                      <span class="badge bg-warning text-dark">Pendientes</span>
+                      {% else %}
+                      <span class="badge bg-success">Al día</span>
+                      {% endif %}
+                    </div>
+                    <div class="col-12 col-md-3 text-md-end">
+                      {% if curso.estado == 'Abierta' or curso.estado ==
+                      'Activo' %}
+                      <a
+                        href="/asignar_notas"
+                        class="btn btn-primary btn-sm w-100 rounded-2 py-2"
+                        >Gestionar Notas</a
+                      >
+                      {% else %}
+                      <a
+                        href="#"
+                        class="btn btn-outline-secondary btn-sm w-100 rounded-2 py-2"
+                        >Ver Panel</a
+                      >
+                      {% endif %}
+                    </div>
                   </div>
+                </div>
+                {% endfor %} {% else %}
+                <div
+                  class="text-center py-4 text-muted bg-light rounded-3 border"
+                >
+                  No registras asignaturas activas asignadas a tu perfil
+                  docente.
+                </div>
                 {% endif %}
               </div>
             </div>
@@ -351,4 +354,4 @@
       crossorigin="anonymous"
     ></script>
   </body>
-</html> 
+</html>
