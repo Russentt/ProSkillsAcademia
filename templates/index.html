@@ -54,7 +54,7 @@
                 class="navbar-nav d-flex flex-column flex-lg-row gap-2 gap-lg-3 justify-content-center align-items-center me-lg-3 w-lg-auto"
               >
                 <li class="nav-item text-center">
-                  <a class="nav-link text-dark" href="#">Cursos</a>
+                  <a class="nav-link text-dark" href="/cursos">Cursos</a>
                 </li>
                 <li class="nav-item text-center">
                   <a class="nav-link text-dark" href="/skills">Programas</a>
@@ -233,7 +233,10 @@
                     </div>
 
                     <div>
-                      <a href="{{ url_for('mostrar_curso', nombre_curso='desarrollo') }}" class="btn btn-dark">
+                      <a
+                        href="{{ url_for('mostrar_curso', nombre_curso='desarrollo') }}"
+                        class="btn btn-dark"
+                      >
                         Iniciar Curso
                       </a>
                       <p class="text-center text-muted small mt-2 mb-0">
@@ -341,7 +344,10 @@
                     </div>
 
                     <div>
-                      <a href="{{ url_for('mostrar_curso', nombre_curso='marketing') }}" class="btn btn-dark">
+                      <a
+                        href="{{ url_for('mostrar_curso', nombre_curso='marketing') }}"
+                        class="btn btn-dark"
+                      >
                         Iniciar Curso
                       </a>
                       <p class="text-center text-muted small mt-2 mb-0">
@@ -451,7 +457,10 @@
                     </div>
 
                     <div>
-                      <a href="{{ url_for('mostrar_curso', nombre_curso='diseno') }}" class="btn btn-dark">
+                      <a
+                        href="{{ url_for('mostrar_curso', nombre_curso='diseno') }}"
+                        class="btn btn-dark"
+                      >
                         Iniciar Curso
                       </a>
                       <p class="text-center text-muted small mt-2 mb-0">

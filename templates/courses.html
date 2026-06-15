@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProSkills - Cursos</title>
+    <link rel="icon" type="image/x-icon" href="static/SGAP.svg" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg bg-body-tertiary py-1">
+        <div class="container-fluid d-flex flex-wrap px-3 px-lg-4">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div
+              class="d-flex flex-column flex-lg-row align-items-center justify-content-center w-100 mt-3 mt-lg-0"
+            >
+              <a
+                class="navbar-brand d-flex flex-column flex-lg-row align-items-center me-0 me-lg-auto mb-3 mb-lg-0"
+                href="#"
+              >
+                <img
+                  src="static/ProSkills.png"
+                  alt="Logo"
+                  width="60"
+                  height="48"
+                  class="img-fluid"
+                />
+                <span class="text-primary fw-bold ms-lg-2 text-center"
+                  >ProSkills Academia</span
+                >
+              </a>
+              <ul
+                class="navbar-nav d-flex flex-column flex-lg-row gap-2 gap-lg-3 justify-content-center align-items-center me-lg-3 w-lg-auto"
+              >
+                <li class="nav-item text-center">
+                  <a class="nav-link text-dark" href="/skills">Programas</a>
+                </li>
+                <li class="nav-item text-center">
+                  <a class="nav-link text-dark" href="/about#soporte"
+                    >Contacto</a
+                  >
+                </li>
+                <li class="nav-item text-center">
+                  <a class="nav-link text-dark" href="/account">Mi Cuenta</a>
+                </li>
+                <li class="nav-item d-flex justify-content-center mt-2 mt-lg-0">
+                  <button
+                    class="btn btn-outline-primary"
+                    onclick="window.location.href = '/login'"
+                    type="submit"
+                  >
+                    Iniciar Sesion
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <div class="container my-3">
+        <div class="d-flex justify-content-end">
+          <div class="input-group" style="max-width: 400px; width: 100%">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Buscar cursos"
+              aria-label="Search"
+            />
+            <button
+              class="btn btn-primary btn-sm"
+              type="submit"
+              id="button-search"
+            >
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="row my-3">
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.facialix.com%2Fwp-content%2Fuploads%2F2024%2F01%2Fpython-y-flask-cupon.jpg&f=1&nofb=1&ipt=0f0e448c8ee84ced5a7b5a26463362bf61e0c1172cf32f6b1fd4c601a2eb5fcd"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Desarrollo Web Backend con Flask y Python
+                </h5>
+                <p class="card-text">
+                  Domina la construcción de aplicaciones web escalables.
+                  Aprenderás patrones arquitectónicos, control de sesiones
+                  lógicas, enrutamiento seguro y persistencia de datos
+                  relacionales conectando tus servicios directamente con
+                  servidores PostgreSQL.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffacialix.com%2Fwp-content%2Fuploads%2F2023%2F11%2Fcurso-postgresql-gratis.jpg&f=1&nofb=1&ipt=670d0f1d7aff2cdf3025db3d9e305d669ba8a60cb3320f6d93e0e08411a68c9a"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Optimización y Modelado Avanzado en PostgreSQL
+                </h5>
+                <p class="card-text">
+                  Curso de especialización técnica enfocado en el aislamiento de
+                  transacciones lógicas, diseño de índices compuestos y
+                  mitigación de condiciones de carrera (race conditions). Ideal
+                  para desarrolladores que manejan flujos críticos y alta
+                  concurrencia de datos.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmanuelzapata.co%2Fwp-content%2Fuploads%2F2023%2F09%2FPack-de-cursos-thumbnail.png&f=1&nofb=1&ipt=71a8bb5572846813aa8a0259dab0a4aa2c31b6802f47b318d7d237d4f2d7b43c"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Arquitectura de Software y Pipelines de Integración Continua
+                  (CI/CD)
+                </h5>
+                <p class="card-text">
+                  Especialización avanzada en el diseño de vistas físicas y
+                  lógicas basadas en el DAS. Aprenderás a estructurar entornos
+                  de servidores automatizados, pruebas automatizadas de backend
+                  y control de despliegues en entornos de producción
+                  relacionales.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.dcinternet.com.mx%2Fimages%2FImgDCInternetBootstrap.png&f=1&nofb=1&ipt=8fb5683639769921f62718b22a25d680408c13557e32a1786ff66ea52ef947c1"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Diseño de Interfaces Web UI/UX con Bootstrap 5
+                </h5>
+                <p class="card-text">
+                  Aprende a maquetar sitios web modernos, responsivos y
+                  visualmente atractivos. Domina el uso del sistema de rejillas
+                  fluidas (grids), componentes nativos, tipografías
+                  institucionales y utilidades CSS avanzadas para garantizar una
+                  adaptabilidad perfecta en pantallas móviles.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.simbolointeractivo.com%2Fwp-content%2Fuploads%2F2024%2F08%2Fdiseno-de-marca-caracteristicas-scaled.jpg&f=1&nofb=1&ipt=0d4252d21f904d05e4aef0d35d7e21154c2e8d881d10619e22c13065400264c7"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Identidad Corporativa y Diseño de Assets de Marca
+                </h5>
+                <p class="card-text">
+                  Especialízate en la creación de manuales de marca, paletas
+                  cromáticas institucionales y composición vectorial. Este curso
+                  te enseñará a diseñar logotipos y elementos gráficos
+                  optimizados con canal alfa para su correcta implementación en
+                  plataformas digitales.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Faulacm.com%2Fwp-content%2Fuploads%2F2025%2F03%2FDiseno-web-y-prototipado-Figma.jpg&f=1&nofb=1&ipt=c756b6ad29f82245be9cb6173534e6198e2006f00774327f37010a194128dd27"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Prototipado Avanzado y Diseño de Flujos de Navegación
+                </h5>
+                <p class="card-text">
+                  Curso centrado en la creación y validación de mockups
+                  funcionales interactivos antes de la fase de codificación. Los
+                  estudiantes aprenderán a diseñar mapas de interacción según
+                  las características de los usuarios descritas en la ERS.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.licdn.com%2Fdms%2Fimage%2Fv2%2FD4D12AQE4F8fjhDxUSw%2Farticle-cover_image-shrink_720_1280%2Farticle-cover_image-shrink_720_1280%2F0%2F1674484772342%3Fe%3D2147483647%26v%3Dbeta%26t%3DwletdQYQEkqxuzxmKJFNXPdY7-o4yk57jFp246xxm2s&f=1&nofb=1&ipt=53777a841d26241107f432463e5e9a20106d33402975774ec425a7b158485501"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Estrategias de Growth Marketing y Analítica Web
+                </h5>
+                <p class="card-text">
+                  Comprende el ciclo de adquisición de usuarios mediante embudos
+                  de conversión digitales. Aprenderás a configurar tableros
+                  analíticos, interpretar métricas financieras, gestionar
+                  campañas automatizadas y optimizar la retención de clientes en
+                  entornos comerciales masivos.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpinguinodigital.com%2Fwp-content%2Fuploads%2F2022%2F09%2FComo-Se-Puede-Hacer-Un-Buen-SEO-optimizacion-Para-Motores-De-Busqueda-Para-Mi-Sitio-Web.png&f=1&nofb=1&ipt=0c309a43f111c860f3d13fa4d7329b63a4ed3516bc6593807fe5c77c505cbf30"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  SEO Técnico y Optimización de Motores de Búsqueda
+                </h5>
+                <p class="card-text">
+                  Enfoque avanzado centrado en la arquitectura interna de la
+                  información, indexación semántica, optimización de velocidad
+                  de carga (Core Web Vitals) y estructuración de metadatos
+                  lógicos para escalar el posicionamiento orgánico de
+                  plataformas web de e-learning.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="width: 18rem">
+              <img
+                src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffunnel.mx%2Fwp-content%2Fuploads%2F2023%2F07%2FFunnel_Campanas.png&f=1&nofb=1&ipt=0f3fbdd53353fe9fda2c7d1877f6aeb6b4dc0056f50f77a83e0f22b9c50a437a"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">
+                  Marketing de Conversión Avanzado y Gestión de Campañas
+                  Académicas
+                </h5>
+                <p class="card-text">
+                  Especialización orientada al incremento eficiente de
+                  matrículas mediante automatización de flujos y análisis de
+                  embudos de postulación. Aprenderás a interpretar métricas
+                  operativas y no financieras para potenciar la captación
+                  institucional en plataformas digitales de capacitación.
+                </p>
+                <a href="#" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row"></div>
+      </div>
+    </main>
+  </body>
+</html>
