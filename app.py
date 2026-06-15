@@ -9,8 +9,11 @@ from flask_jwt_extended import create_access_token
 from datetime import timedelta, datetime
 import smtplib
 from email.mime.text import MIMEText
-from flask import request, redirect, url_for, flash, render_template
-from flask_jwt_extended import create_access_token, decode_token
+from flask import request, redirect, url_for, flash, render_template, send_file
+from flask_jwt_extended import create_access_token, decode_token, verify_jwt_in_request
+from fpdf import FPDF
+import io
+
 
 load_dotenv()
 
@@ -377,12 +380,12 @@ def cuenta():
         
         if rol_usuario == 'instructor':
             return redirect(url_for('instructor'))
-
         
         cursor = conexion_db.cursor()
         sql = """SELECT nombre, apellido, correo, estado, fecha_registro FROM usuarios WHERE id = %s::int;"""
         cursor.execute(sql, (usuario,))
         datos = cursor.fetchone()
+        cursor.close()
         
         if not datos:
             flash("usuario no encontrado")
@@ -393,7 +396,7 @@ def cuenta():
             "apellido": datos[1],
             "correo": datos[2],
             "estado": datos[3],
-            "fecha_registro": datos[4].strftime('%d/%m/%Y')
+            "fecha_registro": datos[4].strftime('%d/%m/%Y') if datos[4] else 'Sin fecha'
         } 
         
         return render_template('account.html', usuario=encontrado)
@@ -466,6 +469,78 @@ def aula_virtual(nombre_curso):
         print(f"--- ERROR : {ex} ---")
         flash("Ocurrió un error al conectar con el aula virtual.")
         return redirect(url_for('home'))
+
+@app.route("/download-diploma/<int:curso_id>", methods=['GET'])
+def descargar_diploma(curso_id):
+    try:
+        verify_jwt_in_request()
+        usuario_id = get_jwt_identity()
+        cursor = conexion_db.cursor()
+        
+        sql = """ 
+            SELECT u.nombre, u.apellido, 
+                   (SELECT titulo FROM curso LIMIT 1) as titulo_curso
+            FROM usuarios u
+            WHERE u.id = %s::int;
+        """
+        cursor.execute(sql, (usuario_id,)) 
+        datos = cursor.fetchone()
+        cursor.close()
+        
+        if not datos:
+            flash("No se encontraron registros para generar el diploma")
+            return redirect(url_for('cuenta'))
+        
+        nombre_completo = f"{datos[0]} {datos[1]}"
+        nombre_curso = datos[2]
+        fecha = datetime.now().strftime('%d/%m/%Y')
+        
+        pdf = FPDF(orientation='L', unit='mm', format='A4')
+        pdf.add_page()
+        
+        pdf.set_line_width(1)
+        pdf.rect(10, 10, 277, 190) 
+        pdf.set_line_width(2)
+        pdf.rect(14, 14, 269, 182)
+
+        
+        pdf.set_font("Helvetica", "B", 32)
+        pdf.cell(0, 40, "PROSKILLS ACADEMIA", ln=True, align="C")
+        
+        pdf.set_font("Helvetica", "I", 18)
+        pdf.cell(0, 20, "Otorga el presente Diploma de Honor a:", ln=True, align="C")
+        
+        
+        pdf.set_font("Helvetica", "B", 26)
+        pdf.cell(0, 25, nombre_completo.upper(), ln=True, align="C")
+        
+        pdf.set_font("Helvetica", "", 16)
+        pdf.cell(0, 15, "Por haber aprobado exitosamente el plan de estudios del curso:", ln=True, align="C")
+        
+        
+        pdf.set_font("Helvetica", "B", 22)
+        pdf.cell(0, 20, f"'{nombre_curso}'", ln=True, align="C")
+        
+        
+        pdf.set_font("Helvetica", "I", 12)
+        pdf.cell(0, 35, f"Santiago de Chile, {fecha} -- Certificación de Competencias ProSkills", ln=True, align="C")
+
+        pdf_output = io.BytesIO()
+        pdf.output(pdf_output)
+        pdf_output.seek(0)
+        
+        nombre_archivo = f"Diploma_{nombre_curso.replace(' ', '_')}.pdf"
+        return send_file(
+            pdf_output, 
+            mimetype='application/pdf', 
+            as_attachment=True, 
+            download_name=nombre_archivo
+        )
+
+    except Exception as e:
+        print(f" Error al generar diploma: {e}")
+        flash("No se pudo procesar la descarga de tu documento.")
+        return redirect(url_for('cuenta'))
 
 
 @app.errorhandler(404)

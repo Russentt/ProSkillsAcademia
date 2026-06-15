@@ -113,17 +113,16 @@
             >
               Estadisticas
             </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              id="tab-configuracion"
-              data-bs-toggle="list"
-              data-bs-target="#content-configuracion"
-              role="tab"
-              aria-controls="content-configuracion"
+            
+            <a
+              href="{{ url_for('descargar_diploma', curso_id=1) }}"
+              class="btn btn-primary btn-sm px-3 py-2 rounded-2 d-inline-flex align-items-center gap-2"
+              id="btn-diploma"
             >
-              Configuracion
-            </button>
+              Descargar Diploma PDF
+            </a>
+
+
             <button
               type="button"
               class="list-group-item list-group-item-action"
