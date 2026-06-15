@@ -413,6 +413,10 @@ def logout():
     flash("Sesión cerrada correctamente.")
     return respuesta
 
+@app.route('/cursos')
+def courses():
+    return render_template('courses.html')
+
 @app.route('/asignar_notas', methods=['GET', 'POST'])
 def asignar_notas():
     if request.method == 'GET':
