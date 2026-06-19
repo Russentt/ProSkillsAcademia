@@ -45,6 +45,19 @@
                 <span class="text-primary fw-bold ms-lg-2 text-center"
                   >ProSkills Academia</span
                 >
+
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class="container mt-2 px-3">
+                      {% for message in messages %}
+                        <p class="text-danger small fw-medium mb-2">
+                          * {{ message }}
+                        </p>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                {% endwith %}
+
               </a>
               <ul
                 class="navbar-nav d-flex flex-column flex-lg-row gap-2 gap-lg-3 justify-content-center align-items-center me-lg-3 w-lg-auto"
@@ -114,14 +127,19 @@
               Estadisticas
             </button>
             
+            {% if cursos_inscritos and cursos_inscritos|length > 0 %}
             <a
-              href="{{ url_for('descargar_diploma', curso_id=1) }}"
+              href="{{ url_for('descargar_diploma', curso_id=cursos_inscritos[0].id_curso) }}"
               class="btn btn-primary btn-sm px-3 py-2 rounded-2 d-inline-flex align-items-center gap-2"
               id="btn-diploma"
             >
               Descargar Diploma PDF
             </a>
-
+            {% else %}
+            <button class="btn btn-secondary btn-sm px-3 py-2 rounded-2 d-inline-flex align-items-center gap-2" disabled>
+              Descargar Diploma PDF
+            </button>
+            {% endif %}
 
             <button
               type="button"
@@ -223,6 +241,7 @@
               {% endif %}
             </div>
           </div>
+          
           <div
             class="tab-pane fade"
             id="content-cursos"
@@ -231,145 +250,73 @@
           >
             <div class="d-flex justify-content-between align-items-center mb-4">
               <h2 class="fw-semibold mb-0">Mis Cursos Inscritos</h2>
-
-              <span
-                class="badge bg-primary rounded-pill px-3 py-2"
-                id="totalCursosBadge"
-                >2 Cursos Activos</span
-              >
+              <span class="badge bg-primary rounded-pill px-3 py-2" id="totalCursosBadge">
+                {% if cursos_inscritos %}{{ cursos_inscritos|length }}{% else %}0{% endif %} Cursos Activos
+              </span>
             </div>
 
             <div class="d-flex flex-column gap-3" id="cursosInscritosContainer">
-              <div
-                class="card border border-light-subtle rounded-3 shadow-sm bg-white p-3"
-              >
-                <div class="row align-items-center g-3">
-                  <div class="col-12 col-md-5 col-lg-6">
-                    <div class="d-flex align-items-start align-items-sm-center">
-                      <span
-                        class="badge bg-success-subtle text-success border border-success-subtle rounded-2 me-3 px-2 py-1 small mt-1 mt-sm-0"
-                        >En Curso</span
-                      >
-                      <div>
-                        <h5
-                          class="fw-bold mb-1 text-dark text-wrap"
-                          id="curso1-titulo"
-                        >
-                          Desarrollo Web Full Stack con Bootstrap 5
-                        </h5>
-                        <p class="text-muted small mb-0">
-                          Prof.
-                          <span id="curso1-instructor">Carlos Mendoza</span>
-                        </p>
+              {% if cursos_inscritos %}
+                {% for curso in cursos_inscritos %}
+                <div class="card border border-light-subtle rounded-3 shadow-sm bg-white p-3">
+                  <div class="row align-items-center g-3">
+                    <div class="col-12 col-md-5 col-lg-6">
+                      <div class="d-flex align-items-start align-items-sm-center">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-2 me-3 px-2 py-1 small mt-1 mt-sm-0">
+                          Matriculado
+                        </span>
+                        <div>
+                          <h5 class="fw-bold mb-1 text-dark text-wrap">
+                            {{ curso.titulo }}
+                          </h5>
+                          <p class="text-muted small mb-0">
+                            {{ curso.instructor }}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="col-6 col-md-2 col-lg-2">
-                    <span class="text-muted d-block small"
-                      >Fecha de inicio</span
-                    >
-                    <span class="fw-medium text-secondary" id="curso1-fecha"
-                      >15/01/2026</span
-                    >
-                  </div>
-
-                  <div class="col-6 col-md-3 col-lg-2">
-                    <span class="text-muted d-block small mb-1"
-                      >Tu progreso</span
-                    >
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="progress flex-grow-1" style="height: 6px">
-                        <div
-                          class="progress-bar bg-primary"
-                          role="progressbar"
-                          style="width: 60%"
-                          aria-valuenow="60"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
-                      </div>
-                      <span
-                        class="small fw-semibold text-dark"
-                        id="curso1-progreso"
-                        >60%</span
-                      >
+                    <div class="col-6 col-md-2 col-lg-2">
+                      <span class="text-muted d-block small">Fecha de inicio</span>
+                      <span class="fw-medium text-secondary">
+                        {{ curso.fecha_inicio }}
+                      </span>
                     </div>
-                  </div>
-                  <div class="col-12 col-md-2 col-lg-2 text-md-end">
-                    <a
-                      href="#"
-                      class="btn btn-primary btn-sm w-100 rounded-2 py-2 py-md-1"
-                      >Ingresar</a
-                    >
+
+                    <div class="col-6 col-md-3 col-lg-2">
+                      <span class="text-muted d-block small mb-1">Tu progreso</span>
+                      <div class="d-flex align-items-center gap-2">
+                        <div class="progress flex-grow-1" style="height: 6px">
+                          <div
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            style="width: 0%"
+                            aria-valuenow="0"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          ></div>
+                        </div>
+                        <span class="small fw-semibold text-dark">0%</span>
+                      </div>
+                    </div>
+                    
+                    <div class="col-12 col-md-2 col-lg-2 text-md-end">
+                      <a href="{{ url_for('aula_virtual', nombre_curso='java') }}" class="btn btn-primary btn-sm w-100 rounded-2 py-2 py-md-1">
+                        Ingresar
+                      </a>
+                    </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="card border border-light-subtle rounded-3 shadow-sm bg-white p-3"
-              >
-                <div class="row align-items-center g-3">
-                  <div class="col-12 col-md-5 col-lg-6">
-                    <div class="d-flex align-items-start align-items-sm-center">
-                      <span
-                        class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-2 me-3 px-2 py-1 small mt-1 mt-sm-0"
-                        >Sin Iniciar</span
-                      >
-                      <div>
-                        <h5
-                          class="fw-bold mb-1 text-dark text-wrap"
-                          id="curso2-titulo"
-                        >
-                          Introducción a Bases de Datos Relacionales
-                        </h5>
-                        <p class="text-muted small mb-0">
-                          Prof.
-                          <span id="curso2-instructor">Ana María Silva</span>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-6 col-md-2 col-lg-2">
-                    <span class="text-muted d-block small"
-                      >Fecha de inicio</span
-                    >
-                    <span class="fw-medium text-secondary" id="curso2-fecha"
-                      >02/02/2026</span
-                    >
-                  </div>
-                  <div class="col-6 col-md-3 col-lg-2">
-                    <span class="text-muted d-block small mb-1"
-                      >Tu progreso</span
-                    >
-                    <div class="d-flex align-items-center gap-2">
-                      <div class="progress flex-grow-1" style="height: 6px">
-                        <div
-                          class="progress-bar bg-secondary-subtle"
-                          role="progressbar"
-                          style="width: 0%"
-                          aria-valuenow="0"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
-                      </div>
-                      <span
-                        class="small fw-semibold text-muted"
-                        id="curso2-progreso"
-                        >0%</span
-                      >
-                    </div>
-                  </div>
-                  <div class="col-12 col-md-2 col-lg-2 text-md-end">
-                    <a
-                      href="#"
-                      class="btn btn-outline-secondary btn-sm w-100 rounded-2 py-2 py-md-1"
-                      >Iniciar</a
-                    >
-                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="alert alert-light border text-center text-muted p-4 rounded-3 shadow-sm" role="alert">
+                  No te encuentras registrado en ningún curso en este periodo.
                 </div>
-              </div>
+              {% endif %}
             </div>
           </div>
+          
           <div
             class="tab-pane fade"
             id="content-estadisticas"
@@ -535,7 +482,7 @@
           >
             <h2 class="fw-semibold">Configuración</h2>
             <p class="text-muted">
-              Opciones para cambiar tu contraseña y preferencias de cuenta.
+              Opciones para cambiar tu contraseña y preferences de cuenta.
             </p>
           </div>
           <div
