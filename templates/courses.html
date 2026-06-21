@@ -388,6 +388,15 @@
         >
           No se encontraron cursos para tu búsqueda.
         </div>
+        <div id="loadMoreWrap" class="text-center mb-4">
+          <button
+            id="loadMoreBtn"
+            type="button"
+            class="btn btn-outline-primary"
+          >
+            Mostrar más cursos
+          </button>
+        </div>
       </div>
     </main>
     <script>
@@ -396,11 +405,321 @@
       const searchMeta = document.getElementById("searchMeta");
       const suggestions = document.getElementById("searchSuggestions");
       const emptyState = document.getElementById("emptySearchState");
+      const placeholderImage =
+        "{{ url_for('static', filename='course-placeholder.svg') }}";
+      const loadMoreBtn = document.getElementById("loadMoreBtn");
+      const loadMoreWrap = document.getElementById("loadMoreWrap");
+      const courseGrid = document.querySelector(
+        ".row.row-cols-1.row-cols-md-2.row-cols-lg-3.g-4.my-3",
+      );
       const courseItems = Array.from(document.querySelectorAll(".course-item"));
       let visibleSuggestions = [];
       let activeSuggestionIndex = -1;
+      const INITIAL_VISIBLE = 9;
+      const LOAD_BATCH = 9;
+      let visibleLimit = INITIAL_VISIBLE;
 
-      const courseIndex = courseItems.map((item) => {
+      const extraCourses = [
+        {
+          title: "JavaScript Moderno para Aplicaciones Web",
+          summary:
+            "Profundiza en ES6+, asincronía y arquitectura modular para proyectos frontend.",
+          image: "https://picsum.photos/id/180/800/450",
+          href: "/skills",
+        },
+        {
+          title: "TypeScript desde Cero a Producción",
+          summary:
+            "Tipado estricto, interfaces y patrones escalables para equipos de desarrollo.",
+          image: "https://picsum.photos/id/20/800/450",
+          href: "/skills",
+        },
+        {
+          title: "React Avanzado con Hooks y Context",
+          summary:
+            "Construye interfaces mantenibles con estado global y optimización de rendimiento.",
+          image: "https://picsum.photos/id/48/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Node.js y APIs REST Profesionales",
+          summary:
+            "Diseña servicios backend robustos con validación, autenticación y logging.",
+          image: "https://picsum.photos/id/96/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Docker y Contenedores para Developers",
+          summary:
+            "Empaqueta, versiona y despliega aplicaciones en contenedores reproducibles.",
+          image: "https://picsum.photos/id/160/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Kubernetes Fundamentos Operativos",
+          summary:
+            "Orquesta microservicios con despliegues, escalado y recuperación automática.",
+          image: "https://picsum.photos/id/201/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Git y GitHub para Trabajo en Equipo",
+          summary:
+            "Control de versiones, ramas de feature y flujos colaborativos de alto nivel.",
+          image: "https://picsum.photos/id/225/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Testing Automatizado en Python",
+          summary:
+            "Implementa pruebas unitarias, integración y cobertura para código confiable.",
+          image: "https://picsum.photos/id/239/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Data Analytics con Python y Pandas",
+          summary:
+            "Transforma datos en decisiones con limpieza, análisis y visualización efectiva.",
+          image: "https://picsum.photos/id/250/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Power BI para Inteligencia de Negocio",
+          summary:
+            "Crea dashboards ejecutivos y reportes interactivos orientados a KPIs.",
+          image: "https://picsum.photos/id/292/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Machine Learning Aplicado",
+          summary:
+            "Modelos supervisados y métricas para resolver casos reales de negocio.",
+          image: "https://picsum.photos/id/319/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Fundamentos de Ciberseguridad",
+          summary:
+            "Buenas prácticas de seguridad, gestión de riesgos y protección de activos.",
+          image: "https://picsum.photos/id/335/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Seguridad Web OWASP Top 10",
+          summary:
+            "Previene vulnerabilidades críticas en aplicaciones web modernas.",
+          image: "https://picsum.photos/id/365/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Cloud Computing con AWS",
+          summary:
+            "Arquitecturas cloud, servicios base y despliegues escalables.",
+          image: "https://picsum.photos/id/375/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Azure para Soluciones Empresariales",
+          summary:
+            "Implementa recursos cloud con enfoque corporativo y gobierno de costos.",
+          image: "https://picsum.photos/id/401/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Google Cloud Essentials",
+          summary:
+            "Servicios clave de GCP para proyectos de datos y aplicaciones distribuidas.",
+          image: "https://picsum.photos/id/433/800/450",
+          href: "/skills",
+        },
+        {
+          title: "DevOps y Entrega Continua",
+          summary:
+            "Integra cultura, automatización y monitoreo para ciclos de entrega rápidos.",
+          image: "https://picsum.photos/id/445/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Linux para Administradores y Developers",
+          summary:
+            "Comandos, permisos y automatización para entornos de producción.",
+          image: "https://picsum.photos/id/455/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Arquitectura de Microservicios",
+          summary:
+            "Diseña sistemas desacoplados con resiliencia y comunicación eficiente.",
+          image: "https://picsum.photos/id/490/800/450",
+          href: "/skills",
+        },
+        {
+          title: "NoSQL con MongoDB",
+          summary:
+            "Modelado documental y consultas eficientes para aplicaciones de alto tráfico.",
+          image: "https://picsum.photos/id/500/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Redis y Sistemas de Cache",
+          summary:
+            "Mejora tiempos de respuesta y escalabilidad con estrategias de cache.",
+          image: "https://picsum.photos/id/530/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Scrum Master y Gestión Ágil",
+          summary:
+            "Lidera equipos con marcos ágiles, métricas y mejora continua.",
+          image: "https://picsum.photos/id/550/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Product Management Digital",
+          summary:
+            "Define roadmap de producto con validación y enfoque en impacto.",
+          image: "https://picsum.photos/id/566/800/450",
+          href: "/skills",
+        },
+        {
+          title: "UX Research para Productos Digitales",
+          summary:
+            "Métodos de investigación para detectar necesidades y oportunidades.",
+          image: "https://picsum.photos/id/579/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Figma Avanzado para Equipos",
+          summary:
+            "Diseña sistemas UI colaborativos con componentes y librerías escalables.",
+          image: "https://picsum.photos/id/602/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Diseño de Sistemas de Diseño",
+          summary: "Estandariza patrones visuales y reduce deuda de interfaz.",
+          image: "https://picsum.photos/id/618/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Video Marketing para Marcas",
+          summary:
+            "Producción y optimización de contenido audiovisual para conversión.",
+          image: "https://picsum.photos/id/634/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Email Marketing y Automatización",
+          summary:
+            "Crea secuencias automatizadas para nutrición y retención de clientes.",
+          image: "https://picsum.photos/id/651/800/450",
+          href: "/skills",
+        },
+        {
+          title: "Analítica de Producto",
+          summary:
+            "Mide comportamiento de usuarios para optimizar embudos y activación.",
+          image: "https://picsum.photos/id/669/800/450",
+          href: "/skills",
+        },
+        {
+          title: "E-commerce y Optimización de Conversión",
+          summary:
+            "Mejora ventas online con pruebas y diseño orientado a resultados.",
+          image: "https://picsum.photos/id/680/800/450",
+          href: "/skills",
+        },
+        {
+          title: "SQL para Análisis de Datos",
+          summary:
+            "Consultas, joins y agregaciones para extraer valor desde bases relacionales.",
+          image: "https://picsum.photos/id/701/800/450",
+          href: "/skills",
+        },
+      ];
+
+      const extraCourseSlugs = [
+        "javascript-moderno-aplicaciones-web",
+        "typescript-cero-produccion",
+        "react-avanzado-hooks-context",
+        "nodejs-apis-rest-profesionales",
+        "docker-contenedores-developers",
+        "kubernetes-fundamentos-operativos",
+        "git-github-trabajo-equipo",
+        "testing-automatizado-python",
+        "data-analytics-python-pandas",
+        "power-bi-inteligencia-negocio",
+        "machine-learning-aplicado",
+        "fundamentos-ciberseguridad",
+        "seguridad-web-owasp-top-10",
+        "cloud-computing-aws",
+        "azure-soluciones-empresariales",
+        "google-cloud-essentials",
+        "devops-entrega-continua",
+        "linux-administradores-developers",
+        "arquitectura-microservicios",
+        "nosql-mongodb",
+        "redis-sistemas-cache",
+        "scrum-master-gestion-agil",
+        "product-management-digital",
+        "ux-research-productos-digitales",
+        "figma-avanzado-equipos",
+        "diseno-sistemas-diseno",
+        "video-marketing-marcas",
+        "email-marketing-automatizacion",
+        "analitica-producto",
+        "ecommerce-optimizacion-conversion",
+        "sql-analisis-datos",
+      ];
+
+      function applyImageFallback(img) {
+        img.addEventListener("error", () => {
+          if (!img.src.includes("course-placeholder.svg")) {
+            img.src = placeholderImage;
+          }
+        });
+      }
+
+      document.querySelectorAll(".course-card .card-img-top").forEach((img) => {
+        applyImageFallback(img);
+      });
+
+      extraCourses.forEach((course, idx) => {
+        const href = `/curso/${extraCourseSlugs[idx] || "skills"}`;
+        const col = document.createElement("div");
+        col.className = "col d-flex course-item";
+        col.innerHTML = `
+          <div class="card course-card w-100">
+            <img src="${course.image}" class="card-img-top" alt="${course.title}" />
+            <div class="card-body">
+              <h5 class="card-title">${course.title}</h5>
+              <p class="card-text">${course.summary}</p>
+              <a href="${href}" class="btn btn-primary">Ver más</a>
+            </div>
+          </div>
+        `;
+        courseGrid.appendChild(col);
+        const addedImage = col.querySelector(".card-img-top");
+        if (addedImage) {
+          applyImageFallback(addedImage);
+        }
+      });
+
+      setTimeout(() => {
+        document
+          .querySelectorAll(".course-card .card-img-top")
+          .forEach((img) => {
+            if (!img.complete || img.naturalWidth === 0) {
+              img.src = placeholderImage;
+            }
+          });
+      }, 1800);
+
+      const allCourseItems = Array.from(
+        document.querySelectorAll(".course-item"),
+      );
+
+      const courseIndex = allCourseItems.map((item) => {
         const titleEl = item.querySelector(".card-title");
         const textEl = item.querySelector(".card-text");
         const linkEl = item.querySelector("a.btn");
@@ -481,20 +800,31 @@
       function applySearch(rawQuery) {
         const query = rawQuery.trim();
         const results = getResults(query);
+        const usingSearch = query.length > 0;
 
-        courseIndex.forEach((course) => {
-          const isMatch = results.includes(course);
-          course.item.classList.toggle("hidden-by-search", !isMatch);
-        });
+        if (usingSearch) {
+          courseIndex.forEach((course) => {
+            const isMatch = results.includes(course);
+            course.item.classList.toggle("hidden-by-search", !isMatch);
+          });
+        } else {
+          courseIndex.forEach((course, idx) => {
+            const isVisibleByLimit = idx < visibleLimit;
+            course.item.classList.toggle("hidden-by-search", !isVisibleByLimit);
+          });
+        }
 
         const total = courseIndex.length;
         const found = results.length;
-        emptyState.classList.toggle("d-none", found !== 0);
+        emptyState.classList.toggle("d-none", !(usingSearch && found === 0));
 
-        if (!query) {
-          searchMeta.textContent = `Mostrando ${total} cursos disponibles.`;
+        if (!usingSearch) {
+          const visible = Math.min(visibleLimit, total);
+          searchMeta.textContent = `Mostrando ${visible} de ${total} cursos disponibles.`;
+          loadMoreWrap.classList.toggle("d-none", visible >= total);
         } else {
           searchMeta.textContent = `Resultados para "${query}": ${found} de ${total} cursos.`;
+          loadMoreWrap.classList.add("d-none");
         }
 
         renderSuggestions(results, query);
@@ -560,6 +890,11 @@
         applySearch(searchInput.value);
         suggestions.classList.add("d-none");
         activeSuggestionIndex = -1;
+      });
+
+      loadMoreBtn.addEventListener("click", () => {
+        visibleLimit += LOAD_BATCH;
+        applySearch("");
       });
 
       document.addEventListener("click", (event) => {
