@@ -557,8 +557,11 @@ def descargar_diploma(curso_id):
         pdf.set_font("Helvetica", "I", 12)
         pdf.cell(0, 35, f"Santiago de Chile, {fecha} -- Certificación de Competencias ProSkills", ln=True, align="C")
 
-        pdf_output = io.BytesIO()
-        pdf.output(pdf_output)
+        pdf_data = pdf.output(dest='S')
+        if isinstance(pdf_data, str):
+            pdf_data = pdf_data.encode('latin-1')
+
+        pdf_output = io.BytesIO(pdf_data)
         pdf_output.seek(0)
         
         nombre_archivo = f"Diploma_{nombre_curso.replace(' ', '_')}.pdf"
