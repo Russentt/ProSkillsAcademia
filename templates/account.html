@@ -14,7 +14,7 @@
   </head>
   <body>
     <header>
-      <nav class="navbar navbar-expand-lg bg-body-primary py-1">
+      <nav class="navbar navbar-expand-lg bg-body-primary py-1 border-bottom">
         <div class="container-fluid d-flex flex-wrap px-3 px-lg-4">
           <button
             class="navbar-toggler"
@@ -45,20 +45,8 @@
                 <span class="text-primary fw-bold ms-lg-2 text-center"
                   >ProSkills Academia</span
                 >
-
-                {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                    <div class="container mt-2 px-3">
-                      {% for message in messages %}
-                        <p class="text-danger small fw-medium mb-2">
-                          * {{ message }}
-                        </p>
-                      {% endfor %}
-                    </div>
-                  {% endif %}
-                {% endwith %}
-
               </a>
+
               <ul
                 class="navbar-nav d-flex flex-column flex-lg-row gap-2 gap-lg-3 justify-content-center align-items-center me-lg-3 w-lg-auto"
               >
@@ -79,433 +67,588 @@
         </div>
       </nav>
     </header>
-    <main class="bg-body-tertiary mt-3 min-vh-100 py-1">
-      <div class="container row align-items-start mx-auto px-0">
-        <div
-          class="col-12 col-md-3 col-lg-2 mt-3 me-lg-4 ms-md-4 p-0 px-3 px-md-0"
-        >
-          <div class="row mb-3">
-            <h1 class="fw-semibold">Mi Cuenta</h1>
-          </div>
-          <div
-            class="list-group p-2 rounded-2 text-center"
-            id="btnGroup"
-            role="tablist"
-          >
-            <button
-              type="button"
-              class="list-group-item list-group-item-action active"
-              id="tab-informacion"
-              data-bs-toggle="list"
-              data-bs-target="#content-informacion"
-              role="tab"
-              aria-controls="content-informacion"
-              aria-current="true"
-            >
-              Información
-            </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              id="tab-cursos"
-              data-bs-toggle="list"
-              data-bs-target="#content-cursos"
-              role="tab"
-              aria-controls="content-cursos"
-            >
-              Cursos Inscritos
-            </button>
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              id="tab-estadisticas"
-              data-bs-toggle="list"
-              data-bs-target="#content-estadisticas"
-              role="tab"
-              aria-controls="content-estadisticas"
-            >
-              Estadisticas
-            </button>
-<<<<<<< HEAD
 
-=======
-            
-            {% if cursos_inscritos and cursos_inscritos|length > 0 %}
->>>>>>> ab85289830850558bd7506380a7d6d8cee0ec04a
-            <a
-              href="{{ url_for('descargar_diploma', curso_id=cursos_inscritos[0].id_curso) }}"
-              class="btn btn-primary btn-sm px-3 py-2 rounded-2 d-inline-flex align-items-center gap-2"
-              id="btn-diploma"
+    <main class="bg-body-tertiary py-4 min-vh-100">
+      <div class="container">
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="row mb-3">
+          <div class="col-12">
+            <div
+              class="alert alert-warning border-0 shadow-sm mb-0"
+              role="alert"
             >
-              Descargar Diploma PDF
-            </a>
-<<<<<<< HEAD
-=======
-            {% else %}
-            <button class="btn btn-secondary btn-sm px-3 py-2 rounded-2 d-inline-flex align-items-center gap-2" disabled>
-              Descargar Diploma PDF
-            </button>
-            {% endif %}
->>>>>>> ab85289830850558bd7506380a7d6d8cee0ec04a
-
-            <button
-              type="button"
-              class="list-group-item list-group-item-action"
-              id="tab-transacciones"
-              data-bs-toggle="list"
-              data-bs-target="#content-transacciones"
-              role="tab"
-              aria-controls="content-transacciones"
-            >
-              Transacciones
-            </button>
-            <div id="btnGroup" class="list-group">
-              <a
-                href="{{ url_for('logout') }}"
-                class="list-group-item list-group-item-action text-danger fw-semibold"
-              >
-                Cerrar Sesión
-              </a>
+              {% for message in messages %}
+              <div class="small">{{ message }}</div>
+              {% endfor %}
             </div>
           </div>
         </div>
-        <div
-          class="col-12 col-md flex-grow-1 rounded-4 bg-white p-4 pt-4 mt-5 tab-content"
-          id="nav-tabContent"
-        >
-          <div
-            class="tab-pane fade show active"
-            id="content-informacion"
-            role="tabpanel"
-            aria-labelledby="tab-informacion"
-          >
-            <h2 class="fw-semibold">Información</h2>
-            <div class="mb-2">
-              {% if usuario %}
-              <label for="formControlNombre" class="form-label fw-semibold"
-                >Nombre</label
-              >
-              <input
-                type="text"
-                class="text-dark form-control-plaintext"
-                id="formControlNombre"
-                value="{{ usuario.nombre }}"
-                readonly
-              />
-            </div>
-            <div class="mb-3">
-              <label for="formControlApellido" class="form-label fw-semibold"
-                >Apellido</label
-              >
-              <input
-                type="text"
-                class="text-dark form-control-plaintext"
-                id="formControlApellido"
-                value="{{ usuario.apellido }}"
-                readonly
-              />
-            </div>
-            <div class="mb-3">
-              <label for="FormControlEmail" class="form-label fw-semibold"
-                >Correo electrónico</label
-              >
-              <input
-                type="email"
-                class="text-dark form-control-plaintext"
-                id="formControlEmail"
-                value="{{ usuario.correo }}"
-                readonly
-              />
-            </div>
-            <div class="mb-3">
-              <label for="FormControlEstado" class="form-label fw-semibold"
-                >Estado</label
-              >
-              <input
-                type="text"
-                class="text-dark form-control-plaintext"
-                id="formControlEstado"
-                value="{{ usuario.estado }}"
-                readonly
-              />
-            </div>
-            <div class="mb-3">
-              <label for="FormControlRegistro" class="form-label fw-semibold"
-                >Fecha de registro</label
-              >
-              <input
-                type="text"
-                class="text-dark form-control-plaintext fst-italic"
-                id="formControlRegistro"
-                value="{{ usuario.fecha_registro }}"
-                readonly
-              />
-              {% else %}
-              <div class="alert alert-danger my-3" role="alert">
-                No se pudo cargar la información del perfil. Por favor, inicia
-                sesión nuevamente.
-              </div>
-              {% endif %}
-            </div>
-          </div>
-          
-          <div
-            class="tab-pane fade"
-            id="content-cursos"
-            role="tabpanel"
-            aria-labelledby="tab-cursos"
-          >
-            <div class="d-flex justify-content-between align-items-center mb-4">
-              <h2 class="fw-semibold mb-0">Mis Cursos Inscritos</h2>
-              <span class="badge bg-primary rounded-pill px-3 py-2" id="totalCursosBadge">
-                {% if cursos_inscritos %}{{ cursos_inscritos|length }}{% else %}0{% endif %} Cursos Activos
-              </span>
-            </div>
+        {% endif %} {% endwith %}
 
-            <div class="d-flex flex-column gap-3" id="cursosInscritosContainer">
-              {% if cursos_inscritos %}
-                {% for curso in cursos_inscritos %}
-                <div class="card border border-light-subtle rounded-3 shadow-sm bg-white p-3">
-                  <div class="row align-items-center g-3">
-                    <div class="col-12 col-md-5 col-lg-6">
-                      <div class="d-flex align-items-start align-items-sm-center">
-                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-2 me-3 px-2 py-1 small mt-1 mt-sm-0">
-                          Matriculado
-                        </span>
-                        <div>
-                          <h5 class="fw-bold mb-1 text-dark text-wrap">
-                            {{ curso.titulo }}
-                          </h5>
-                          <p class="text-muted small mb-0">
-                            {{ curso.instructor }}
-                          </p>
+        <div class="row g-4 align-items-start">
+          <aside class="col-12 col-lg-3">
+            <div
+              class="bg-white rounded-4 shadow-sm border p-3 p-md-4 sticky-lg-top"
+              style="top: 1.25rem"
+            >
+              <h1 class="h4 fw-bold mb-3">Mi Cuenta</h1>
+
+              <div class="list-group" id="btnGroup" role="tablist">
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action active"
+                  id="tab-informacion"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-informacion"
+                  role="tab"
+                  aria-controls="content-informacion"
+                  aria-current="true"
+                >
+                  Información
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-cursos"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-cursos"
+                  role="tab"
+                  aria-controls="content-cursos"
+                >
+                  Cursos Inscritos
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-estadisticas"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-estadisticas"
+                  role="tab"
+                  aria-controls="content-estadisticas"
+                >
+                  Estadísticas
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-actividad"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-actividad"
+                  role="tab"
+                  aria-controls="content-actividad"
+                >
+                  Actividad reciente
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-transacciones"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-transacciones"
+                  role="tab"
+                  aria-controls="content-transacciones"
+                >
+                  Transacciones
+                </button>
+              </div>
+
+              <div class="d-grid gap-2 mt-3">
+                {% if cursos_inscritos and cursos_inscritos|length > 0 %}
+                <a
+                  href="{{ url_for('descargar_diploma', curso_id=cursos_inscritos[0].id_curso) }}"
+                  class="btn btn-primary btn-sm py-2"
+                  id="btn-diploma"
+                >
+                  Descargar Diploma PDF
+                </a>
+                {% else %}
+                <button class="btn btn-secondary btn-sm py-2" disabled>
+                  Descargar Diploma PDF
+                </button>
+                {% endif %}
+
+                <a
+                  href="{{ url_for('logout') }}"
+                  class="btn btn-outline-danger btn-sm py-2"
+                >
+                  Cerrar Sesión
+                </a>
+              </div>
+            </div>
+          </aside>
+
+          <section class="col-12 col-lg-9">
+            <div class="tab-content" id="nav-tabContent">
+              <div
+                class="tab-pane fade show active"
+                id="content-informacion"
+                role="tabpanel"
+                aria-labelledby="tab-informacion"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <div
+                    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4"
+                  >
+                    <h2 class="h4 fw-bold mb-0">Información del Perfil</h2>
+                    <span class="badge text-bg-light border"
+                      >Cuenta activa</span
+                    >
+                  </div>
+
+                  {% if usuario %}
+                  <div class="row g-4">
+                    <div class="col-12 col-md-6">
+                      <label
+                        for="formControlNombre"
+                        class="form-label fw-semibold"
+                        >Nombre</label
+                      >
+                      <input
+                        type="text"
+                        class="text-dark form-control"
+                        id="formControlNombre"
+                        value="{{ usuario.nombre }}"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label
+                        for="formControlApellido"
+                        class="form-label fw-semibold"
+                        >Apellido</label
+                      >
+                      <input
+                        type="text"
+                        class="text-dark form-control"
+                        id="formControlApellido"
+                        value="{{ usuario.apellido }}"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <label
+                        for="formControlEmail"
+                        class="form-label fw-semibold"
+                        >Correo electrónico</label
+                      >
+                      <input
+                        type="email"
+                        class="text-dark form-control"
+                        id="formControlEmail"
+                        value="{{ usuario.correo }}"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <label
+                        for="formControlEstado"
+                        class="form-label fw-semibold"
+                        >Estado</label
+                      >
+                      <input
+                        type="text"
+                        class="text-dark form-control"
+                        id="formControlEstado"
+                        value="{{ usuario.estado }}"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <label
+                        for="formControlRegistro"
+                        class="form-label fw-semibold"
+                        >Registro</label
+                      >
+                      <input
+                        type="text"
+                        class="text-dark form-control fst-italic"
+                        id="formControlRegistro"
+                        value="{{ usuario.fecha_registro }}"
+                        readonly
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row g-3 mt-4">
+                    <div class="col-12 col-md-4">
+                      <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                        <p class="small text-muted mb-1">Cursos inscritos</p>
+                        <h3 class="h5 fw-bold mb-0">
+                          {{ cursos_inscritos|length if cursos_inscritos else 0
+                          }}
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                        <p class="small text-muted mb-1">Programa principal</p>
+                        <h3 class="h6 fw-bold mb-0">
+                          {% if cursos_inscritos and cursos_inscritos|length > 0
+                          %} {{ cursos_inscritos[0].titulo }} {% else %} Sin
+                          matrícula activa {% endif %}
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                        <p class="small text-muted mb-1">Diploma</p>
+                        <h3 class="h6 fw-bold mb-0">
+                          Disponible al completar tu curso
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                  {% else %}
+                  <div class="alert alert-danger my-3" role="alert">
+                    No se pudo cargar la información del perfil. Por favor,
+                    inicia sesión nuevamente.
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div
+                class="tab-pane fade"
+                id="content-cursos"
+                role="tabpanel"
+                aria-labelledby="tab-cursos"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2"
+                  >
+                    <h2 class="h4 fw-bold mb-0">Mis Cursos Inscritos</h2>
+                    <span class="badge bg-primary rounded-pill px-3 py-2">
+                      {{ cursos_inscritos|length if cursos_inscritos else 0 }}
+                      Cursos Activos
+                    </span>
+                  </div>
+
+                  <div
+                    class="d-flex flex-column gap-3"
+                    id="cursosInscritosContainer"
+                  >
+                    {% if cursos_inscritos %} {% for curso in cursos_inscritos
+                    %}
+                    <div
+                      class="card border border-light-subtle rounded-3 shadow-sm bg-white p-3"
+                    >
+                      <div class="row align-items-center g-3">
+                        <div class="col-12 col-md-6">
+                          <div
+                            class="d-flex align-items-start align-items-sm-center gap-3"
+                          >
+                            <span
+                              class="badge bg-success-subtle text-success border border-success-subtle rounded-2 px-2 py-1 small mt-1 mt-sm-0"
+                            >
+                              Matriculado
+                            </span>
+                            <div>
+                              <h5 class="fw-bold mb-1 text-dark text-wrap">
+                                {{ curso.titulo }}
+                              </h5>
+                              <p class="text-muted small mb-0">
+                                {{ curso.instructor }}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col-6 col-md-2">
+                          <span class="text-muted d-block small">Inicio</span>
+                          <span class="fw-medium text-secondary"
+                            >{{ curso.fecha_inicio }}</span
+                          >
+                        </div>
+
+                        <div class="col-6 col-md-2">
+                          <span class="text-muted d-block small mb-1"
+                            >Progreso</span
+                          >
+                          <div class="d-flex align-items-center gap-2">
+                            <div
+                              class="progress flex-grow-1"
+                              style="height: 6px"
+                            >
+                              <div
+                                class="progress-bar bg-primary"
+                                role="progressbar"
+                                style="width: 0%"
+                                aria-valuenow="0"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                              ></div>
+                            </div>
+                            <span class="small fw-semibold text-dark">0%</span>
+                          </div>
+                        </div>
+
+                        <div class="col-12 col-md-2 text-md-end">
+                          <a
+                            href="{{ url_for('aula_virtual', nombre_curso='java') }}"
+                            class="btn btn-primary btn-sm w-100 rounded-2 py-2 py-md-1"
+                          >
+                            Ingresar
+                          </a>
                         </div>
                       </div>
                     </div>
+                    {% endfor %} {% else %}
+                    <div
+                      class="alert alert-light border text-center text-muted p-4 rounded-3 shadow-sm"
+                      role="alert"
+                    >
+                      No te encuentras registrado en ningún curso en este
+                      periodo.
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
 
-                    <div class="col-6 col-md-2 col-lg-2">
-                      <span class="text-muted d-block small">Fecha de inicio</span>
-                      <span class="fw-medium text-secondary">
-                        {{ curso.fecha_inicio }}
-                      </span>
+              <div
+                class="tab-pane fade"
+                id="content-estadisticas"
+                role="tabpanel"
+                aria-labelledby="tab-estadisticas"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <h2 class="h4 fw-bold mb-4">Estadísticas de Aprendizaje</h2>
+
+                  <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-lg-4">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Cursos Completados</span
+                        >
+                        <h3 class="fw-bold text-primary my-2">4</h3>
+                        <p class="text-success small mb-0 fw-semibold">
+                          +1 este mes
+                        </p>
+                      </div>
                     </div>
 
-                    <div class="col-6 col-md-3 col-lg-2">
-                      <span class="text-muted d-block small mb-1">Tu progreso</span>
-                      <div class="d-flex align-items-center gap-2">
-                        <div class="progress flex-grow-1" style="height: 6px">
+                    <div class="col-12 col-sm-6 col-lg-4">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Horas de Estudio</span
+                        >
+                        <h3 class="fw-bold text-dark my-2">38.5 hrs</h3>
+                        <p class="text-muted small mb-0">Total acumulado</p>
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-lg-4">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Progreso General</span
+                        >
+                        <h3 class="fw-bold text-warning my-2">72%</h3>
+                        <div class="progress mt-2" style="height: 6px">
                           <div
-                            class="progress-bar bg-primary"
+                            class="progress-bar bg-warning"
                             role="progressbar"
-                            style="width: 0%"
-                            aria-valuenow="0"
+                            style="width: 72%"
+                            aria-valuenow="72"
                             aria-valuemin="0"
                             aria-valuemax="100"
                           ></div>
                         </div>
-                        <span class="small fw-semibold text-dark">0%</span>
                       </div>
                     </div>
-                    
-                    <div class="col-12 col-md-2 col-lg-2 text-md-end">
-                      <a href="{{ url_for('aula_virtual', nombre_curso='java') }}" class="btn btn-primary btn-sm w-100 rounded-2 py-2 py-md-1">
-                        Ingresar
-                      </a>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-12 col-lg-7">
+                      <div
+                        class="border rounded-3 p-3 bg-white shadow-sm h-100"
+                      >
+                        <h5 class="fw-semibold mb-3">Curso en Desarrollo</h5>
+                        <div
+                          class="d-flex justify-content-between align-items-center mb-1"
+                        >
+                          <span class="fw-medium text-dark"
+                            >Desarrollo Web Full Stack con Bootstrap 5</span
+                          >
+                          <span class="text-muted small">60% Completado</span>
+                        </div>
+                        <div class="progress" style="height: 10px">
+                          <div
+                            class="progress-bar bg-primary"
+                            role="progressbar"
+                            style="width: 60%"
+                            aria-valuenow="60"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                          ></div>
+                        </div>
+                      </div>
                     </div>
+                    <div class="col-12 col-lg-5">
+                      <div
+                        class="border rounded-3 p-3 bg-white shadow-sm h-100"
+                      >
+                        <h5 class="fw-semibold mb-3">Recomendado para ti</h5>
+                        <div class="small text-muted mb-2">
+                          Siguiente especialización
+                        </div>
+                        <div class="fw-semibold">
+                          Java Intermedio para Proyectos Reales
+                        </div>
+                        <p class="text-muted small mt-2 mb-3">
+                          Basado en tu progreso actual, este programa acelera tu
+                          ruta hacia certificación técnica.
+                        </p>
+                        <a href="/skills" class="btn btn-outline-primary btn-sm"
+                          >Ver programas</a
+                        >
+                      </div>
                     </div>
                   </div>
                 </div>
-                {% endfor %}
-              {% else %}
-                <div class="alert alert-light border text-center text-muted p-4 rounded-3 shadow-sm" role="alert">
-                  No te encuentras registrado en ningún curso en este periodo.
-                </div>
-              {% endif %}
-            </div>
-          </div>
-          
-          <div
-            class="tab-pane fade"
-            id="content-estadisticas"
-            role="tabpanel"
-            aria-labelledby="tab-estadisticas"
-          >
-            <h2 class="fw-semibold mb-4">Estadísticas de Aprendizaje</h2>
-
-            <div class="row g-3 mb-4">
-              <div class="col-12 col-sm-6 col-lg-4">
-                <div
-                  class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm"
-                >
-                  <span class="text-muted small fw-bold text-uppercase"
-                    >Cursos Completados</span
-                  >
-                  <h3
-                    class="fw-bold text-primary my-2"
-                    id="statCursosCompletados"
-                  >
-                    4
-                  </h3>
-                  <p class="text-success small mb-0 fw-semibold">
-                    <i class="bi bi-arrow-up-short"></i> +1 este mes
-                  </p>
-                </div>
               </div>
 
-              <div class="col-12 col-sm-6 col-lg-4">
-                <div
-                  class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm"
-                >
-                  <span class="text-muted small fw-bold text-uppercase"
-                    >Horas de Estudio</span
-                  >
-                  <h3 class="fw-bold text-dark my-2" id="statHorasEstudio">
-                    38.5 hrs
-                  </h3>
-                  <p class="text-muted small mb-0">Total acumulado</p>
-                </div>
-              </div>
-
-              <div class="col-12 col-lg-4">
-                <div
-                  class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm"
-                >
-                  <span class="text-muted small fw-bold text-uppercase"
-                    >Progreso General</span
-                  >
-                  <h3
-                    class="fw-bold text-warning my-2"
-                    id="statProgresoGeneral"
-                  >
-                    72%
-                  </h3>
-
-                  <div class="progress mt-2" style="height: 6px">
-                    <div
-                      class="progress-bar bg-warning"
-                      role="progressbar"
-                      style="width: 72%"
-                      aria-valuenow="72"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="border rounded-3 p-3 mb-4 bg-white shadow-sm">
-              <h5 class="fw-semibold mb-3">Curso en Desarrollo</h5>
               <div
-                class="d-flex justify-content-between align-items-center mb-1"
+                class="tab-pane fade"
+                id="content-actividad"
+                role="tabpanel"
+                aria-labelledby="tab-actividad"
               >
-                <span class="fw-medium text-dark" id="currentCourseName"
-                  >Desarrollo Web Full Stack con Bootstrap 5</span
-                >
-                <span class="text-muted small" id="currentCoursePercent"
-                  >60% Completado</span
-                >
-              </div>
-              <div class="progress" style="height: 10px">
-                <div
-                  class="progress-bar bg-primary"
-                  role="progressbar"
-                  style="width: 60%"
-                  aria-valuenow="60"
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              </div>
-              <div class="row text-center mt-3 pt-2 border-top g-2">
-                <div class="col-6 col-sm-4 text-start">
-                  <span class="text-muted d-block small">Módulos vistos</span>
-                  <strong id="statModulosVistos">12 de 20</strong>
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <h2 class="h4 fw-bold mb-4">Actividad Reciente</h2>
+
+                  <div class="row g-3 mb-4">
+                    <div class="col-12 col-md-4">
+                      <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                        <p class="small text-muted mb-1">Último acceso</p>
+                        <p class="fw-semibold mb-0">Hoy, 09:40 AM</p>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                        <p class="small text-muted mb-1">
+                          Tiempo de estudio (7 días)
+                        </p>
+                        <p class="fw-semibold mb-0">6 horas 20 min</p>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                      <div class="border rounded-3 p-3 h-100 bg-light-subtle">
+                        <p class="small text-muted mb-1">
+                          Lecciones completadas
+                        </p>
+                        <p class="fw-semibold mb-0">8 lecciones</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                      <ul class="list-group list-group-flush">
+                        <li
+                          class="list-group-item d-flex justify-content-between align-items-center py-3"
+                        >
+                          <div>
+                            <div class="fw-semibold">
+                              Completaste una lección de Java
+                            </div>
+                            <small class="text-muted"
+                              >Módulo 3 · Programación Orientada a
+                              Objetos</small
+                            >
+                          </div>
+                          <span class="badge text-bg-success">Completado</span>
+                        </li>
+                        <li
+                          class="list-group-item d-flex justify-content-between align-items-center py-3"
+                        >
+                          <div>
+                            <div class="fw-semibold">
+                              Se registró una nueva evaluación
+                            </div>
+                            <small class="text-muted"
+                              >Curso: Desarrollo Web</small
+                            >
+                          </div>
+                          <span class="badge text-bg-primary">Nuevo</span>
+                        </li>
+                        <li
+                          class="list-group-item d-flex justify-content-between align-items-center py-3"
+                        >
+                          <div>
+                            <div class="fw-semibold">Diploma disponible</div>
+                            <small class="text-muted"
+                              >Revisa tus certificados desde el panel
+                              lateral</small
+                            >
+                          </div>
+                          <span class="badge text-bg-warning">Pendiente</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-6 col-sm-4 text-start">
-                  <span class="text-muted d-block small"
-                    >Tareas entregadas</span
-                  >
-                  <strong id="statTareasEntregadas">5 de 6</strong>
-                </div>
-                <div class="col-12 col-sm-4 text-sm-end mt-2 mt-sm-0">
-                  <a href="#" class="btn btn-outline-primary btn-sm rounded-2"
-                    >Continuar Aprendiendo</a
-                  >
+              </div>
+
+              <div
+                class="tab-pane fade"
+                id="content-transacciones"
+                role="tabpanel"
+                aria-labelledby="tab-transacciones"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <h2 class="h4 fw-bold mb-4">Transacciones</h2>
+                  <p class="text-muted">
+                    Historial de pagos, recibos de compra y facturas.
+                  </p>
+
+                  <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Fecha</th>
+                          <th>Detalle</th>
+                          <th>Método</th>
+                          <th class="text-end">Monto</th>
+                          <th class="text-end">Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="text-muted">12/06/2026</td>
+                          <td>Inscripción curso Java</td>
+                          <td class="text-muted">Tarjeta</td>
+                          <td class="text-end">$89.00</td>
+                          <td class="text-end">
+                            <span class="badge text-bg-success">Pagado</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="text-muted">05/05/2026</td>
+                          <td>Inscripción curso Diseño</td>
+                          <td class="text-muted">Transferencia</td>
+                          <td class="text-end">$75.00</td>
+                          <td class="text-end">
+                            <span class="badge text-bg-success">Pagado</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="border rounded-3 p-3 bg-white shadow-sm">
-              <h5 class="fw-semibold mb-3">Últimas Certificaciones</h5>
-              <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                  <thead class="table-light">
-                    <tr>
-                      <th scope="col" class="small text-muted fw-bold">
-                        CURSO / ESPECIALIDAD
-                      </th>
-                      <th scope="col" class="small text-muted fw-bold">
-                        EMISIÓN
-                      </th>
-                      <th scope="col" class="small text-muted fw-bold text-end">
-                        ID CREDENCIAL
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="fw-medium text-dark">
-                          Fundamentos de JavaScript Moderno
-                        </div>
-                      </td>
-                      <td class="text-muted small">Enero 2026</td>
-                      <td class="text-end font-monospace small text-secondary">
-                        PRO-98431
-                      </td>
-                    </tr>
-
-                    <tr>
-                      <td>
-                        <div class="fw-medium text-dark">
-                          Maquetación Web Semántica y Accesible
-                        </div>
-                      </td>
-                      <td class="text-muted small">Diciembre 2025</td>
-                      <td class="text-end font-monospace small text-secondary">
-                        PRO-77621
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div
-            class="tab-pane fade"
-            id="content-configuracion"
-            role="tabpanel"
-            aria-labelledby="tab-configuracion"
-          >
-            <h2 class="fw-semibold">Configuración</h2>
-            <p class="text-muted">
-              Opciones para cambiar tu contraseña y preferences de cuenta.
-            </p>
-          </div>
-          <div
-            class="tab-pane fade"
-            id="content-transacciones"
-            role="tabpanel"
-            aria-labelledby="tab-transacciones"
-          >
-            <h2 class="fw-semibold">Transacciones</h2>
-            <p class="text-muted">
-              Historial de pagos, recibos de compra y facturas.
-            </p>
-          </div>
+          </section>
         </div>
       </div>
     </main>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
