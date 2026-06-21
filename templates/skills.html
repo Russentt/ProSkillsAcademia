@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,6 +11,46 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
+    <style>
+      .program-card {
+        border: 1px solid #dee2e6;
+        border-radius: 1rem;
+        overflow: hidden;
+        background: #fff;
+      }
+
+      .receipt-card {
+        border: 1px solid #dbe7ff;
+        border-radius: 1rem;
+        background: linear-gradient(140deg, #ffffff 0%, #f2f7ff 100%);
+      }
+
+      .processing-card {
+        border: 1px dashed #9ec5fe;
+        border-radius: 1rem;
+        background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
+      }
+
+      .mini-label {
+        font-size: 0.78rem;
+        color: #6c757d;
+      }
+
+      .fade-in {
+        animation: fadeInUp 0.35s ease;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -92,8 +132,8 @@
           </div>
           <div class="row">
             <ul class="list-group">
-              <li class="list-group-item">
-                <div class="container my-4">
+              <li class="list-group-item border-0 px-0">
+                <div class="container my-4 program-card p-3 p-lg-4">
                   <div class="row align-items-center g-4">
                     <div class="col-12 col-md-6">
                       <img
@@ -116,12 +156,18 @@
                       <div class="row justify-content-center mt-4">
                         <div class="col-12 col-md-10 col-lg-8 d-grid gap-3">
                           <button
-                            class="btn btn-success btn-outline-dark btn-sm fw-semibold text-white"
+                            class="btn btn-success btn-outline-dark btn-sm fw-semibold text-white js-pay-btn"
+                            data-programa="Ruta FullStack Developer"
+                            data-precio="$180.000 CLP"
+                            data-modalidad="Pago único"
                           >
                             Valor: $180.000 CLP (Pago Único)
                           </button>
 
-                          <button class="btn btn-light btn-outline-dark btn-sm">
+                          <button
+                            class="btn btn-light btn-outline-dark btn-sm js-options-btn"
+                            data-programa="Ruta FullStack Developer"
+                          >
                             Otras opciones
                           </button>
                         </div>
@@ -130,8 +176,8 @@
                   </div>
                 </div>
               </li>
-              <li class="list-group-item">
-                <div class="container my-4">
+              <li class="list-group-item border-0 px-0">
+                <div class="container my-4 program-card p-3 p-lg-4">
                   <div class="row align-items-center g-4">
                     <div class="col-12 col-md-6">
                       <img
@@ -154,12 +200,18 @@
                       <div class="row mt-4 justify-content-center">
                         <div class="col-12 col-md-10 col-lg-8 d-grid gap-3">
                           <button
-                            class="btn btn-success btn-outline-dark btn-sm fw-semibold text-white"
+                            class="btn btn-success btn-outline-dark btn-sm fw-semibold text-white js-pay-btn"
+                            data-programa="Especialista en Marketing Digital"
+                            data-precio="$250.000 CLP"
+                            data-modalidad="Pago único"
                           >
                             Valor: $250.000 CLP (Pago Único)
                           </button>
 
-                          <button class="btn btn-light btn-outline-dark btn-sm">
+                          <button
+                            class="btn btn-light btn-outline-dark btn-sm js-options-btn"
+                            data-programa="Especialista en Marketing Digital"
+                          >
                             Otras opciones
                           </button>
                         </div>
@@ -168,8 +220,8 @@
                   </div>
                 </div>
               </li>
-              <li class="list-group-item">
-                <div class="container my-4">
+              <li class="list-group-item border-0 px-0">
+                <div class="container my-4 program-card p-3 p-lg-4">
                   <div class="row align-items-center g-4">
                     <div class="col-12 col-md-6">
                       <img
@@ -193,12 +245,18 @@
                       <div class="row mt-4 justify-content-center">
                         <div class="col-12 col-md-10 col-lg-8 d-grid gap-3">
                           <button
-                            class="btn btn-success btn-outline-dark btn-sm fw-semibold text-white"
+                            class="btn btn-success btn-outline-dark btn-sm fw-semibold text-white js-pay-btn"
+                            data-programa="Diseño UI/UX Profesional"
+                            data-precio="$45.000 CLP"
+                            data-modalidad="Mensual"
                           >
                             Valor: $45.000CLP / Mes
                           </button>
 
-                          <button class="btn btn-light btn-outline-dark btn-sm">
+                          <button
+                            class="btn btn-light btn-outline-dark btn-sm js-options-btn"
+                            data-programa="Diseño UI/UX Profesional"
+                          >
                             Otras opciones
                           </button>
                         </div>
@@ -212,10 +270,597 @@
         </div>
       </div>
     </main>
+
+    <div class="modal fade" id="modalPago" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalPagoTitulo">Ventana de pago</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="paymentFormView" class="fade-in">
+              <div class="row g-3 mb-3">
+                <div class="col-12 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <span class="mini-label d-block">Programa</span>
+                    <strong id="resumenPrograma">-</strong>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <span class="mini-label d-block">Total</span>
+                    <strong id="resumenPrecio">-</strong>
+                  </div>
+                </div>
+                <div class="col-6 col-md-4">
+                  <div class="border rounded-3 p-3 h-100">
+                    <span class="mini-label d-block">Modalidad</span>
+                    <strong id="resumenModalidad">-</strong>
+                  </div>
+                </div>
+              </div>
+
+              <form id="paymentForm" class="row g-3" novalidate>
+                <div class="col-12 col-md-6">
+                  <label for="payMetodo" class="form-label"
+                    >Método de pago</label
+                  >
+                  <select class="form-select" id="payMetodo" required>
+                    <option value="" selected disabled>
+                      Selecciona una opción
+                    </option>
+                    <option value="Tarjeta de crédito">
+                      Tarjeta de crédito
+                    </option>
+                    <option value="Tarjeta de débito">Tarjeta de débito</option>
+                    <option value="Transferencia bancaria">
+                      Transferencia bancaria
+                    </option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="payCuotas" class="form-label">Cuotas</label>
+                  <select class="form-select" id="payCuotas" required>
+                    <option value="" selected disabled>
+                      Selecciona una opción
+                    </option>
+                    <option value="1 cuota">1 cuota</option>
+                    <option value="3 cuotas">3 cuotas</option>
+                    <option value="6 cuotas">6 cuotas</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="payNombre" class="form-label"
+                    >Nombre del titular</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="payNombre"
+                    required
+                  />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="payRut" class="form-label">RUT</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="payRut"
+                    placeholder="12.345.678-9"
+                    maxlength="12"
+                    required
+                  />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="payEmail" class="form-label"
+                    >Correo electrónico</label
+                  >
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="payEmail"
+                    required
+                  />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="payCard" class="form-label"
+                    >Número de tarjeta</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="payCard"
+                    placeholder="4242 4242 4242 4242"
+                    maxlength="19"
+                    required
+                  />
+                </div>
+                <div class="col-6 col-md-3">
+                  <label for="payExp" class="form-label">Vencimiento</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="payExp"
+                    placeholder="12/29"
+                    maxlength="5"
+                    required
+                  />
+                </div>
+                <div class="col-6 col-md-3">
+                  <label for="payCvv" class="form-label">CVV</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="payCvv"
+                    placeholder="123"
+                    maxlength="4"
+                    required
+                  />
+                </div>
+                <div class="col-12">
+                  <label for="payCoupon" class="form-label"
+                    >Cupón (opcional)</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="payCoupon"
+                    placeholder="PROSKILLS20"
+                  />
+                </div>
+                <div class="col-12">
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="payTerms"
+                      required
+                    />
+                    <label class="form-check-label" for="payTerms">
+                      Confirmo que esta es una simulación y acepto los términos
+                      del proceso.
+                    </label>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div id="paymentProcessingView" class="d-none fade-in">
+              <div class="processing-card p-4 text-center">
+                <div
+                  class="spinner-border text-primary mb-3"
+                  role="status"
+                  aria-hidden="true"
+                ></div>
+                <h6 class="mb-2">Procesando pago...</h6>
+                <p class="text-muted mb-3" id="processingStatusText">
+                  Estamos validando los datos de tu transacción.
+                </p>
+                <div
+                  class="progress"
+                  role="progressbar"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                >
+                  <div
+                    id="processingProgressBar"
+                    class="progress-bar progress-bar-striped progress-bar-animated"
+                    style="width: 0%"
+                  ></div>
+                </div>
+                <div class="small text-muted mt-3" id="processingStepLabel">
+                  Paso 1 de 3
+                </div>
+              </div>
+            </div>
+
+            <div id="paymentReceiptView" class="d-none fade-in">
+              <div class="receipt-card p-4">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3"
+                >
+                  <h6 class="mb-0">Comprobante visual</h6>
+                  <span class="badge text-bg-success">Aprobado</span>
+                </div>
+                <div class="row g-3 mb-3">
+                  <div class="col-12 col-md-6">
+                    <span class="mini-label d-block">Código operación</span>
+                    <strong id="cpOperacion">-</strong>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <span class="mini-label d-block">Fecha y hora</span>
+                    <strong id="cpFecha">-</strong>
+                  </div>
+                  <div class="col-12">
+                    <span class="mini-label d-block">Programa</span>
+                    <strong id="cpPrograma">-</strong>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <span class="mini-label d-block">Pagador</span>
+                    <strong id="cpPagador">-</strong>
+                  </div>
+                  <div class="col-12 col-md-6">
+                    <span class="mini-label d-block">Método</span>
+                    <strong id="cpMetodo">-</strong>
+                  </div>
+                  <div class="col-6">
+                    <span class="mini-label d-block">Monto</span>
+                    <strong id="cpMonto">-</strong>
+                  </div>
+                  <div class="col-6">
+                    <span class="mini-label d-block">Cuotas</span>
+                    <strong id="cpCuotas">-</strong>
+                  </div>
+                </div>
+                <div class="small text-muted">
+                  Este comprobante es una simulación visual de pago para fines
+                  demostrativos.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              id="btnMockData"
+            >
+              Autocompletar demo
+            </button>
+            <button type="button" class="btn btn-success" id="btnSimularPago">
+              Simular pago
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary d-none"
+              id="btnNuevaSimulacion"
+            >
+              Nueva simulación
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="modalOpciones" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalOpcionesTitulo">Otras opciones</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <div class="modal-body" id="modalOpcionesBody"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    <script>
+      const optionsByProgram = {
+        "Ruta FullStack Developer": {
+          beca: "Beca del 20% para inscripción anticipada (hasta fin de mes).",
+          cuotas: "3 cuotas sin interés de $60.000 CLP.",
+          extras: "Incluye mentoría grupal semanal y revisión de portafolio.",
+        },
+        "Especialista en Marketing Digital": {
+          beca: "Descuento corporativo del 15% para equipos de 3+ personas.",
+          cuotas: "5 cuotas de $50.000 CLP.",
+          extras: "Acceso a laboratorio de campañas y plantillas de embudos.",
+        },
+        "Diseño UI/UX Profesional": {
+          beca: "Beca creativa de $30.000 CLP en la matrícula inicial.",
+          cuotas: "Mensualidad fija de $45.000 CLP por 4 meses.",
+          extras:
+            "Feedback personalizado de prototipos en sesiones quincenales.",
+        },
+      };
+
+      const payButtons = document.querySelectorAll(".js-pay-btn");
+      const optionsButtons = document.querySelectorAll(".js-options-btn");
+      const modalEl = document.getElementById("modalPago");
+      const modal = new bootstrap.Modal(modalEl);
+      const modalOpciones = new bootstrap.Modal(
+        document.getElementById("modalOpciones"),
+      );
+      const modalTitle = document.getElementById("modalPagoTitulo");
+      const modalOpcionesTitulo = document.getElementById(
+        "modalOpcionesTitulo",
+      );
+      const modalOpcionesBody = document.getElementById("modalOpcionesBody");
+      const paymentForm = document.getElementById("paymentForm");
+      const paymentFormView = document.getElementById("paymentFormView");
+      const paymentProcessingView = document.getElementById(
+        "paymentProcessingView",
+      );
+      const paymentReceiptView = document.getElementById("paymentReceiptView");
+      const btnMockData = document.getElementById("btnMockData");
+      const btnSimularPago = document.getElementById("btnSimularPago");
+      const btnNuevaSimulacion = document.getElementById("btnNuevaSimulacion");
+      const processingStatusText = document.getElementById(
+        "processingStatusText",
+      );
+      const processingProgressBar = document.getElementById(
+        "processingProgressBar",
+      );
+      const processingStepLabel = document.getElementById(
+        "processingStepLabel",
+      );
+
+      const payRut = document.getElementById("payRut");
+      const payCard = document.getElementById("payCard");
+      const payExp = document.getElementById("payExp");
+      const payCvv = document.getElementById("payCvv");
+
+      const resumenPrograma = document.getElementById("resumenPrograma");
+      const resumenPrecio = document.getElementById("resumenPrecio");
+      const resumenModalidad = document.getElementById("resumenModalidad");
+
+      let pagoActual = {
+        programa: "",
+        precio: "",
+        modalidad: "",
+      };
+      let processingTimer = null;
+
+      function limpiarTimerProcesamiento() {
+        if (processingTimer) {
+          clearInterval(processingTimer);
+          processingTimer = null;
+        }
+      }
+
+      function formatearRut(valor) {
+        const limpio = valor.replace(/[^0-9kK]/g, "").toUpperCase();
+        if (limpio.length <= 1) {
+          return limpio;
+        }
+        const cuerpo = limpio.slice(0, -1);
+        const dv = limpio.slice(-1);
+        const cuerpoConPuntos = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return `${cuerpoConPuntos}-${dv}`;
+      }
+
+      function formatearTarjeta(valor) {
+        return valor
+          .replace(/\D/g, "")
+          .slice(0, 16)
+          .replace(/(.{4})/g, "$1 ")
+          .trim();
+      }
+
+      function formatearExp(valor) {
+        const limpio = valor.replace(/\D/g, "").slice(0, 4);
+        if (limpio.length <= 2) {
+          return limpio;
+        }
+        return `${limpio.slice(0, 2)}/${limpio.slice(2)}`;
+      }
+
+      function formatearCvv(valor) {
+        return valor.replace(/\D/g, "").slice(0, 4);
+      }
+
+      function resetModalPago() {
+        limpiarTimerProcesamiento();
+        paymentForm.reset();
+        paymentFormView.classList.remove("d-none");
+        paymentProcessingView.classList.add("d-none");
+        paymentReceiptView.classList.add("d-none");
+        btnMockData.classList.remove("d-none");
+        btnSimularPago.classList.remove("d-none");
+        btnNuevaSimulacion.classList.add("d-none");
+        processingProgressBar.style.width = "0%";
+        processingStatusText.textContent =
+          "Estamos validando los datos de tu transacción.";
+        processingStepLabel.textContent = "Paso 1 de 3";
+      }
+
+      function abrirPago(programa, precio, modalidad) {
+        pagoActual = { programa, precio, modalidad };
+        modalTitle.textContent = `Ventana de pago: ${programa}`;
+        resumenPrograma.textContent = programa;
+        resumenPrecio.textContent = precio;
+        resumenModalidad.textContent = modalidad;
+        resetModalPago();
+        modal.show();
+      }
+
+      function completarDemo() {
+        document.getElementById("payMetodo").value = "Tarjeta de crédito";
+        document.getElementById("payCuotas").value =
+          pagoActual.modalidad === "Mensual" ? "1 cuota" : "3 cuotas";
+        document.getElementById("payNombre").value = "Camila Rojas";
+        document.getElementById("payRut").value = "12.345.678-9";
+        document.getElementById("payEmail").value = "camila.demo@proskills.cl";
+        document.getElementById("payCard").value = "4242 4242 4242 4242";
+        document.getElementById("payExp").value = "12/29";
+        document.getElementById("payCvv").value = "123";
+        document.getElementById("payCoupon").value = "PROSKILLS20";
+        document.getElementById("payTerms").checked = true;
+      }
+
+      function generarComprobanteVisual() {
+        const ahora = new Date();
+        const operacion = `PSK-${Math.floor(100000 + Math.random() * 900000)}`;
+        const metodo = document.getElementById("payMetodo").value;
+        const cuotas = document.getElementById("payCuotas").value;
+        const pagador = document.getElementById("payNombre").value;
+
+        document.getElementById("cpOperacion").textContent = operacion;
+        document.getElementById("cpFecha").textContent =
+          `${ahora.toLocaleDateString("es-CL")} ${ahora.toLocaleTimeString("es-CL")}`;
+        document.getElementById("cpPrograma").textContent = pagoActual.programa;
+        document.getElementById("cpPagador").textContent = pagador;
+        document.getElementById("cpMetodo").textContent = metodo;
+        document.getElementById("cpMonto").textContent = pagoActual.precio;
+        document.getElementById("cpCuotas").textContent = cuotas;
+
+        paymentFormView.classList.add("d-none");
+        paymentProcessingView.classList.add("d-none");
+        paymentReceiptView.classList.remove("d-none");
+        btnMockData.classList.add("d-none");
+        btnSimularPago.classList.add("d-none");
+        btnNuevaSimulacion.classList.remove("d-none");
+      }
+
+      function iniciarInterludioProcesamiento() {
+        paymentFormView.classList.add("d-none");
+        paymentProcessingView.classList.remove("d-none");
+        paymentReceiptView.classList.add("d-none");
+        btnMockData.classList.add("d-none");
+        btnSimularPago.classList.add("d-none");
+        btnNuevaSimulacion.classList.add("d-none");
+
+        const pasos = [
+          {
+            pct: 25,
+            texto: "Validando identidad del pagador...",
+            paso: "Paso 1 de 3",
+          },
+          {
+            pct: 60,
+            texto: "Autorizando medio de pago...",
+            paso: "Paso 2 de 3",
+          },
+          {
+            pct: 90,
+            texto: "Generando comprobante visual...",
+            paso: "Paso 3 de 3",
+          },
+          {
+            pct: 100,
+            texto: "Transacción simulada completada.",
+            paso: "Finalizado",
+          },
+        ];
+
+        let indice = 0;
+        limpiarTimerProcesamiento();
+        processingTimer = setInterval(() => {
+          const actual = pasos[indice];
+          processingProgressBar.style.width = `${actual.pct}%`;
+          processingStatusText.textContent = actual.texto;
+          processingStepLabel.textContent = actual.paso;
+
+          indice += 1;
+          if (indice >= pasos.length) {
+            limpiarTimerProcesamiento();
+            setTimeout(() => {
+              generarComprobanteVisual();
+            }, 450);
+          }
+        }, 850);
+      }
+
+      function mostrarOpciones(programa) {
+        const info = optionsByProgram[programa];
+        modalOpcionesTitulo.textContent = `Otras opciones: ${programa}`;
+        modalOpcionesBody.innerHTML = `
+          <div class="fade-in">
+            <div class="row g-3">
+              <div class="col-12">
+                <div class="border rounded-3 p-3 h-100 bg-light">
+                  <small class="text-muted d-block mb-1">Becas disponibles</small>
+                  <div>${info.beca}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="border rounded-3 p-3 h-100 bg-light">
+                  <small class="text-muted d-block mb-1">Financiamiento</small>
+                  <div>${info.cuotas}</div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="border rounded-3 p-3 h-100 bg-light">
+                  <small class="text-muted d-block mb-1">Beneficios adicionales</small>
+                  <div>${info.extras}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        modalOpciones.show();
+      }
+
+      payButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const programa = btn.dataset.programa;
+          const precio = btn.dataset.precio;
+          const modalidad = btn.dataset.modalidad;
+          abrirPago(programa, precio, modalidad);
+        });
+      });
+
+      optionsButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const programa = btn.dataset.programa;
+          mostrarOpciones(programa);
+        });
+      });
+
+      btnMockData.addEventListener("click", completarDemo);
+
+      payRut.addEventListener("input", () => {
+        payRut.value = formatearRut(payRut.value);
+      });
+
+      payCard.addEventListener("input", () => {
+        payCard.value = formatearTarjeta(payCard.value);
+      });
+
+      payExp.addEventListener("input", () => {
+        payExp.value = formatearExp(payExp.value);
+      });
+
+      payCvv.addEventListener("input", () => {
+        payCvv.value = formatearCvv(payCvv.value);
+      });
+
+      btnSimularPago.addEventListener("click", () => {
+        if (!paymentForm.reportValidity()) {
+          return;
+        }
+        iniciarInterludioProcesamiento();
+      });
+
+      btnNuevaSimulacion.addEventListener("click", () => {
+        resetModalPago();
+      });
+
+      modalEl.addEventListener("hidden.bs.modal", () => {
+        limpiarTimerProcesamiento();
+      });
+    </script>
   </body>
 </html>
