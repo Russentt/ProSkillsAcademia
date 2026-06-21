@@ -370,6 +370,36 @@ def login():
                 flash("Ocurrió un error inesperado en el servidor.")
                 return redirect(url_for('login'))
 
+
+def ob_curso(usuario_id): # Estoy chambeando jefe
+    cursor = None
+    try:
+        cursor = conexion_db.cursor()
+        sql = """
+            SELECT * FROM v_curso
+            WHERE id_estudiante = %s::int;
+        """
+        
+        cursor.execute(sql, [int(usuario_id)])
+        filas = cursor.fetchall()
+        
+        cursos = []
+        for fila in filas:
+            cursos.append({
+                "titulo": fila[1],        
+                "fecha_inicio": fila[2].strftime('%d/%m/%Y') if fila[2] else 'Por definir', 
+                "instructor": fila[3],    
+                "id_curso": fila[0]       
+            })
+        return cursos
+        
+    except Exception as ex:
+        print(f"----Error {ex} -----")
+        return []
+    finally:
+        if cursor:
+            cursor.close()
+
 @app.route('/account', methods=["GET"])
 @jwt_required()
 def cuenta():
@@ -399,12 +429,15 @@ def cuenta():
             "fecha_registro": datos[4].strftime('%d/%m/%Y') if datos[4] else 'Sin fecha'
         } 
         
-        return render_template('account.html', usuario=encontrado)
+        cursos = ob_curso(usuario)
+        
+        return render_template('account.html', usuario=encontrado, cursos_inscritos = cursos)
         
     except Exception as ex:
         print(f"Error al cargar la cuenta {ex}")
         flash("Error al cargar la informacion")
         return redirect(url_for("home"))
+        
         
 @app.route('/logout', methods=['GET'])
 def logout():
@@ -457,21 +490,19 @@ def aula_virtual(nombre_curso):
             return redirect(url_for('home'))
 
         plantillas_validas = {
-    'java': 'aula-java.html.html',  
-    'marketing': 'aula-marketing.html',
-    'diseno': 'aula-diseno.html'
-}
+            'java': 'aula-java.html',  
+            'marketing': 'aula-marketing.html',
+            'diseno': 'aula-diseno.html'
+        }
 
-        curso_clave = nombre_curso.strip().lower()
-
-        if curso_clave in plantillas_validas:
-            return render_template(plantillas_validas[curso_clave])
-        else:
-            return "Aula virtual no encontrada .", 404
+        if nombre_curso in plantillas_validas:
+            return render_template(plantillas_validas[nombre_curso])
+        
+        flash("Aula virtual no encontrada.")
+        return redirect(url_for('cuenta'))
 
     except Exception as ex:
-        print(f"--- ERROR : {ex} ---")
-        flash("Ocurrió un error al conectar con el aula virtual.")
+        print(f"Error en aula virtual: {ex}")
         return redirect(url_for('home'))
 
 @app.route("/download-diploma/<int:curso_id>", methods=['GET'])
@@ -507,20 +538,17 @@ def descargar_diploma(curso_id):
         pdf.set_line_width(2)
         pdf.rect(14, 14, 269, 182)
 
-        
         pdf.set_font("Helvetica", "B", 32)
         pdf.cell(0, 40, "PROSKILLS ACADEMIA", ln=True, align="C")
         
         pdf.set_font("Helvetica", "I", 18)
         pdf.cell(0, 20, "Otorga el presente Diploma de Honor a:", ln=True, align="C")
         
-        
         pdf.set_font("Helvetica", "B", 26)
         pdf.cell(0, 25, nombre_completo.upper(), ln=True, align="C")
         
         pdf.set_font("Helvetica", "", 16)
         pdf.cell(0, 15, "Por haber aprobado exitosamente el plan de estudios del curso:", ln=True, align="C")
-        
         
         pdf.set_font("Helvetica", "B", 22)
         pdf.cell(0, 20, f"'{nombre_curso}'", ln=True, align="C")
