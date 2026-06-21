@@ -11,6 +11,26 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
+    <style>
+      .course-card {
+        height: 100%;
+      }
+
+      .course-card .card-img-top {
+        height: 180px;
+        object-fit: cover;
+      }
+
+      .course-card .card-body {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .course-card .btn {
+        margin-top: auto;
+        align-self: flex-start;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -97,9 +117,9 @@
       </div>
 
       <div class="container">
-        <div class="row my-3">
-          <div class="col">
-            <div class="card" style="width: 18rem">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 my-3">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fblog.facialix.com%2Fwp-content%2Fuploads%2F2024%2F01%2Fpython-y-flask-cupon.jpg&f=1&nofb=1&ipt=0f0e448c8ee84ced5a7b5a26463362bf61e0c1172cf32f6b1fd4c601a2eb5fcd"
                 class="card-img-top"
@@ -116,12 +136,16 @@
                   relacionales conectando tus servicios directamente con
                   servidores PostgreSQL.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='flask-python') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Ffacialix.com%2Fwp-content%2Fuploads%2F2023%2F11%2Fcurso-postgresql-gratis.jpg&f=1&nofb=1&ipt=670d0f1d7aff2cdf3025db3d9e305d669ba8a60cb3320f6d93e0e08411a68c9a"
                 class="card-img-top"
@@ -138,12 +162,16 @@
                   para desarrolladores que manejan flujos críticos y alta
                   concurrencia de datos.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='postgresql-avanzado') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmanuelzapata.co%2Fwp-content%2Fuploads%2F2023%2F09%2FPack-de-cursos-thumbnail.png&f=1&nofb=1&ipt=71a8bb5572846813aa8a0259dab0a4aa2c31b6802f47b318d7d237d4f2d7b43c"
                 class="card-img-top"
@@ -161,14 +189,16 @@
                   y control de despliegues en entornos de producción
                   relacionales.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='arquitectura-cicd') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.dcinternet.com.mx%2Fimages%2FImgDCInternetBootstrap.png&f=1&nofb=1&ipt=8fb5683639769921f62718b22a25d680408c13557e32a1786ff66ea52ef947c1"
                 class="card-img-top"
@@ -185,12 +215,16 @@
                   institucionales y utilidades CSS avanzadas para garantizar una
                   adaptabilidad perfecta en pantallas móviles.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='ux-bootstrap') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.simbolointeractivo.com%2Fwp-content%2Fuploads%2F2024%2F08%2Fdiseno-de-marca-caracteristicas-scaled.jpg&f=1&nofb=1&ipt=0d4252d21f904d05e4aef0d35d7e21154c2e8d881d10619e22c13065400264c7"
                 class="card-img-top"
@@ -207,12 +241,16 @@
                   optimizados con canal alfa para su correcta implementación en
                   plataformas digitales.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='identidad-corporativa') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Faulacm.com%2Fwp-content%2Fuploads%2F2025%2F03%2FDiseno-web-y-prototipado-Figma.jpg&f=1&nofb=1&ipt=c756b6ad29f82245be9cb6173534e6198e2006f00774327f37010a194128dd27"
                 class="card-img-top"
@@ -228,14 +266,16 @@
                   estudiantes aprenderán a diseñar mapas de interacción según
                   las características de los usuarios descritas en la ERS.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='prototipado-flujos') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmedia.licdn.com%2Fdms%2Fimage%2Fv2%2FD4D12AQE4F8fjhDxUSw%2Farticle-cover_image-shrink_720_1280%2Farticle-cover_image-shrink_720_1280%2F0%2F1674484772342%3Fe%3D2147483647%26v%3Dbeta%26t%3DwletdQYQEkqxuzxmKJFNXPdY7-o4yk57jFp246xxm2s&f=1&nofb=1&ipt=53777a841d26241107f432463e5e9a20106d33402975774ec425a7b158485501"
                 class="card-img-top"
@@ -252,12 +292,16 @@
                   campañas automatizadas y optimizar la retención de clientes en
                   entornos comerciales masivos.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='growth-marketing') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fpinguinodigital.com%2Fwp-content%2Fuploads%2F2022%2F09%2FComo-Se-Puede-Hacer-Un-Buen-SEO-optimizacion-Para-Motores-De-Busqueda-Para-Mi-Sitio-Web.png&f=1&nofb=1&ipt=0c309a43f111c860f3d13fa4d7329b63a4ed3516bc6593807fe5c77c505cbf30"
                 class="card-img-top"
@@ -274,12 +318,16 @@
                   lógicos para escalar el posicionamiento orgánico de
                   plataformas web de e-learning.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='seo-tecnico') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
-          <div class="col">
-            <div class="card" style="width: 18rem">
+          <div class="col d-flex">
+            <div class="card course-card w-100">
               <img
                 src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ffunnel.mx%2Fwp-content%2Fuploads%2F2023%2F07%2FFunnel_Campanas.png&f=1&nofb=1&ipt=0f3fbdd53353fe9fda2c7d1877f6aeb6b4dc0056f50f77a83e0f22b9c50a437a"
                 class="card-img-top"
@@ -297,12 +345,15 @@
                   operativas y no financieras para potenciar la captación
                   institucional en plataformas digitales de capacitación.
                 </p>
-                <a href="#" class="btn btn-primary">Ver más</a>
+                <a
+                  href="{{ url_for('mostrar_curso', nombre_curso='marketing-conversion') }}"
+                  class="btn btn-primary"
+                  >Ver más</a
+                >
               </div>
             </div>
           </div>
         </div>
-        <div class="row"></div>
       </div>
     </main>
   </body>
