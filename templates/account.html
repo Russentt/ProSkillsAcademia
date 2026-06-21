@@ -384,12 +384,21 @@
                         </div>
 
                         <div class="col-12 col-md-2 text-md-end">
+                          {% if curso.nombre_aula %}
                           <a
-                            href="{{ url_for('aula_virtual', nombre_curso='java') }}"
+                            href="{{ url_for('aula_virtual', nombre_curso=curso.nombre_aula) }}"
                             class="btn btn-primary btn-sm w-100 rounded-2 py-2 py-md-1"
                           >
                             Ingresar
                           </a>
+                          {% else %}
+                          <button
+                            class="btn btn-secondary btn-sm w-100 rounded-2 py-2 py-md-1"
+                            disabled
+                          >
+                            Ingresar
+                          </button>
+                          {% endif %}
                         </div>
                       </div>
                     </div>

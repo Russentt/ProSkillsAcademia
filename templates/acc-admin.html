@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProSkills - Panel Administrativo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" type="image/x-icon" href="static/SGAP.svg" />
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg bg-body-primary py-1 border-bottom">
+        <div class="container-fluid d-flex flex-wrap px-3 px-lg-4">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div
+              class="d-flex flex-column flex-lg-row align-items-center justify-content-between w-100 mt-3 mt-lg-0"
+            >
+              <a
+                class="navbar-brand d-flex align-items-center mb-3 mb-lg-0"
+                href="/"
+              >
+                <img
+                  src="static/ProSkills.png"
+                  alt="Logo"
+                  width="40"
+                  height="32"
+                  class="img-fluid me-2"
+                />
+                <span class="text-primary fw-bold fs-5"
+                  >ProSkills Academia</span
+                >
+              </a>
+              <ul
+                class="navbar-nav d-flex flex-column flex-lg-row gap-2 gap-lg-4 justify-content-center align-items-center"
+              >
+                <li class="nav-item">
+                  <a class="nav-link text-dark fw-medium" href="/"
+                    >Portal Institucional</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-dark fw-medium" href="/about#soporte"
+                    >Soporte TI</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="bg-body-tertiary py-4 min-vh-100">
+      <div class="container">
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <div class="row mb-3">
+          <div class="col-12">
+            <div
+              class="alert alert-warning border-0 shadow-sm mb-0"
+              role="alert"
+            >
+              {% for message in messages %}
+              <div class="small">{{ message }}</div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %} {% endwith %}
+
+        <div class="row g-4 align-items-start">
+          <!-- ── SIDEBAR ──────────────────────────────────── -->
+          <aside class="col-12 col-lg-3">
+            <div
+              class="bg-white rounded-4 shadow-sm border p-3 p-md-4 sticky-lg-top"
+              style="top: 1.25rem"
+            >
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-danger px-2 py-1 small">ADMIN</span>
+                <h1 class="h5 fw-bold mb-0">Panel Administrativo</h1>
+              </div>
+              {% if admin %}
+              <p class="text-muted small mb-3">
+                {{ admin.nombre }} {{ admin.apellido }}
+              </p>
+              {% endif %}
+
+              <div class="list-group" id="btnGroup" role="tablist">
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action active"
+                  id="tab-resumen"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-resumen"
+                  role="tab"
+                  aria-controls="content-resumen"
+                  aria-current="true"
+                >
+                  Resumen General
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-usuarios"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-usuarios"
+                  role="tab"
+                  aria-controls="content-usuarios"
+                >
+                  Usuarios
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-cursos"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-cursos"
+                  role="tab"
+                  aria-controls="content-cursos"
+                >
+                  Cursos
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-instructores"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-instructores"
+                  role="tab"
+                  aria-controls="content-instructores"
+                >
+                  Instructores
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-reportes"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-reportes"
+                  role="tab"
+                  aria-controls="content-reportes"
+                >
+                  Reportes
+                </button>
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  id="tab-configuracion"
+                  data-bs-toggle="list"
+                  data-bs-target="#content-configuracion"
+                  role="tab"
+                  aria-controls="content-configuracion"
+                >
+                  Configuración
+                </button>
+              </div>
+
+              <div class="d-grid mt-3">
+                <a
+                  href="{{ url_for('logout') }}"
+                  class="btn btn-outline-danger btn-sm py-2"
+                >
+                  Cerrar Sesión
+                </a>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ── MAIN CONTENT ─────────────────────────────── -->
+          <section class="col-12 col-lg-9">
+            <div class="tab-content" id="nav-tabContent">
+              <!-- ══ RESUMEN ══════════════════════════════════ -->
+              <div
+                class="tab-pane fade show active"
+                id="content-resumen"
+                role="tabpanel"
+                aria-labelledby="tab-resumen"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <div
+                    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4"
+                  >
+                    <h2 class="h4 fw-bold mb-0">Resumen de la Plataforma</h2>
+                    <span class="badge text-bg-danger border"
+                      >Acceso total</span
+                    >
+                  </div>
+
+                  <!-- KPI row -->
+                  <div class="row g-3 mb-4">
+                    <div class="col-6 col-lg-3">
+                      <div
+                        class="border rounded-3 p-3 h-100 bg-light-subtle text-center"
+                      >
+                        <p class="small text-muted mb-1">Estudiantes</p>
+                        <h3 class="h4 fw-bold text-primary mb-0">
+                          {{ stats.total_estudiantes if stats else '—' }}
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <div
+                        class="border rounded-3 p-3 h-100 bg-light-subtle text-center"
+                      >
+                        <p class="small text-muted mb-1">Instructores</p>
+                        <h3 class="h4 fw-bold text-success mb-0">
+                          {{ stats.total_instructores if stats else '—' }}
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <div
+                        class="border rounded-3 p-3 h-100 bg-light-subtle text-center"
+                      >
+                        <p class="small text-muted mb-1">Cursos Activos</p>
+                        <h3 class="h4 fw-bold text-warning mb-0">
+                          {{ stats.total_cursos if stats else '—' }}
+                        </h3>
+                      </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                      <div
+                        class="border rounded-3 p-3 h-100 bg-light-subtle text-center"
+                      >
+                        <p class="small text-muted mb-1">Matrículas</p>
+                        <h3 class="h4 fw-bold text-danger mb-0">
+                          {{ stats.total_matriculas if stats else '—' }}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Activity feed -->
+                  <h5 class="fw-semibold mb-3">Actividad Reciente</h5>
+                  <div class="card border-0 shadow-sm">
+                    <ul class="list-group list-group-flush">
+                      <li
+                        class="list-group-item d-flex justify-content-between align-items-center py-3"
+                      >
+                        <div>
+                          <div class="fw-semibold">
+                            Nuevo estudiante registrado
+                          </div>
+                          <small class="text-muted">Hoy, 10:14 AM</small>
+                        </div>
+                        <span class="badge text-bg-primary">Nuevo</span>
+                      </li>
+                      <li
+                        class="list-group-item d-flex justify-content-between align-items-center py-3"
+                      >
+                        <div>
+                          <div class="fw-semibold">
+                            Curso de Flask publicado
+                          </div>
+                          <small class="text-muted">Hoy, 08:52 AM</small>
+                        </div>
+                        <span class="badge text-bg-success">Publicado</span>
+                      </li>
+                      <li
+                        class="list-group-item d-flex justify-content-between align-items-center py-3"
+                      >
+                        <div>
+                          <div class="fw-semibold">
+                            Pago pendiente de verificación
+                          </div>
+                          <small class="text-muted">Ayer, 03:40 PM</small>
+                        </div>
+                        <span class="badge text-bg-warning">Pendiente</span>
+                      </li>
+                      <li
+                        class="list-group-item d-flex justify-content-between align-items-center py-3"
+                      >
+                        <div>
+                          <div class="fw-semibold">
+                            Instructor Carlos Ruiz actualizado
+                          </div>
+                          <small class="text-muted">Ayer, 01:15 PM</small>
+                        </div>
+                        <span class="badge text-bg-secondary">Edición</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ══ USUARIOS ═════════════════════════════════ -->
+              <div
+                class="tab-pane fade"
+                id="content-usuarios"
+                role="tabpanel"
+                aria-labelledby="tab-usuarios"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <div
+                    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4"
+                  >
+                    <h2 class="h4 fw-bold mb-0">Gestión de Usuarios</h2>
+                    <button
+                      class="btn btn-primary btn-sm px-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalNuevoUsuario"
+                    >
+                      + Nuevo Usuario
+                    </button>
+                  </div>
+
+                  <!-- Search & filter bar -->
+                  <div class="row g-2 mb-3">
+                    <div class="col-12 col-md-6">
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        placeholder="Buscar por nombre o correo…"
+                        id="userSearch"
+                      />
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <select
+                        class="form-select form-select-sm"
+                        id="userRolFilter"
+                      >
+                        <option value="">Todos los roles</option>
+                        <option value="estudiante">Estudiantes</option>
+                        <option value="instructor">Instructores</option>
+                        <option value="admin">Administradores</option>
+                      </select>
+                    </div>
+                    <div class="col-6 col-md-3">
+                      <select
+                        class="form-select form-select-sm"
+                        id="userEstadoFilter"
+                      >
+                        <option value="">Todos los estados</option>
+                        <option value="activo">Activo</option>
+                        <option value="inactivo">Inactivo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table align-middle mb-0" id="usersTable">
+                      <thead class="table-light">
+                        <tr>
+                          <th>#</th>
+                          <th>Nombre</th>
+                          <th>Correo</th>
+                          <th>Rol</th>
+                          <th>Estado</th>
+                          <th>Registro</th>
+                          <th class="text-end">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if usuarios %} {% for u in usuarios %}
+                        <tr>
+                          <td class="text-muted small">{{ u.id }}</td>
+                          <td class="fw-semibold">
+                            {{ u.nombre }} {{ u.apellido }}
+                          </td>
+                          <td class="text-muted small">{{ u.correo }}</td>
+                          <td>
+                            {% if u.rol == 'admin' %}
+                            <span class="badge text-bg-danger">Admin</span>
+                            {% elif u.rol == 'instructor' %}
+                            <span class="badge text-bg-success"
+                              >Instructor</span
+                            >
+                            {% else %}
+                            <span class="badge text-bg-primary"
+                              >Estudiante</span
+                            >
+                            {% endif %}
+                          </td>
+                          <td>
+                            <span
+                              class="badge {% if u.estado == 'activo' %}text-bg-success{% else %}text-bg-secondary{% endif %}"
+                            >
+                              {{ u.estado | capitalize }}
+                            </span>
+                          </td>
+                          <td class="text-muted small">
+                            {{ u.fecha_registro }}
+                          </td>
+                          <td class="text-end">
+                            <button class="btn btn-outline-secondary btn-sm">
+                              Editar
+                            </button>
+                          </td>
+                        </tr>
+                        {% endfor %} {% else %}
+                        <tr>
+                          <td colspan="7" class="text-center text-muted py-4">
+                            No hay usuarios registrados.
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ══ CURSOS ════════════════════════════════════ -->
+              <div
+                class="tab-pane fade"
+                id="content-cursos"
+                role="tabpanel"
+                aria-labelledby="tab-cursos"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <div
+                    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4"
+                  >
+                    <h2 class="h4 fw-bold mb-0">Gestión de Cursos</h2>
+                    <div class="d-flex gap-2">
+                      <button
+                        class="btn btn-outline-primary btn-sm px-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalAsignarCurso"
+                      >
+                        Asignar a estudiante
+                      </button>
+                      <button
+                        class="btn btn-primary btn-sm px-3"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalNuevoCurso"
+                      >
+                        + Nuevo Curso
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-column gap-3">
+                    {% if cursos %} {% for curso in cursos %}
+                    <div
+                      class="card border border-light-subtle rounded-3 shadow-sm p-3"
+                    >
+                      <div class="row align-items-center g-3">
+                        <div class="col-12 col-md-5">
+                          <h5 class="fw-bold mb-1 text-dark">
+                            {{ curso.titulo }}
+                          </h5>
+                          <p class="text-muted small mb-0">
+                            Instructor: {{ curso.instructor }} &nbsp;·&nbsp;
+                            <span class="font-monospace text-secondary"
+                              >PS-{{ curso.id_curso }}</span
+                            >
+                          </p>
+                        </div>
+                        <div class="col-6 col-md-3">
+                          <span class="text-muted d-block small">Inicio</span>
+                          <span class="fw-medium text-secondary"
+                            >{{ curso.fecha_inicio }}</span
+                          >
+                        </div>
+                        <div class="col-6 col-md-2 text-center">
+                          <span class="badge text-bg-success">Activo</span>
+                        </div>
+                        <div
+                          class="col-12 col-md-2 text-md-end d-flex gap-2 justify-content-md-end"
+                        >
+                          <button class="btn btn-outline-secondary btn-sm">
+                            Editar
+                          </button>
+                          <button class="btn btn-outline-danger btn-sm">
+                            Baja
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %} {% else %}
+                    <div
+                      class="alert alert-light border text-center text-muted p-4 rounded-3"
+                      role="alert"
+                    >
+                      No hay cursos registrados en el sistema.
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- ══ INSTRUCTORES ══════════════════════════════ -->
+              <div
+                class="tab-pane fade"
+                id="content-instructores"
+                role="tabpanel"
+                aria-labelledby="tab-instructores"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <div
+                    class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4"
+                  >
+                    <h2 class="h4 fw-bold mb-0">Instructores</h2>
+                    <button
+                      class="btn btn-primary btn-sm px-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalNuevoInstructor"
+                    >
+                      + Agregar Instructor
+                    </button>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Nombre</th>
+                          <th>Correo</th>
+                          <th>Especialidad</th>
+                          <th>Cursos Asignados</th>
+                          <th>Estado</th>
+                          <th class="text-end">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% if instructores %} {% for inst in instructores %}
+                        <tr>
+                          <td class="fw-semibold">{{ inst.nombre }}</td>
+                          <td class="text-muted small">{{ inst.correo }}</td>
+                          <td class="text-muted small">
+                            {{ inst.especialidad }}
+                          </td>
+                          <td class="text-center">
+                            {{ inst.cursos_asignados }}
+                          </td>
+                          <td>
+                            <span
+                              class="badge {% if inst.estado == 'activo' %}text-bg-success{% else %}text-bg-secondary{% endif %}"
+                            >
+                              {{ inst.estado | capitalize }}
+                            </span>
+                          </td>
+                          <td class="text-end">
+                            <button class="btn btn-outline-secondary btn-sm">
+                              Ver perfil
+                            </button>
+                          </td>
+                        </tr>
+                        {% endfor %} {% else %}
+                        <tr>
+                          <td colspan="6" class="text-center text-muted py-4">
+                            No hay instructores registrados.
+                          </td>
+                        </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ══ REPORTES ══════════════════════════════════ -->
+              <div
+                class="tab-pane fade"
+                id="content-reportes"
+                role="tabpanel"
+                aria-labelledby="tab-reportes"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <h2 class="h4 fw-bold mb-4">Reportes de la Plataforma</h2>
+
+                  <div class="row g-3 mb-4">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm text-center"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Ingresos del Mes</span
+                        >
+                        <h3 class="fw-bold text-success my-2">$4,820</h3>
+                        <p class="text-success small mb-0 fw-semibold">
+                          +12% vs mes anterior
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm text-center"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Nuevas Matrículas</span
+                        >
+                        <h3 class="fw-bold text-primary my-2">38</h3>
+                        <p class="text-muted small mb-0">Este mes</p>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm text-center"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Tasa de Retención</span
+                        >
+                        <h3 class="fw-bold text-warning my-2">78%</h3>
+                        <p class="text-muted small mb-0">Promedio anual</p>
+                      </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                      <div
+                        class="card h-100 border-0 bg-light p-3 rounded-3 shadow-sm text-center"
+                      >
+                        <span class="text-muted small fw-bold text-uppercase"
+                          >Diplomas Emitidos</span
+                        >
+                        <h3 class="fw-bold text-dark my-2">214</h3>
+                        <p class="text-muted small mb-0">Histórico total</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row g-3">
+                    <div class="col-12 col-lg-6">
+                      <div
+                        class="border rounded-3 p-3 bg-white shadow-sm h-100"
+                      >
+                        <h5 class="fw-semibold mb-3">Cursos más populares</h5>
+                        <ul class="list-group list-group-flush">
+                          <li
+                            class="list-group-item d-flex justify-content-between px-0"
+                          >
+                            <span>Curso de Java</span>
+                            <span class="badge text-bg-primary rounded-pill"
+                              >45 alumnos</span
+                            >
+                          </li>
+                          <li
+                            class="list-group-item d-flex justify-content-between px-0"
+                          >
+                            <span>Flask con Python</span>
+                            <span class="badge text-bg-primary rounded-pill"
+                              >38 alumnos</span
+                            >
+                          </li>
+                          <li
+                            class="list-group-item d-flex justify-content-between px-0"
+                          >
+                            <span>Marketing Digital</span>
+                            <span class="badge text-bg-primary rounded-pill"
+                              >32 alumnos</span
+                            >
+                          </li>
+                          <li
+                            class="list-group-item d-flex justify-content-between px-0"
+                          >
+                            <span>Diseño UX</span>
+                            <span class="badge text-bg-primary rounded-pill"
+                              >27 alumnos</span
+                            >
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                      <div
+                        class="border rounded-3 p-3 bg-white shadow-sm h-100"
+                      >
+                        <h5 class="fw-semibold mb-3">Exportar reportes</h5>
+                        <div class="d-grid gap-2">
+                          <a
+                            href="{{ url_for('export_usuarios_csv') }}"
+                            class="btn btn-outline-dark btn-sm py-2"
+                          >
+                            Exportar usuarios (CSV)
+                          </a>
+                          <button
+                            class="btn btn-outline-dark btn-sm py-2"
+                            disabled
+                            title="Próximamente"
+                          >
+                            Exportar matrículas (CSV)
+                          </button>
+                          <button
+                            class="btn btn-outline-dark btn-sm py-2"
+                            disabled
+                            title="Próximamente"
+                          >
+                            Reporte financiero (PDF)
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ══ CONFIGURACIÓN ════════════════════════════ -->
+              <div
+                class="tab-pane fade"
+                id="content-configuracion"
+                role="tabpanel"
+                aria-labelledby="tab-configuracion"
+              >
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-lg-5">
+                  <h2 class="h4 fw-bold mb-4">Configuración del Sistema</h2>
+
+                  <div class="row g-4">
+                    <div class="col-12 col-md-6">
+                      <div class="border rounded-3 p-4 h-100">
+                        <h5 class="fw-semibold mb-3">
+                          Información del Administrador
+                        </h5>
+                        {% if admin %}
+                        <div class="mb-3">
+                          <label class="form-label fw-semibold small"
+                            >Nombre</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            value="{{ admin.nombre }} {{ admin.apellido }}"
+                            readonly
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label fw-semibold small"
+                            >Correo</label
+                          >
+                          <input
+                            type="email"
+                            class="form-control"
+                            value="{{ admin.correo }}"
+                            readonly
+                          />
+                        </div>
+                        <div class="mb-0">
+                          <label class="form-label fw-semibold small"
+                            >Nivel de Acceso</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control"
+                            value="{{ admin.nivel_acceso }}"
+                            readonly
+                          />
+                        </div>
+                        {% else %}
+                        <p class="text-muted small">
+                          No se pudo cargar la información del administrador.
+                        </p>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                      <div class="border rounded-3 p-4 h-100">
+                        <h5 class="fw-semibold mb-3">Seguridad</h5>
+                        <div class="d-grid gap-2">
+                          <a
+                            href="{{ url_for('password_recover') }}"
+                            class="btn btn-outline-dark py-2"
+                          >
+                            Cambiar Contraseña
+                          </a>
+                        </div>
+                        <hr />
+                        <h5 class="fw-semibold mb-3">
+                          Parámetros de la Plataforma
+                        </h5>
+                        <div class="d-grid gap-2">
+                          <button
+                            class="btn btn-outline-secondary btn-sm py-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalCategorias"
+                          >
+                            Gestionar categorías de cursos
+                          </button>
+                          <button
+                            class="btn btn-outline-secondary py-2"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalNotificaciones"
+                          >
+                            Configurar notificaciones
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- ══ MODALES ══════════════════════════════════════════════════════════ -->
+
+    <!-- Nuevo Usuario -->
+    <div class="modal fade" id="modalNuevoUsuario" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Nuevo Usuario</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form method="POST" action="{{ url_for('admin_crear_usuario') }}">
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Nombre</label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Apellido</label>
+                  <input
+                    type="text"
+                    name="apellido"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold small">Correo</label>
+                  <input
+                    type="email"
+                    name="correo"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Contraseña</label>
+                  <input
+                    type="password"
+                    name="password"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Rol</label>
+                  <select
+                    name="rol"
+                    class="form-select form-select-sm"
+                    required
+                  >
+                    <option value="estudiante">Estudiante</option>
+                    <option value="instructor">Instructor</option>
+                    <option value="administrador">Administrador</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary btn-sm">
+                Crear usuario
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nuevo Curso -->
+    <div class="modal fade" id="modalNuevoCurso" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Nuevo Curso</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-semibold small"
+                  >Título del curso</label
+                >
+                <input
+                  type="text"
+                  class="form-control form-control-sm"
+                  placeholder="Ej. Curso de Java Avanzado"
+                />
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small"
+                  >Instructor asignado</label
+                >
+                <select class="form-select form-select-sm">
+                  {% for inst in instructores %}
+                  <option>{{ inst.nombre }}</option>
+                  {% else %}
+                  <option disabled>Sin instructores registrados</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-semibold small"
+                  >Fecha de inicio</label
+                >
+                <input type="date" class="form-control form-control-sm" />
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-semibold small"
+                  >Duración (semanas)</label
+                >
+                <input
+                  type="number"
+                  class="form-control form-control-sm"
+                  value="8"
+                  min="1"
+                />
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold small"
+                  >Descripción breve</label
+                >
+                <textarea
+                  class="form-control form-control-sm"
+                  rows="2"
+                ></textarea>
+              </div>
+            </div>
+            <p class="text-muted small mt-3 mb-0">
+              La gestión completa de cursos estará disponible en la próxima
+              versión.
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              data-bs-dismiss="modal"
+            >
+              Guardar borrador
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nuevo Instructor -->
+    <div class="modal fade" id="modalNuevoInstructor" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Agregar Instructor</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form method="POST" action="{{ url_for('admin_crear_usuario') }}">
+            <div class="modal-body">
+              <div class="row g-3">
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Nombre</label>
+                  <input
+                    type="text"
+                    name="nombre"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Apellido</label>
+                  <input
+                    type="text"
+                    name="apellido"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small">Correo</label>
+                  <input
+                    type="email"
+                    name="correo"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-6">
+                  <label class="form-label fw-semibold small"
+                    >Contraseña temporal</label
+                  >
+                  <input
+                    type="password"
+                    name="password"
+                    class="form-control form-control-sm"
+                    required
+                  />
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold small"
+                    >Especialidad</label
+                  >
+                  <input
+                    type="text"
+                    name="especialidad"
+                    class="form-control form-control-sm"
+                    placeholder="Ej. Desarrollo Backend"
+                  />
+                </div>
+                <input type="hidden" name="rol" value="instructor" />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-primary btn-sm">
+                Registrar instructor
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gestionar categorías -->
+    <div class="modal fade" id="modalCategorias" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Categorías de Cursos</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group list-group-flush mb-3">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Programación
+                <span class="badge text-bg-primary rounded-pill">3 cursos</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Marketing Digital
+                <span class="badge text-bg-primary rounded-pill">1 curso</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                Diseño UX/UI
+                <span class="badge text-bg-primary rounded-pill">1 curso</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
+                DevOps &amp; Cloud
+                <span class="badge text-bg-primary rounded-pill">2 cursos</span>
+              </li>
+            </ul>
+            <div class="input-group input-group-sm">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Nueva categoría..."
+                id="newCatInput"
+              />
+              <button class="btn btn-primary" id="btnAddCat">Agregar</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Configurar notificaciones -->
+    <div class="modal fade" id="modalNotificaciones" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold">Notificaciones del Sistema</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-check form-switch mb-3">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="notifNuevoUsuario"
+                checked
+              />
+              <label
+                class="form-check-label small fw-semibold"
+                for="notifNuevoUsuario"
+                >Nuevo usuario registrado</label
+              >
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="notifNuevaMatricula"
+                checked
+              />
+              <label
+                class="form-check-label small fw-semibold"
+                for="notifNuevaMatricula"
+                >Nueva matrícula</label
+              >
+            </div>
+            <div class="form-check form-switch mb-3">
+              <input class="form-check-input" type="checkbox" id="notifPago" />
+              <label class="form-check-label small fw-semibold" for="notifPago"
+                >Pago pendiente de verificación</label
+              >
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="notifDiploma"
+                checked
+              />
+              <label
+                class="form-check-label small fw-semibold"
+                for="notifDiploma"
+                >Diploma emitido</label
+              >
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary btn-sm" data-bs-dismiss="modal">
+              Guardar preferencias
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const menuButtons = document.querySelectorAll(
+        "#btnGroup .list-group-item-action:not([disabled])",
+      );
+      menuButtons.forEach((button) => {
+        button.addEventListener("click", function () {
+          const currentActive = document.querySelector(
+            "#btnGroup .list-group-item-action.active",
+          );
+          if (currentActive) {
+            currentActive.classList.remove("active");
+            currentActive.removeAttribute("aria-current");
+          }
+          this.classList.add("active");
+          this.setAttribute("aria-current", "true");
+        });
+      });
+
+      // Live search on users table
+      const userSearch = document.getElementById("userSearch");
+      if (userSearch) {
+        userSearch.addEventListener("input", function () {
+          const term = this.value.toLowerCase();
+          document.querySelectorAll("#usersTable tbody tr").forEach((row) => {
+            row.style.display = row.textContent.toLowerCase().includes(term)
+              ? ""
+              : "none";
+          });
+        });
+      }
+
+      // Role + Estado filter
+      ["userRolFilter", "userEstadoFilter"].forEach((id) => {
+        document.getElementById(id)?.addEventListener("change", applyFilters);
+      });
+      function applyFilters() {
+        const rol =
+          document.getElementById("userRolFilter")?.value.toLowerCase() || "";
+        const estado =
+          document.getElementById("userEstadoFilter")?.value.toLowerCase() ||
+          "";
+        document.querySelectorAll("#usersTable tbody tr").forEach((row) => {
+          const text = row.textContent.toLowerCase();
+          const rolOk = !rol || text.includes(rol);
+          const estadoOk = !estado || text.includes(estado);
+          row.style.display = rolOk && estadoOk ? "" : "none";
+        });
+      }
+
+      // Categorías — demo add
+      document
+        .getElementById("btnAddCat")
+        ?.addEventListener("click", function () {
+          const input = document.getElementById("newCatInput");
+          const val = input.value.trim();
+          if (!val) return;
+          const list = this.closest(".modal-body").querySelector(".list-group");
+          const li = document.createElement("li");
+          li.className =
+            "list-group-item d-flex justify-content-between align-items-center";
+          li.innerHTML = `${val} <span class="badge text-bg-secondary rounded-pill">0 cursos</span>`;
+          list.appendChild(li);
+          input.value = "";
+        });
+    </script>
+  </body>
+</html>

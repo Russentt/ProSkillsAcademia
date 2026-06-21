@@ -8,15 +8,152 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="icon" type="image/x-icon" href="static/SGAP.svg" />
+    <link rel="icon" type="image/x-icon" href="../static/SGAP.svg" />
     <style>
-      :root { --accent-color: #0d6efd; --accent-bg: #f0f6ff; }
-      .sidebar-link.active { background-color: var(--accent-bg) !important; color: var(--accent-color) !important; fw-bold; }
-      .accent-text { color: var(--accent-color); }
-      .accent-progress { background-color: var(--accent-color); }
+      :root {
+        --accent-color: #0d6efd;
+        --accent-bg: #f0f6ff;
+      }
+
+      .sidebar-link.active {
+        background-color: var(--accent-bg) !important;
+        color: var(--accent-color) !important;
+        font-weight: 600;
+      }
+      .accent-text {
+        color: var(--accent-color);
+      }
+      .accent-progress {
+        background-color: var(--accent-color);
+      }
+
+      /* Module cards */
+      .module-card {
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .module-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(13, 110, 253, 0.15) !important;
+      }
+      .module-card.active {
+        border-left: 4px solid var(--accent-color) !important;
+      }
+
+      /* Detail panel */
+      .detail-panel {
+        display: none;
+      }
+      .detail-panel.show {
+        display: block;
+        animation: fadeSlideIn 0.25s ease;
+      }
+      @keyframes fadeSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Lesson list */
+      .lesson-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0.35rem 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      .lesson-item:last-child {
+        border-bottom: none;
+      }
+      .lesson-check {
+        font-size: 1rem;
+        min-width: 1.2rem;
+      }
+      .lesson-check.done {
+        color: #198754;
+      }
+      .lesson-check.pending {
+        color: #adb5bd;
+      }
+
+      /* Resource links */
+      .resource-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        background: #f8f9fa;
+        margin-bottom: 0.5rem;
+        text-decoration: none;
+        color: #212529;
+        transition: background 0.15s;
+      }
+      .resource-item:hover {
+        background: #e9ecef;
+        color: #0d6efd;
+      }
+
+      /* Progress ring */
+      .progress-ring {
+        position: relative;
+        width: 90px;
+        height: 90px;
+      }
+      .progress-ring svg {
+        transform: rotate(-90deg);
+      }
+      .progress-ring .ring-bg {
+        fill: none;
+        stroke: #e9ecef;
+        stroke-width: 8;
+      }
+      .progress-ring .ring-fill {
+        fill: none;
+        stroke: var(--accent-color);
+        stroke-width: 8;
+        stroke-linecap: round;
+        stroke-dasharray: 251.2;
+        stroke-dashoffset: 251.2;
+        transition: stroke-dashoffset 1.2s ease;
+      }
+      .progress-ring .ring-text {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+        color: #212529;
+      }
+
+      /* Code blocks */
+      pre code {
+        font-size: 0.82rem;
+        color: #1e293b;
+      }
+
+      /* Tab overrides */
+      .nav-tabs .nav-link {
+        color: #6c757d;
+      }
+      .nav-tabs .nav-link.active {
+        color: var(--accent-color);
+        font-weight: 600;
+        border-color: #dee2e6 #dee2e6 #fff;
+      }
     </style>
   </head>
   <body class="bg-light">
+    <!-- ═══ HEADER ═══════════════════════════════════════════════════════════ -->
     <header
       class="navbar navbar-expand-lg navbar-light bg-white border-bottom px-4 py-2 sticky-top"
     >
@@ -38,18 +175,22 @@
             ></span>
             🔔
           </button>
-          <div class="d-flex align-items-center gap-2">
+          <a
+            href="{{ url_for('cuenta') }}"
+            class="d-flex align-items-center gap-2 text-decoration-none"
+          >
             <span class="badge bg-primary rounded-circle px-2 py-2">AM</span>
             <span class="small fw-semibold text-dark d-none d-sm-inline"
               >Ana Martínez</span
             >
-          </div>
+          </a>
         </div>
       </div>
     </header>
 
     <div class="container-fluid">
       <div class="row">
+        <!-- ═══ SIDEBAR NAV ═══════════════════════════════════════════════════ -->
         <nav
           class="col-12 col-md-3 col-lg-2 bg-white min-vh-100 border-end py-4 px-3"
         >
@@ -60,69 +201,97 @@
           <div class="nav flex-column gap-1">
             <a
               href="#"
+              data-target="section-inicio"
               class="nav-link sidebar-link active rounded-2 py-2 px-3 text-dark"
               >Inicio</a
             >
             <a
               href="#"
+              data-target="section-contenido"
               class="nav-link sidebar-link rounded-2 py-2 px-3 text-secondary"
               >Contenido</a
             >
             <a
               href="#"
+              data-target="section-tareas"
               class="nav-link sidebar-link rounded-2 py-2 px-3 text-secondary"
               >Tareas</a
             >
             <a
               href="#"
+              data-target="section-foros"
               class="nav-link sidebar-link rounded-2 py-2 px-3 text-secondary"
               >Foros</a
             >
             <a
               href="#"
+              data-target="section-recursos"
               class="nav-link sidebar-link rounded-2 py-2 px-3 text-secondary"
               >Recursos</a
             >
             <a
               href="#"
+              data-target="section-progreso"
               class="nav-link sidebar-link rounded-2 py-2 px-3 text-secondary"
               >Mi progreso</a
             >
           </div>
         </nav>
 
+        <!-- ═══ MAIN CONTENT ══════════════════════════════════════════════════ -->
         <main class="col-12 col-md-9 col-lg-10 p-4">
+          <!-- Course banner -->
           <div
             class="d-flex align-items-center gap-3 mb-4 bg-white p-3 rounded-3 shadow-sm border"
           >
             <span class="fs-1">☕</span>
-            <div>
+            <div class="flex-grow-1">
               <h2 class="fw-bold mb-1 text-dark">Curso de Java</h2>
               <p class="text-muted small mb-0">
-                Aprende a programar desde cero
+                Programación orientada a objetos: de los fundamentos hasta
+                Streams y Lambdas
               </p>
+            </div>
+            <div class="d-none d-md-flex align-items-center gap-2">
+              <span class="badge bg-primary-subtle text-primary px-3 py-2"
+                >Intermedio</span
+              >
+              <span class="badge bg-light text-secondary border px-3 py-2"
+                >☕ Java 17+</span
+              >
             </div>
           </div>
 
-          <div class="row g-4">
+          <div class="row g-4" id="section-inicio">
             <div class="col-12 col-lg-9">
-              <h5 class="fw-bold text-dark mb-3">Módulos del curso</h5>
-              <div class="row g-3">
+              <h5 class="fw-bold text-dark mb-3">
+                Módulos del curso
+                <span
+                  class="badge bg-light text-secondary border fw-normal ms-1 small"
+                  >8 módulos</span
+                >
+              </h5>
+
+              <!-- ── Module grid ──────────────────────────────────────────────── -->
+              <div class="row g-3" id="modules-grid">
+                <!-- Módulo 1 -->
                 <div class="col-12 col-sm-6">
                   <div
-                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3"
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="1"
                   >
                     <div class="d-flex align-items-center gap-2 mb-2">
-                      <span class="fs-4 accent-text">&lt;/&gt;</span>
+                      <span class="fs-4 accent-text">🚀</span>
                       <h6 class="fw-bold text-dark mb-0">
                         1. Introducción a Java
                       </h6>
                     </div>
                     <p class="text-muted small mb-3">
-                      Conceptos básicos y entorno de desarrollo.
+                      Historia, arquitectura JVM/JRE/JDK, instalación y primer
+                      programa.
                     </p>
                     <div class="mt-auto">
-                      <div class="progress h-25 mb-1" style="height: 6px">
+                      <div class="progress mb-1" style="height: 6px">
                         <div
                           class="progress-bar accent-progress"
                           role="progressbar"
@@ -134,9 +303,11 @@
                   </div>
                 </div>
 
+                <!-- Módulo 2 -->
                 <div class="col-12 col-sm-6">
                   <div
-                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3"
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="2"
                   >
                     <div class="d-flex align-items-center gap-2 mb-2">
                       <span class="fs-4 accent-text">📦</span>
@@ -145,10 +316,11 @@
                       </h6>
                     </div>
                     <p class="text-muted small mb-3">
-                      Variables, tipos primitivos y operadores.
+                      Los 8 tipos primitivos, String, casting
+                      implícito/explícito y operadores.
                     </p>
                     <div class="mt-auto">
-                      <div class="progress h-25 mb-1" style="height: 6px">
+                      <div class="progress mb-1" style="height: 6px">
                         <div
                           class="progress-bar accent-progress"
                           role="progressbar"
@@ -160,9 +332,11 @@
                   </div>
                 </div>
 
+                <!-- Módulo 3 -->
                 <div class="col-12 col-sm-6">
                   <div
-                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3"
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="3"
                   >
                     <div class="d-flex align-items-center gap-2 mb-2">
                       <span class="fs-4 accent-text">🌿</span>
@@ -171,10 +345,11 @@
                       </h6>
                     </div>
                     <p class="text-muted small mb-3">
-                      Condicionales, bucles y control de flujo lógico.
+                      Condicionales, switch expressions, bucles y control de
+                      flujo.
                     </p>
                     <div class="mt-auto">
-                      <div class="progress h-25 mb-1" style="height: 6px">
+                      <div class="progress mb-1" style="height: 6px">
                         <div
                           class="progress-bar accent-progress"
                           role="progressbar"
@@ -186,9 +361,11 @@
                   </div>
                 </div>
 
+                <!-- Módulo 4 -->
                 <div class="col-12 col-sm-6">
                   <div
-                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3"
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="4"
                   >
                     <div class="d-flex align-items-center gap-2 mb-2">
                       <span class="fs-4 accent-text">{ }</span>
@@ -197,10 +374,125 @@
                       </h6>
                     </div>
                     <p class="text-muted small mb-3">
-                      Clases, objetos, herencia, polimorfismo y más.
+                      Clases, herencia, polimorfismo, interfaces y
+                      encapsulamiento.
                     </p>
                     <div class="mt-auto">
-                      <div class="progress h-25 mb-1" style="height: 6px">
+                      <div class="progress mb-1" style="height: 6px">
+                        <div
+                          class="progress-bar accent-progress"
+                          role="progressbar"
+                          style="width: 30%"
+                        ></div>
+                      </div>
+                      <span class="text-muted small font-monospace">30%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Módulo 5 -->
+                <div class="col-12 col-sm-6">
+                  <div
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="5"
+                  >
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <span class="fs-4 accent-text">📋</span>
+                      <h6 class="fw-bold text-dark mb-0">
+                        5. Arrays y Colecciones
+                      </h6>
+                    </div>
+                    <p class="text-muted small mb-3">
+                      Arrays, ArrayList, HashMap, LinkedList y el Collections
+                      Framework.
+                    </p>
+                    <div class="mt-auto">
+                      <div class="progress mb-1" style="height: 6px">
+                        <div
+                          class="progress-bar accent-progress"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <span class="text-muted small font-monospace">0%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Módulo 6 -->
+                <div class="col-12 col-sm-6">
+                  <div
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="6"
+                  >
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <span class="fs-4 accent-text">⚠️</span>
+                      <h6 class="fw-bold text-dark mb-0">
+                        6. Manejo de Excepciones
+                      </h6>
+                    </div>
+                    <p class="text-muted small mb-3">
+                      try/catch/finally, jerarquía de excepciones y excepciones
+                      propias.
+                    </p>
+                    <div class="mt-auto">
+                      <div class="progress mb-1" style="height: 6px">
+                        <div
+                          class="progress-bar accent-progress"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <span class="text-muted small font-monospace">0%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Módulo 7 -->
+                <div class="col-12 col-sm-6">
+                  <div
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="7"
+                  >
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <span class="fs-5 accent-text fw-bold">λ</span>
+                      <h6 class="fw-bold text-dark mb-0">
+                        7. Streams y Lambdas
+                      </h6>
+                    </div>
+                    <p class="text-muted small mb-3">
+                      Stream API, expresiones lambda, method references e
+                      interfaces funcionales.
+                    </p>
+                    <div class="mt-auto">
+                      <div class="progress mb-1" style="height: 6px">
+                        <div
+                          class="progress-bar accent-progress"
+                          role="progressbar"
+                          style="width: 0%"
+                        ></div>
+                      </div>
+                      <span class="text-muted small font-monospace">0%</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Módulo 8 -->
+                <div class="col-12 col-sm-6">
+                  <div
+                    class="card h-100 bg-white border-light-subtle shadow-sm p-3 rounded-3 module-card"
+                    data-module="8"
+                  >
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                      <span class="fs-4 accent-text">🏆</span>
+                      <h6 class="fw-bold text-dark mb-0">8. Proyecto Final</h6>
+                    </div>
+                    <p class="text-muted small mb-3">
+                      App CRUD completa: gestión de inventario integrando todos
+                      los módulos.
+                    </p>
+                    <div class="mt-auto">
+                      <div class="progress mb-1" style="height: 6px">
                         <div
                           class="progress-bar accent-progress"
                           role="progressbar"
@@ -212,26 +504,155 @@
                   </div>
                 </div>
               </div>
-            </div>
+              <!-- /modules-grid -->
 
+              <!-- ── Detail panel (hidden until a card is clicked) ─────────── -->
+              <div
+                id="detail-panel"
+                class="detail-panel mt-4 bg-white border border-primary-subtle rounded-3 shadow-sm p-4"
+              >
+                <div
+                  class="d-flex align-items-center justify-content-between mb-3"
+                >
+                  <div class="d-flex align-items-center gap-2">
+                    <span id="detail-icon" class="fs-4"></span>
+                    <h5 id="detail-title" class="fw-bold text-dark mb-0"></h5>
+                  </div>
+                  <button
+                    class="btn btn-sm btn-outline-secondary"
+                    id="close-detail"
+                  >
+                    ✕ Cerrar
+                  </button>
+                </div>
+
+                <!-- Inner tabs -->
+                <ul class="nav nav-tabs mb-3" id="detailTabs" role="tablist">
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link active"
+                      id="tab-lecciones"
+                      data-bs-toggle="tab"
+                      data-bs-target="#pane-lecciones"
+                      type="button"
+                      role="tab"
+                    >
+                      📚 Lecciones
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="tab-conceptos"
+                      data-bs-toggle="tab"
+                      data-bs-target="#pane-conceptos"
+                      type="button"
+                      role="tab"
+                    >
+                      💡 Conceptos Clave
+                    </button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                    <button
+                      class="nav-link"
+                      id="tab-recursos"
+                      data-bs-toggle="tab"
+                      data-bs-target="#pane-recursos"
+                      type="button"
+                      role="tab"
+                    >
+                      🔗 Recursos
+                    </button>
+                  </li>
+                </ul>
+
+                <div class="tab-content">
+                  <div
+                    class="tab-pane fade show active"
+                    id="pane-lecciones"
+                    role="tabpanel"
+                  >
+                    <div id="lecciones-content"></div>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="pane-conceptos"
+                    role="tabpanel"
+                  >
+                    <div id="conceptos-content"></div>
+                  </div>
+                  <div class="tab-pane fade" id="pane-recursos" role="tabpanel">
+                    <div id="recursos-content"></div>
+                  </div>
+                </div>
+              </div>
+              <!-- /detail-panel -->
+            </div>
+            <!-- /col-lg-9 -->
+
+            <!-- ── Right sidebar ───────────────────────────────────────────── -->
             <div class="col-12 col-lg-3">
+              <!-- Progress ring -->
               <div
                 class="card bg-white p-3 border-light-subtle shadow-sm rounded-3 mb-3 text-center"
               >
-                <span class="small fw-bold text-uppercase text-muted"
+                <span
+                  class="small fw-bold text-uppercase text-muted mb-2 d-block"
                   >Mi progreso</span
                 >
-                <div class="my-3 d-flex justify-content-center">
-                  <div
-                    class="position-relative d-flex align-items-center justify-content-center"
-                    style="width: 100px; height: 100px"
-                  >
-                    <div class="fs-4 fw-bold text-dark">65%</div>
+                <div class="d-flex justify-content-center mb-2">
+                  <div class="progress-ring">
+                    <svg width="90" height="90" viewBox="0 0 90 90">
+                      <circle class="ring-bg" cx="45" cy="45" r="40" />
+                      <circle
+                        class="ring-fill"
+                        id="progress-ring-fill"
+                        cx="45"
+                        cy="45"
+                        r="40"
+                      />
+                    </svg>
+                    <div class="ring-text">65%</div>
                   </div>
                 </div>
                 <span class="text-muted small">Curso en progreso</span>
+                <div class="mt-2">
+                  <div class="progress" style="height: 5px">
+                    <div
+                      class="progress-bar accent-progress"
+                      id="overall-bar"
+                      role="progressbar"
+                      style="width: 0%; transition: width 1.2s ease"
+                    ></div>
+                  </div>
+                </div>
               </div>
 
+              <!-- Next lesson -->
+              <div
+                class="card bg-white p-3 border-light-subtle shadow-sm rounded-3 mb-3"
+              >
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <span>▶️</span>
+                  <span class="small fw-bold text-uppercase text-muted"
+                    >Próxima Lección</span
+                  >
+                </div>
+                <p class="small fw-semibold text-dark mb-1">
+                  Módulo 3 · Lección 4
+                </p>
+                <p class="small text-muted mb-2">
+                  Switch Expressions en Java 14+
+                </p>
+                <button
+                  class="btn btn-primary btn-sm w-100"
+                  onclick="openModule(3)"
+                >
+                  Continuar →
+                </button>
+              </div>
+
+              <!-- Announcements -->
               <div
                 class="card bg-white p-3 border-light-subtle shadow-sm rounded-3"
               >
@@ -243,13 +664,1368 @@
                 </div>
                 <p class="small text-dark mb-0">
                   Recuerda entregar la tarea 2 antes del viernes a medianoche.
+                  🕛
                 </p>
+              </div>
+            </div>
+            <!-- /col-lg-3 -->
+          </div>
+          <!-- /row /section-inicio -->
+
+          <!-- ══ CONTENIDO ══════════════════════════════════════════════════ -->
+          <div id="section-contenido" class="aula-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold text-dark mb-0">Temario del Curso</h4>
+              <span
+                class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2"
+                >8 módulos · ~48 hrs</span
+              >
+            </div>
+            <div class="accordion" id="syllabusAccordion"></div>
+          </div>
+
+          <!-- ══ TAREAS ══════════════════════════════════════════════════════ -->
+          <div id="section-tareas" class="aula-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold text-dark mb-0">Mis Tareas</h4>
+              <span
+                class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2"
+                >1 pendiente</span
+              >
+            </div>
+            <div class="d-flex flex-column gap-3">
+              <!-- Tarea 1 -->
+              <div class="card border-0 shadow-sm rounded-3 p-4">
+                <div class="row align-items-center g-3">
+                  <div class="col-12 col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="badge text-bg-success mt-1">Entregada</span>
+                      <div>
+                        <h6 class="fw-bold mb-1">
+                          Tarea 1: Variables y tipos primitivos
+                        </h6>
+                        <p class="text-muted small mb-0">
+                          Módulo 2 · Tipos de datos, casting y autoboxing
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-2 text-md-center">
+                    <span class="text-muted d-block small">Entregada</span>
+                    <span class="fw-medium">14/06/2026</span>
+                  </div>
+                  <div class="col-6 col-md-2 text-md-center">
+                    <span class="text-muted d-block small">Nota</span>
+                    <span class="fw-bold text-success fs-5">92 / 100</span>
+                  </div>
+                  <div class="col-12 col-md-2 text-md-end">
+                    <button
+                      class="btn btn-outline-secondary btn-sm w-100"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalTarea1"
+                    >
+                      Ver retroalimentación
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Tarea 2 -->
+              <div
+                class="card border border-warning-subtle shadow-sm rounded-3 p-4"
+              >
+                <div class="row align-items-center g-3">
+                  <div class="col-12 col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="badge text-bg-warning mt-1">Pendiente</span>
+                      <div>
+                        <h6 class="fw-bold mb-1">
+                          Tarea 2: Control de flujo y bucles
+                        </h6>
+                        <p class="text-muted small mb-0">
+                          Módulo 3 · if/switch expressions, for, while, do-while
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-2 text-md-center">
+                    <span class="text-muted d-block small">Vence</span>
+                    <span class="fw-medium text-danger">25/06/2026</span>
+                  </div>
+                  <div class="col-6 col-md-2 text-md-center">
+                    <span class="text-muted d-block small">Nota</span>
+                    <span class="fw-bold text-muted">—</span>
+                  </div>
+                  <div class="col-12 col-md-2 text-md-end">
+                    <button
+                      class="btn btn-primary btn-sm w-100"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalEntregarTarea"
+                    >
+                      Entregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Tarea 3 -->
+              <div class="card border-0 bg-light shadow-sm rounded-3 p-4">
+                <div class="row align-items-center g-3">
+                  <div class="col-12 col-md-6">
+                    <div class="d-flex align-items-start gap-3">
+                      <span class="badge text-bg-secondary mt-1"
+                        >Por abrir</span
+                      >
+                      <div>
+                        <h6 class="fw-bold mb-1 text-muted">
+                          Tarea 3: POO — Herencia y polimorfismo
+                        </h6>
+                        <p class="text-muted small mb-0">
+                          Módulo 4 · Clases, herencia, interfaces
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6 col-md-2 text-md-center">
+                    <span class="text-muted d-block small">Disponible</span>
+                    <span class="fw-medium text-muted">02/07/2026</span>
+                  </div>
+                  <div class="col-6 col-md-2 text-md-center">
+                    <span class="text-muted d-block small">Nota</span>
+                    <span class="fw-bold text-muted">—</span>
+                  </div>
+                  <div class="col-12 col-md-2 text-md-end">
+                    <button
+                      class="btn btn-outline-secondary btn-sm w-100"
+                      disabled
+                    >
+                      No disponible
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ FOROS ════════════════════════════════════════════════════════ -->
+          <div id="section-foros" class="aula-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold text-dark mb-0">Foro Q&amp;A</h4>
+              <button
+                class="btn btn-primary btn-sm px-3"
+                data-bs-toggle="modal"
+                data-bs-target="#modalNuevoHilo"
+              >
+                + Nueva pregunta
+              </button>
+            </div>
+            <!-- Thread list -->
+            <div class="d-flex flex-column gap-3 mb-4" id="forum-threads">
+              <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div
+                  class="d-flex justify-content-between align-items-start gap-2"
+                >
+                  <div>
+                    <h6 class="fw-semibold mb-1">
+                      ¿Cuál es la diferencia entre ArrayList y LinkedList?
+                    </h6>
+                    <p class="text-muted small mb-0">
+                      Módulo 5 · Por <span class="fw-medium">Carlos M.</span> ·
+                      hace 2 días
+                    </p>
+                  </div>
+                  <div class="text-end flex-shrink-0">
+                    <span class="badge text-bg-primary rounded-pill"
+                      >5 respuestas</span
+                    >
+                  </div>
+                </div>
+                <div class="mt-2 border-top pt-2">
+                  <button
+                    class="btn btn-link btn-sm p-0 text-primary"
+                    onclick="toggleThread(this)"
+                  >
+                    Ver respuestas ▾
+                  </button>
+                  <div class="thread-replies d-none mt-2 ps-3 border-start">
+                    <div class="mb-2">
+                      <span class="fw-semibold small">Instructor:</span>
+                      <p class="small text-dark mb-0">
+                        ArrayList usa un array dinámico (acceso O(1) por
+                        índice), mientras LinkedList usa nodos enlazados
+                        (inserción/eliminación O(1) en extremos pero O(n) acceso
+                        por índice). Usa ArrayList para la mayoría de los casos.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div
+                  class="d-flex justify-content-between align-items-start gap-2"
+                >
+                  <div>
+                    <h6 class="fw-semibold mb-1">
+                      Error al usar switch expression en Java 14+
+                    </h6>
+                    <p class="text-muted small mb-0">
+                      Módulo 3 · Por <span class="fw-medium">Ana R.</span> ·
+                      hace 4 días
+                    </p>
+                  </div>
+                  <div class="text-end flex-shrink-0">
+                    <span class="badge text-bg-success rounded-pill"
+                      >Resuelta · 3 resp.</span
+                    >
+                  </div>
+                </div>
+                <div class="mt-2 border-top pt-2">
+                  <button
+                    class="btn btn-link btn-sm p-0 text-primary"
+                    onclick="toggleThread(this)"
+                  >
+                    Ver respuestas ▾
+                  </button>
+                  <div class="thread-replies d-none mt-2 ps-3 border-start">
+                    <div class="mb-2">
+                      <span class="fw-semibold small">Instructor:</span>
+                      <p class="small text-dark mb-0">
+                        Asegúrate de compilar con <code>--release 14</code> o
+                        superior. Si usas IntelliJ, ve a Project Structure → SDK
+                        y selecciona Java 14+.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card border-0 shadow-sm rounded-3 p-3">
+                <div
+                  class="d-flex justify-content-between align-items-start gap-2"
+                >
+                  <div>
+                    <h6 class="fw-semibold mb-1">
+                      ¿Cuándo usar interfaces vs clases abstractas?
+                    </h6>
+                    <p class="text-muted small mb-0">
+                      Módulo 4 · Por <span class="fw-medium">Luis T.</span> ·
+                      hace 1 semana
+                    </p>
+                  </div>
+                  <div class="text-end flex-shrink-0">
+                    <span class="badge text-bg-primary rounded-pill"
+                      >8 respuestas</span
+                    >
+                  </div>
+                </div>
+                <div class="mt-2 border-top pt-2">
+                  <button
+                    class="btn btn-link btn-sm p-0 text-primary"
+                    onclick="toggleThread(this)"
+                  >
+                    Ver respuestas ▾
+                  </button>
+                  <div class="thread-replies d-none mt-2 ps-3 border-start">
+                    <div class="mb-2">
+                      <span class="fw-semibold small">Instructor:</span>
+                      <p class="small text-dark mb-0">
+                        Usa interfaces cuando defines un contrato
+                        (comportamiento) que varias clases no relacionadas deben
+                        implementar. Usa clase abstracta cuando tienes lógica
+                        compartida que las subclases heredarán directamente.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ RECURSOS ════════════════════════════════════════════════════ -->
+          <div id="section-recursos" class="aula-section d-none">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h4 class="fw-bold text-dark mb-0">Recursos del Curso</h4>
+            </div>
+            <div id="recursos-library"></div>
+          </div>
+
+          <!-- ══ MI PROGRESO ═════════════════════════════════════════════════ -->
+          <div id="section-progreso" class="aula-section d-none">
+            <h4 class="fw-bold text-dark mb-4">Mi Progreso</h4>
+            <div class="row g-3 mb-4">
+              <div class="col-6 col-md-3">
+                <div
+                  class="card border-0 bg-light p-3 rounded-3 text-center shadow-sm"
+                >
+                  <span class="text-muted small fw-bold text-uppercase"
+                    >Módulos completos</span
+                  >
+                  <h3 class="fw-bold text-primary my-2">2 / 8</h3>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div
+                  class="card border-0 bg-light p-3 rounded-3 text-center shadow-sm"
+                >
+                  <span class="text-muted small fw-bold text-uppercase"
+                    >Lecciones vistas</span
+                  >
+                  <h3 class="fw-bold text-dark my-2">19 / 50</h3>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div
+                  class="card border-0 bg-light p-3 rounded-3 text-center shadow-sm"
+                >
+                  <span class="text-muted small fw-bold text-uppercase"
+                    >Tareas entregadas</span
+                  >
+                  <h3 class="fw-bold text-success my-2">1 / 3</h3>
+                </div>
+              </div>
+              <div class="col-6 col-md-3">
+                <div
+                  class="card border-0 bg-light p-3 rounded-3 text-center shadow-sm"
+                >
+                  <span class="text-muted small fw-bold text-uppercase"
+                    >Promedio</span
+                  >
+                  <h3 class="fw-bold text-warning my-2">92 / 100</h3>
+                </div>
+              </div>
+            </div>
+            <h5 class="fw-semibold mb-3">Avance por módulo</h5>
+            <div
+              class="d-flex flex-column gap-3"
+              id="progress-module-list"
+            ></div>
+            <div class="mt-4 p-4 border rounded-3 bg-light text-center">
+              <p class="text-muted small mb-2">
+                Diploma disponible al completar todos los módulos y tareas
+              </p>
+              <div
+                class="progress"
+                style="height: 10px; max-width: 400px; margin: 0 auto 0.75rem"
+              >
+                <div class="progress-bar bg-success" style="width: 25%"></div>
+              </div>
+              <span class="small text-muted fw-semibold"
+                >25% completado — faltan 6 módulos</span
+              >
+            </div>
+          </div>
+
+          <!-- ══ MODALES ═════════════════════════════════════════════════════ -->
+          <!-- Retroalimentación tarea 1 -->
+          <div class="modal fade" id="modalTarea1" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fw-bold">
+                    Retroalimentación — Tarea 1
+                  </h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <p class="small text-muted mb-1">Calificación</p>
+                  <h3 class="fw-bold text-success mb-3">92 / 100</h3>
+                  <p class="small fw-semibold mb-1">
+                    Comentarios del instructor:
+                  </p>
+                  <p class="small text-dark">
+                    Excelente manejo de tipos primitivos y casting. Se
+                    descuentan 8 puntos por no incluir ejemplos de autoboxing
+                    con tipos generics (<code>List&lt;Integer&gt;</code>). Para
+                    la próxima, recuerda documentar cada conversión explícita.
+                  </p>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    data-bs-dismiss="modal"
+                  >
+                    Cerrar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Entregar tarea 2 -->
+          <div class="modal fade" id="modalEntregarTarea" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fw-bold">Entregar Tarea 2</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <p class="small text-muted mb-3">
+                    Control de flujo y bucles — vence 25/06/2026
+                  </p>
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold small"
+                      >Enlace al repositorio (GitHub / GitLab)</label
+                    >
+                    <input
+                      type="url"
+                      class="form-control form-control-sm"
+                      placeholder="https://github.com/tu-usuario/tarea2-java"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold small"
+                      >Comentarios (opcional)</label
+                    >
+                    <textarea
+                      class="form-control form-control-sm"
+                      rows="3"
+                      placeholder="Describe brevemente tu solución..."
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                  <button class="btn btn-primary btn-sm">Entregar tarea</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Nueva pregunta en foro -->
+          <div class="modal fade" id="modalNuevoHilo" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title fw-bold">Nueva Pregunta</h5>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                  ></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold small"
+                      >Módulo relacionado</label
+                    >
+                    <select class="form-select form-select-sm">
+                      <option>Módulo 1 — Introducción a Java</option>
+                      <option>Módulo 2 — Variables y Tipos de Datos</option>
+                      <option selected>
+                        Módulo 3 — Estructuras de Control
+                      </option>
+                      <option>Módulo 4 — POO</option>
+                      <option>Módulo 5 — Arrays y Colecciones</option>
+                      <option>Módulo 6 — Excepciones</option>
+                      <option>Módulo 7 — Streams y Lambdas</option>
+                      <option>Módulo 8 — Proyecto Final</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold small">Pregunta</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      placeholder="¿Cuál es tu duda?"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-semibold small">Detalle</label>
+                    <textarea
+                      class="form-control form-control-sm"
+                      rows="4"
+                      placeholder="Explica el contexto de tu pregunta..."
+                    ></textarea>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                  <button class="btn btn-primary btn-sm" id="btnPostThread">
+                    Publicar pregunta
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </main>
       </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // ── Module content data ─────────────────────────────────────────────────
+      const moduleData = {
+        1: {
+          icon: "🚀",
+          title: "Introducción a Java",
+          lecciones: [
+            { done: true, text: "¿Qué es Java? Historia y versiones" },
+            { done: true, text: "Arquitectura JDK, JRE y JVM" },
+            {
+              done: true,
+              text: "Instalación del JDK 17 y configuración del PATH",
+            },
+            { done: true, text: "Primer programa: Hello, World!" },
+            { done: true, text: "Compilar y ejecutar desde la terminal" },
+            { done: true, text: "Estructura básica de un archivo .java" },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-3">Arquitectura de Java</h6>
+            <div class="row g-3 mb-3">
+              <div class="col-md-4">
+                <div class="border rounded-3 p-3 bg-light text-center">
+                  <div class="fw-bold text-primary mb-1">JDK</div>
+                  <div class="small text-muted">Java Development Kit<br>Compilador + JRE + herramientas</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="border rounded-3 p-3 bg-light text-center">
+                  <div class="fw-bold text-success mb-1">JRE</div>
+                  <div class="small text-muted">Java Runtime Environment<br>Librerías + JVM</div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="border rounded-3 p-3 bg-light text-center">
+                  <div class="fw-bold text-warning mb-1">JVM</div>
+                  <div class="small text-muted">Java Virtual Machine<br>Ejecuta el bytecode</div>
+                </div>
+              </div>
+            </div>
+            <h6 class="fw-bold mb-2">Hello, World!</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>// HelloWorld.java
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}</code></pre>
+            <div class="alert alert-info border-0 py-2 px-3 mt-3 small">
+              <strong>Compilar:</strong> <code>javac HelloWorld.java</code><br>
+              <strong>Ejecutar:</strong> <code>java HelloWorld</code>
+            </div>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "Documentación oficial Oracle Java 17",
+              url: "https://docs.oracle.com/en/java/javase/17/",
+            },
+            {
+              icon: "⬇️",
+              label: "Descargar JDK 17 (Oracle)",
+              url: "https://www.oracle.com/java/technologies/downloads/",
+            },
+            {
+              icon: "🛠️",
+              label: "IntelliJ IDEA Community (gratis)",
+              url: "https://www.jetbrains.com/idea/download/",
+            },
+          ],
+        },
+        2: {
+          icon: "📦",
+          title: "Variables y Tipos de Datos",
+          lecciones: [
+            {
+              done: true,
+              text: "Variables: declaración, inicialización y nomenclatura",
+            },
+            { done: true, text: "Los 8 tipos primitivos de Java" },
+            { done: true, text: "Tipo String y métodos esenciales" },
+            {
+              done: true,
+              text: "Casting implícito (widening) y explícito (narrowing)",
+            },
+            {
+              done: true,
+              text: "Autoboxing y Unboxing (Integer, Double, Boolean…)",
+            },
+            {
+              done: true,
+              text: "Constantes con final y operadores aritméticos/lógicos",
+            },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-3">Los 8 Tipos Primitivos</h6>
+            <div class="table-responsive mb-3">
+              <table class="table table-sm table-bordered small">
+                <thead class="table-primary">
+                  <tr><th>Tipo</th><th>Tamaño</th><th>Rango</th><th>Ejemplo</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>byte</code></td><td>8 bits</td><td>-128 a 127</td><td><code>byte b = 100;</code></td></tr>
+                  <tr><td><code>short</code></td><td>16 bits</td><td>-32,768 a 32,767</td><td><code>short s = 1000;</code></td></tr>
+                  <tr><td><code>int</code></td><td>32 bits</td><td>-2³¹ a 2³¹-1</td><td><code>int i = 42;</code></td></tr>
+                  <tr><td><code>long</code></td><td>64 bits</td><td>-2⁶³ a 2⁶³-1</td><td><code>long l = 9999L;</code></td></tr>
+                  <tr><td><code>float</code></td><td>32 bits</td><td>~±3.4×10³⁸</td><td><code>float f = 3.14f;</code></td></tr>
+                  <tr><td><code>double</code></td><td>64 bits</td><td>~±1.8×10³⁰⁸</td><td><code>double d = 3.14159;</code></td></tr>
+                  <tr><td><code>boolean</code></td><td>1 bit</td><td>true / false</td><td><code>boolean ok = true;</code></td></tr>
+                  <tr><td><code>char</code></td><td>16 bits</td><td>U+0000 a U+FFFF</td><td><code>char c = 'A';</code></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <h6 class="fw-bold mb-2">Casting, String y Autoboxing</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>// Casting implícito (widening — sin pérdida de datos)
+int entero = 42;
+double decimal = entero;        // OK automático
+
+// Casting explícito (narrowing — puede haber pérdida)
+double pi = 3.14159;
+int piInt = (int) pi;           // 3 (trunca la parte decimal)
+
+// Constante
+final double IVA = 0.16;
+
+// String — inmutable
+String nombre = "Java";
+int longitud    = nombre.length();          // 4
+String mayuscula = nombre.toUpperCase();    // "JAVA"
+boolean empieza  = nombre.startsWith("J"); // true
+String version   = nombre + " 17";         // "Java 17"
+
+// Autoboxing / Unboxing
+Integer boxed = 42;   // primitivo → objeto wrapper
+int unboxed   = boxed; // objeto wrapper → primitivo</code></pre>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "Primitive Data Types — Oracle Docs",
+              url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html",
+            },
+            {
+              icon: "💻",
+              label: "Ejercicios: Variables en Exercism.io",
+              url: "https://exercism.org/tracks/java",
+            },
+          ],
+        },
+        3: {
+          icon: "🌿",
+          title: "Estructuras de Control",
+          lecciones: [
+            { done: true, text: "if, else if y else" },
+            { done: true, text: "Operador ternario" },
+            { done: true, text: "switch clásico" },
+            { done: false, text: "Switch Expressions (Java 14+)" },
+            {
+              done: false,
+              text: "Bucle for clásico y for-each (enhanced for)",
+            },
+            { done: false, text: "Bucles while y do-while" },
+            { done: false, text: "break, continue y etiquetas de salto" },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-2">Condicionales</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>int nota = 85;
+
+// if / else if / else
+if (nota >= 90) {
+    System.out.println("Sobresaliente");
+} else if (nota >= 70) {
+    System.out.println("Aprobado");   // ← se ejecuta este
+} else {
+    System.out.println("Reprobado");
+}
+
+// Operador ternario
+String resultado = (nota >= 70) ? "Aprobado" : "Reprobado";
+
+// Switch Expression (Java 14+) — sin fall-through
+String nivel = switch (nota / 10) {
+    case 10, 9 -> "Sobresaliente";
+    case 8, 7  -> "Aprobado";
+    default    -> "Reprobado";
+};</code></pre>
+            <h6 class="fw-bold mb-2">Bucles</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>// for clásico
+for (int i = 0; i < 5; i++) {
+    System.out.println(i); // 0 1 2 3 4
+}
+
+// for-each (arrays y colecciones)
+int[] nums = {10, 20, 30, 40};
+for (int n : nums) {
+    System.out.println(n);
+}
+
+// while
+int c = 0;
+while (c < 3) { System.out.println("iter " + c); c++; }
+
+// do-while (se ejecuta al menos una vez)
+do { System.out.println("ejecutado"); c--; } while (c > 0);
+
+// break / continue
+for (int i = 0; i < 10; i++) {
+    if (i == 3) continue; // omite el 3
+    if (i == 7) break;    // sale al llegar a 7
+    System.out.print(i + " "); // 0 1 2 4 5 6
+}</code></pre>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "Control Flow Statements — Oracle Docs",
+              url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html",
+            },
+            {
+              icon: "📄",
+              label: "Switch Expressions JEP 361",
+              url: "https://openjdk.org/jeps/361",
+            },
+            {
+              icon: "💻",
+              label: "Ejercicios: Control Flow en CodingBat",
+              url: "https://codingbat.com/java",
+            },
+          ],
+        },
+        4: {
+          icon: "{ }",
+          title: "Programación Orientada a Objetos",
+          lecciones: [
+            { done: true, text: "Clases, objetos e instancias" },
+            { done: true, text: "Atributos, métodos y constructores" },
+            { done: false, text: "Encapsulamiento: getters y setters" },
+            { done: false, text: "Herencia con extends y super" },
+            { done: false, text: "Polimorfismo y @Override" },
+            { done: false, text: "Clases abstractas vs interfaces" },
+            {
+              done: false,
+              text: "Modificadores de acceso: public, private, protected",
+            },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-2">Clase, Atributos y Constructor</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>public class Empleado {
+    private String nombre;   // encapsulado
+    private double salario;
+
+    public Empleado(String nombre, double salario) {
+        this.nombre  = nombre;
+        this.salario = salario;
+    }
+
+    public String getNombre()          { return nombre; }
+    public void   setSalario(double s) { this.salario = s; }
+
+    @Override
+    public String toString() {
+        return nombre + " — $" + salario;
+    }
+}
+
+Empleado emp = new Empleado("Carlos", 55000);
+System.out.println(emp); // Carlos — $55000.0</code></pre>
+            <h6 class="fw-bold mb-2">Herencia y Polimorfismo</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>public class Gerente extends Empleado {
+    private String departamento;
+
+    public Gerente(String nombre, double salario, String depto) {
+        super(nombre, salario);        // invoca constructor del padre
+        this.departamento = depto;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " [" + departamento + "]";
+    }
+}
+
+Empleado g = new Gerente("Laura", 90000, "IT");
+System.out.println(g); // Laura — $90000.0 [IT]</code></pre>
+            <h6 class="fw-bold mb-2">Interfaces</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>public interface Auditable {
+    void registrarAuditoria();                  // contrato
+    default String getTimestamp() {             // método por defecto
+        return java.time.LocalDate.now().toString();
+    }
+}
+
+public class Gerente extends Empleado implements Auditable {
+    @Override
+    public void registrarAuditoria() {
+        System.out.println("Auditoría: " + getNombre()
+                           + " — " + getTimestamp());
+    }
+}</code></pre>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "OOP Concepts — Oracle Docs",
+              url: "https://docs.oracle.com/javase/tutorial/java/concepts/",
+            },
+            { icon: "🎥", label: "Video: Principios SOLID en Java", url: "#" },
+          ],
+        },
+        5: {
+          icon: "📋",
+          title: "Arrays y Colecciones",
+          lecciones: [
+            {
+              done: false,
+              text: "Arrays unidimensionales y multidimensionales",
+            },
+            {
+              done: false,
+              text: "Arrays.sort(), Arrays.fill() y Arrays.copyOf()",
+            },
+            {
+              done: false,
+              text: "ArrayList: add, remove, get, size e iteración",
+            },
+            { done: false, text: "HashMap y operaciones CRUD" },
+            { done: false, text: "LinkedList como cola y pila" },
+            {
+              done: false,
+              text: "HashSet y TreeSet: conjuntos sin duplicados",
+            },
+            { done: false, text: "Collections.sort() y unmodifiableList()" },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-2">Arrays</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>int[] numeros = {5, 3, 8, 1, 9};
+java.util.Arrays.sort(numeros);            // [1, 3, 5, 8, 9]
+int[] copia = java.util.Arrays.copyOf(numeros, 3); // [1, 3, 5]
+
+// Array 2D
+int[][] matriz = {% raw %}{{1,2,3},{4,5,6},{7,8,9}}{% endraw %};
+System.out.println(matriz[1][2]); // 6</code></pre>
+            <h6 class="fw-bold mb-2">ArrayList</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>import java.util.ArrayList;
+
+ArrayList&lt;String&gt; lista = new ArrayList&lt;&gt;();
+lista.add("Java");
+lista.add("Python");
+lista.add("Kotlin");
+lista.remove("Python");
+System.out.println(lista.get(0)); // "Java"
+System.out.println(lista.size()); // 2
+
+for (String lang : lista) {
+    System.out.println(lang);
+}</code></pre>
+            <h6 class="fw-bold mb-2">HashMap</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>import java.util.HashMap;
+
+HashMap&lt;String, Integer&gt; edades = new HashMap&lt;&gt;();
+edades.put("Ana", 28);
+edades.put("Luis", 34);
+edades.put("Marta", 22);
+
+System.out.println(edades.get("Ana"));       // 28
+System.out.println(edades.containsKey("Luis")); // true
+edades.remove("Luis");
+
+for (var entry : edades.entrySet()) {
+    System.out.println(entry.getKey() + " → " + entry.getValue());
+}</code></pre>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "Java Collections Framework — Oracle Docs",
+              url: "https://docs.oracle.com/javase/tutorial/collections/",
+            },
+            {
+              icon: "💻",
+              label: "Ejercicios: Colecciones en LeetCode",
+              url: "https://leetcode.com/problemset/all/",
+            },
+          ],
+        },
+        6: {
+          icon: "⚠️",
+          title: "Manejo de Excepciones",
+          lecciones: [
+            { done: false, text: "¿Qué es una excepción? Error vs Exception" },
+            { done: false, text: "Jerarquía: Throwable → Error / Exception" },
+            {
+              done: false,
+              text: "Excepciones checked vs unchecked (RuntimeException)",
+            },
+            { done: false, text: "Bloques try / catch / finally" },
+            { done: false, text: "try-with-resources (AutoCloseable)" },
+            { done: false, text: "Declarar excepciones en métodos con throws" },
+            { done: false, text: "Crear excepciones personalizadas" },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-2">Jerarquía de Excepciones</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>Throwable
+├── Error                   (JVM errors — NO atrapar)
+│   ├── OutOfMemoryError
+│   └── StackOverflowError
+└── Exception
+    ├── IOException         (checked — debes manejar)
+    ├── SQLException        (checked)
+    └── RuntimeException    (unchecked — opcionales)
+        ├── NullPointerException
+        ├── ArrayIndexOutOfBoundsException
+        └── NumberFormatException</code></pre>
+            <h6 class="fw-bold mb-2">try / catch / finally</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>public int dividir(int a, int b) {
+    try {
+        return a / b;
+    } catch (ArithmeticException e) {
+        System.err.println("Error: " + e.getMessage());
+        return 0;
+    } finally {
+        System.out.println("Bloque finally: siempre se ejecuta");
+    }
+}
+
+// Multi-catch
+try {
+    String s = null;
+    int x = Integer.parseInt(s);
+} catch (NullPointerException | NumberFormatException e) {
+    System.err.println("Dato inválido: " + e.getMessage());
+}</code></pre>
+            <h6 class="fw-bold mb-2">Excepción Personalizada</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>public class SaldoInsuficienteException extends Exception {
+    private final double monto;
+
+    public SaldoInsuficienteException(double monto) {
+        super("Saldo insuficiente. Falta: $" + monto);
+        this.monto = monto;
+    }
+    public double getMonto() { return monto; }
+}
+
+// Uso en un método
+public void retirar(double cantidad) throws SaldoInsuficienteException {
+    if (cantidad > saldo) {
+        throw new SaldoInsuficienteException(cantidad - saldo);
+    }
+    saldo -= cantidad;
+}</code></pre>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "Exceptions — Oracle Docs",
+              url: "https://docs.oracle.com/javase/tutorial/essential/exceptions/",
+            },
+            {
+              icon: "💻",
+              label: "Ejercicios: Exception Handling en HackerRank",
+              url: "https://www.hackerrank.com/domains/java",
+            },
+          ],
+        },
+        7: {
+          icon: "λ",
+          title: "Streams y Lambdas",
+          lecciones: [
+            {
+              done: false,
+              text: "Interfaces funcionales: Predicate, Function, Consumer, Supplier",
+            },
+            { done: false, text: "Expresiones lambda: sintaxis y ejemplos" },
+            { done: false, text: "Method references: Clase::método" },
+            { done: false, text: "Stream API: filter(), map(), reduce()" },
+            {
+              done: false,
+              text: "Operaciones terminales: collect(), forEach(), count()",
+            },
+            { done: false, text: "Optional: evitar NullPointerException" },
+            { done: false, text: "Streams paralelos y rendimiento" },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-2">Expresiones Lambda</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>// Antes (clase anónima)
+Runnable r1 = new Runnable() {
+    public void run() { System.out.println("Hola"); }
+};
+
+// Con lambda
+Runnable r2 = () -> System.out.println("Hola");
+
+// Predicate
+java.util.function.Predicate&lt;Integer&gt; esPar = n -> n % 2 == 0;
+System.out.println(esPar.test(4));  // true
+
+// Method reference
+java.util.function.Function&lt;String, Integer&gt; longitud = String::length;
+System.out.println(longitud.apply("Java")); // 4</code></pre>
+            <h6 class="fw-bold mb-2">Stream API</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>import java.util.*;
+import java.util.stream.*;
+
+List&lt;Integer&gt; nums = List.of(1,2,3,4,5,6,7,8,9,10);
+
+// Filtrar → transformar → recopilar
+List&lt;Integer&gt; resultado = nums.stream()
+    .filter(n -> n % 2 == 0)      // [2,4,6,8,10]
+    .map(n -> n * n)               // [4,16,36,64,100]
+    .collect(Collectors.toList());
+
+// Suma con reduce
+int suma = nums.stream().reduce(0, Integer::sum); // 55
+
+// Agrupar por paridad
+Map&lt;Boolean, List&lt;Integer&gt;&gt; grupos = nums.stream()
+    .collect(Collectors.partitioningBy(n -> n % 2 == 0));</code></pre>
+            <h6 class="fw-bold mb-2">Optional</h6>
+            <pre class="bg-light border rounded-3 p-3"><code>Optional&lt;String&gt; nombre = Optional.ofNullable(buscarUsuario(id));
+
+String result = nombre
+    .map(String::toUpperCase)
+    .orElse("Anónimo");
+
+System.out.println(result); // "CARLOS" o "Anónimo"</code></pre>`,
+          recursos: [
+            {
+              icon: "📄",
+              label: "Stream API — Oracle Docs",
+              url: "https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html",
+            },
+            {
+              icon: "📄",
+              label: "Lambda Expressions — Oracle Tutorial",
+              url: "https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html",
+            },
+            {
+              icon: "💻",
+              label: "Ejercicios: Java Streams en HackerRank",
+              url: "https://www.hackerrank.com/domains/java",
+            },
+          ],
+        },
+        8: {
+          icon: "🏆",
+          title: "Proyecto Final",
+          lecciones: [
+            {
+              done: false,
+              text: "Diseño del sistema: clases y relaciones (UML básico)",
+            },
+            {
+              done: false,
+              text: "Implementar capa de modelo: Producto, Categoría",
+            },
+            {
+              done: false,
+              text: "Repositorio en memoria con ArrayList y HashMap",
+            },
+            {
+              done: false,
+              text: "Lógica de negocio: validaciones y excepciones propias",
+            },
+            { done: false, text: "Menú interactivo de consola con Scanner" },
+            { done: false, text: "Búsqueda y filtrado con Stream API" },
+            { done: false, text: "Pruebas unitarias básicas con JUnit 5" },
+            { done: false, text: "Entrega y revisión en vivo" },
+          ],
+          conceptos: `
+            <h6 class="fw-bold mb-2">Estructura del Proyecto</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>inventario-app/
+├── model/
+│   ├── Producto.java            // entidad con getters/setters
+│   └── Categoria.java           // enum con categorías
+├── repository/
+│   └── ProductoRepository.java  // CRUD sobre ArrayList
+├── service/
+│   └── ProductoService.java     // lógica + validaciones
+├── exception/
+│   └── ProductoNoEncontradoException.java
+└── Main.java                    // menú interactivo con Scanner</code></pre>
+            <h6 class="fw-bold mb-2">Servicio con Streams</h6>
+            <pre class="bg-light border rounded-3 p-3 mb-3"><code>public class ProductoService {
+    private final ProductoRepository repo;
+
+    public ProductoService(ProductoRepository repo) {
+        this.repo = repo;
+    }
+
+    public List&lt;Producto&gt; buscarPorCategoria(Categoria cat) {
+        return repo.findAll().stream()
+            .filter(p -> p.getCategoria() == cat)
+            .sorted(Comparator.comparing(Producto::getNombre))
+            .collect(Collectors.toList());
+    }
+
+    public double calcularValorInventario() {
+        return repo.findAll().stream()
+            .mapToDouble(p -> p.getPrecio() * p.getStock())
+            .sum();
+    }
+}</code></pre>
+            <div class="alert alert-success border-0 py-2 px-3 small">
+              <strong>Criterio de entrega:</strong> app funcional con ≥3 categorías, 10 productos de prueba, operaciones CRUD completas y búsqueda por nombre/categoría usando Stream API.
+            </div>`,
+          recursos: [
+            {
+              icon: "📝",
+              label: "Plantilla base del proyecto (ZIP)",
+              url: "#",
+            },
+            {
+              icon: "📄",
+              label: "JUnit 5 — Getting Started",
+              url: "https://junit.org/junit5/docs/current/user-guide/",
+            },
+            { icon: "📄", label: "Guía de entrega y rúbrica", url: "#" },
+          ],
+        },
+      };
+
+      // ── Render helpers ────────────────────────────────────────────────────────
+      function renderLecciones(data) {
+        return data.lecciones
+          .map(
+            (l) => `
+          <div class="lesson-item">
+            <span class="lesson-check ${l.done ? "done" : "pending"}">${l.done ? "✓" : "○"}</span>
+            <span class="small ${l.done ? "text-dark" : "text-muted"}">${l.text}</span>
+          </div>`,
+          )
+          .join("");
+      }
+
+      function renderRecursos(data) {
+        return data.recursos
+          .map(
+            (r) => `
+          <a href="${r.url}" class="resource-item" target="_blank" rel="noopener noreferrer">
+            <span>${r.icon}</span>
+            <span class="small">${r.label}</span>
+            <span class="ms-auto text-muted small">↗</span>
+          </a>`,
+          )
+          .join("");
+      }
+
+      // ── Open / toggle module panel ─────────────────────────────────────────
+      let activeModule = null;
+
+      function openModule(num) {
+        const panel = document.getElementById("detail-panel");
+        const data = moduleData[num];
+
+        if (activeModule === num) {
+          panel.classList.remove("show");
+          document
+            .querySelectorAll(".module-card")
+            .forEach((c) => c.classList.remove("active"));
+          activeModule = null;
+          return;
+        }
+
+        // Populate content
+        document.getElementById("detail-icon").textContent = data.icon;
+        document.getElementById("detail-title").textContent = data.title;
+        document.getElementById("lecciones-content").innerHTML =
+          renderLecciones(data);
+        document.getElementById("conceptos-content").innerHTML = data.conceptos;
+        document.getElementById("recursos-content").innerHTML =
+          renderRecursos(data);
+
+        // Reset to first tab
+        bootstrap.Tab.getOrCreateInstance(
+          document.getElementById("tab-lecciones"),
+        ).show();
+
+        // Show and re-trigger animation
+        panel.classList.remove("show");
+        void panel.offsetWidth; // reflow
+        panel.classList.add("show");
+
+        // Highlight active card
+        document
+          .querySelectorAll(".module-card")
+          .forEach((c) => c.classList.remove("active"));
+        document
+          .querySelector(`.module-card[data-module="${num}"]`)
+          .classList.add("active");
+
+        activeModule = num;
+        setTimeout(
+          () => panel.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+          60,
+        );
+      }
+
+      // Card click listeners
+      document.querySelectorAll(".module-card").forEach((card) => {
+        card.addEventListener("click", () =>
+          openModule(Number(card.dataset.module)),
+        );
+      });
+
+      // Close button
+      document.getElementById("close-detail").addEventListener("click", () => {
+        document.getElementById("detail-panel").classList.remove("show");
+        document
+          .querySelectorAll(".module-card")
+          .forEach((c) => c.classList.remove("active"));
+        activeModule = null;
+      });
+
+      // ── Sidebar nav — section switching ──────────────────────────────────
+      const allSections = document.querySelectorAll(".aula-section");
+      document.querySelectorAll(".sidebar-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          document.querySelectorAll(".sidebar-link").forEach((l) => {
+            l.classList.remove("active", "text-dark");
+            l.classList.add("text-secondary");
+          });
+          this.classList.add("active", "text-dark");
+          this.classList.remove("text-secondary");
+          const target = this.dataset.target;
+          allSections.forEach((s) => s.classList.add("d-none"));
+          const el = document.getElementById(target);
+          if (el) el.classList.remove("d-none");
+        });
+      });
+
+      // ── Build syllabus accordion (Contenido) ─────────────────────────────
+      (function buildSyllabus() {
+        const container = document.getElementById("syllabusAccordion");
+        if (!container) return;
+        container.innerHTML = Object.entries(moduleData)
+          .map(([num, m]) => {
+            const lessons = m.lecciones
+              .map(
+                (l) =>
+                  `<li class="list-group-item d-flex align-items-center gap-2 py-1 border-0">
+              <span class="${l.done ? "text-success" : "text-muted"}">${l.done ? "✓" : "○"}</span>
+              <span class="small ${l.done ? "text-dark" : "text-muted"}">${l.text}</span>
+             </li>`,
+              )
+              .join("");
+            const done = m.lecciones.filter((l) => l.done).length;
+            return `
+          <div class="accordion-item border rounded-3 mb-2 overflow-hidden">
+            <h2 class="accordion-header">
+              <button class="accordion-button collapsed fw-semibold" type="button"
+                data-bs-toggle="collapse" data-bs-target="#syl-${num}">
+                <span class="me-2">${m.icon}</span>${num}. ${m.title}
+                <span class="badge bg-light text-secondary border ms-auto me-2 fw-normal small">${done}/${m.lecciones.length} lecciones</span>
+              </button>
+            </h2>
+            <div id="syl-${num}" class="accordion-collapse collapse">
+              <div class="accordion-body pt-2 pb-3">
+                <ul class="list-group list-group-flush">${lessons}</ul>
+                <button class="btn btn-outline-primary btn-sm mt-3" onclick="
+                  document.querySelector('[data-target=section-inicio]').click();
+                  setTimeout(()=>openModule(${num}), 100);">
+                  Ir al módulo →
+                </button>
+              </div>
+            </div>
+          </div>`;
+          })
+          .join("");
+      })();
+
+      // ── Build resource library (Recursos) ────────────────────────────────
+      (function buildRecursos() {
+        const container = document.getElementById("recursos-library");
+        if (!container) return;
+        container.innerHTML = Object.entries(moduleData)
+          .map(([num, m]) => {
+            if (!m.recursos.length) return "";
+            const items = m.recursos
+              .map(
+                (r) =>
+                  `<a href="${r.url}" class="resource-item" target="_blank" rel="noopener noreferrer">
+              <span>${r.icon}</span>
+              <span class="small">${r.label}</span>
+              <span class="ms-auto text-muted small">↗</span>
+             </a>`,
+              )
+              .join("");
+            return `<div class="mb-4">
+            <h6 class="fw-bold text-dark mb-2"><span class="me-2">${m.icon}</span>Módulo ${num}: ${m.title}</h6>
+            ${items}
+          </div>`;
+          })
+          .join("");
+      })();
+
+      // ── Build progress module list (Mi progreso) ──────────────────────────
+      (function buildProgreso() {
+        const container = document.getElementById("progress-module-list");
+        if (!container) return;
+        container.innerHTML = Object.entries(moduleData)
+          .map(([num, m]) => {
+            const done = m.lecciones.filter((l) => l.done).length;
+            const total = m.lecciones.length;
+            const pct = Math.round((done / total) * 100);
+            const color =
+              pct === 100
+                ? "bg-success"
+                : pct > 0
+                  ? "bg-primary"
+                  : "bg-secondary";
+            return `
+          <div class="bg-white rounded-3 border shadow-sm p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="fw-semibold small"><span class="me-2">${m.icon}</span>${num}. ${m.title}</span>
+              <span class="small fw-semibold ${pct === 100 ? "text-success" : pct > 0 ? "text-primary" : "text-muted"}">${pct}%</span>
+            </div>
+            <div class="progress" style="height:6px">
+              <div class="progress-bar ${color}" style="width:${pct}%"></div>
+            </div>
+            <span class="text-muted small">${done} / ${total} lecciones completadas</span>
+          </div>`;
+          })
+          .join("");
+      })();
+
+      // ── Forum thread toggle ───────────────────────────────────────────────
+      function toggleThread(btn) {
+        const replies = btn.nextElementSibling;
+        replies.classList.toggle("d-none");
+        btn.textContent = replies.classList.contains("d-none")
+          ? "Ver respuestas ▾"
+          : "Ocultar respuestas ▴";
+      }
+
+      // ── Forum: post new thread (demo) ─────────────────────────────────────
+      document
+        .getElementById("btnPostThread")
+        ?.addEventListener("click", function () {
+          const modal = bootstrap.Modal.getInstance(
+            document.getElementById("modalNuevoHilo"),
+          );
+          modal.hide();
+          const container = document.getElementById("forum-threads");
+          const card = document.createElement("div");
+          card.className =
+            "card border border-primary-subtle shadow-sm rounded-3 p-3";
+          card.innerHTML = `
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div>
+              <h6 class="fw-semibold mb-1">Tu nueva pregunta</h6>
+              <p class="text-muted small mb-0">Por <span class="fw-medium">Tú</span> · ahora</p>
+            </div>
+            <span class="badge text-bg-secondary rounded-pill">0 respuestas</span>
+          </div>`;
+          container.prepend(card);
+        });
+
+      // ── Animate progress ring on load ─────────────────────────────────────
+      window.addEventListener("load", () => {
+        const pct = 65;
+        const circumference = 2 * Math.PI * 40; // ≈ 251.2
+        const offset = circumference - (pct / 100) * circumference;
+        const ring = document.getElementById("progress-ring-fill");
+        if (ring) ring.style.strokeDashoffset = offset;
+        const bar = document.getElementById("overall-bar");
+        if (bar) bar.style.width = pct + "%";
+      });
+    </script>
   </body>
 </html>

@@ -128,7 +128,9 @@
               role="tab"
             >
               Mensajes
-              <span class="badge bg-danger rounded-pill" id="badge-mensajes">3</span>
+              <span class="badge bg-danger rounded-pill" id="badge-mensajes"
+                >3</span
+              >
             </button>
             <button
               type="button"
@@ -387,23 +389,36 @@
 
             <!-- ── MENSAJES ─────────────────────────────────── -->
             <div class="tab-pane fade" id="content-mensajes" role="tabpanel">
-              <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2"
+              >
                 <h3 class="fw-semibold mb-0">Mensajes</h3>
-                <span class="badge rounded-pill px-3 py-2" id="msg-unread-badge">3 no leídos</span>
+                <span class="badge rounded-pill px-3 py-2" id="msg-unread-badge"
+                  >3 no leídos</span
+                >
               </div>
-              <div class="row g-0 border rounded-3 overflow-hidden" style="min-height:440px">
+              <div
+                class="row g-0 border rounded-3 overflow-hidden"
+                style="min-height: 440px"
+              >
                 <div
                   class="col-12 col-md-4 border-end bg-white"
                   id="thread-list-container"
-                  style="overflow-y:auto;max-height:440px"
+                  style="overflow-y: auto; max-height: 440px"
                 ></div>
-                <div class="col-12 col-md-8 d-flex flex-column bg-white" id="thread-view-container">
+                <div
+                  class="col-12 col-md-8 d-flex flex-column bg-white"
+                  id="thread-view-container"
+                >
                   <div
                     class="flex-grow-1 p-3"
                     id="thread-messages-container"
-                    style="overflow-y:auto;max-height:380px"
+                    style="overflow-y: auto; max-height: 380px"
                   >
-                    <div class="text-center text-muted py-5 small" id="thread-placeholder">
+                    <div
+                      class="text-center text-muted py-5 small"
+                      id="thread-placeholder"
+                    >
                       Selecciona una conversación para leer los mensajes
                     </div>
                   </div>
@@ -415,7 +430,12 @@
                         id="reply-input"
                         placeholder="Escribe tu respuesta..."
                       />
-                      <button class="btn btn-primary btn-sm px-3" id="send-reply-btn">Enviar</button>
+                      <button
+                        class="btn btn-primary btn-sm px-3"
+                        id="send-reply-btn"
+                      >
+                        Enviar
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -451,15 +471,26 @@
                       placeholder="Escribe aquí el mensaje para tus estudiantes..."
                     ></textarea>
                   </div>
-                  <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <button class="btn btn-outline-secondary btn-sm" id="preview-anuncio-btn">
+                  <div
+                    class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2"
+                  >
+                    <button
+                      class="btn btn-outline-secondary btn-sm"
+                      id="preview-anuncio-btn"
+                    >
                       Vista previa
                     </button>
                     <div class="d-flex gap-2">
-                      <button class="btn btn-outline-secondary btn-sm" id="guardar-borrador-btn">
+                      <button
+                        class="btn btn-outline-secondary btn-sm"
+                        id="guardar-borrador-btn"
+                      >
                         Guardar borrador
                       </button>
-                      <button class="btn btn-primary btn-sm px-4" id="publicar-anuncio-btn">
+                      <button
+                        class="btn btn-primary btn-sm px-4"
+                        id="publicar-anuncio-btn"
+                      >
                         Publicar
                       </button>
                     </div>
@@ -482,7 +513,10 @@
                 class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2 flex-wrap gap-2"
               >
                 <h3 class="fw-semibold mb-0">Foro Q&amp;A</h3>
-                <select class="form-select form-select-sm w-auto" id="foro-filter">
+                <select
+                  class="form-select form-select-sm w-auto"
+                  id="foro-filter"
+                >
                   <option value="all">Todos los cursos</option>
                   <option value="Flask con Python">Flask con Python</option>
                   <option value="React Avanzado">React Avanzado</option>
@@ -493,13 +527,21 @@
 
             <!-- ── RECURSOS ──────────────────────────────────── -->
             <div class="tab-pane fade" id="content-recursos" role="tabpanel">
-              <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+              <div
+                class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2"
+              >
                 <h3 class="fw-semibold mb-0">Recursos</h3>
-                <button class="btn btn-primary btn-sm px-3" id="toggle-add-recurso-btn">
+                <button
+                  class="btn btn-primary btn-sm px-3"
+                  id="toggle-add-recurso-btn"
+                >
                   + Agregar recurso
                 </button>
               </div>
-              <div class="card border-0 bg-light rounded-3 p-4 mb-4 d-none" id="add-recurso-form">
+              <div
+                class="card border-0 bg-light rounded-3 p-4 mb-4 d-none"
+                id="add-recurso-form"
+              >
                 <h6 class="fw-bold mb-3">Nuevo recurso</h6>
                 <div class="row g-3">
                   <div class="col-12 col-md-5">
@@ -525,10 +567,16 @@
                     </select>
                   </div>
                   <div class="col-12 text-end">
-                    <button class="btn btn-outline-secondary btn-sm me-2" id="cancel-add-recurso-btn">
+                    <button
+                      class="btn btn-outline-secondary btn-sm me-2"
+                      id="cancel-add-recurso-btn"
+                    >
                       Cancelar
                     </button>
-                    <button class="btn btn-primary btn-sm px-4" id="guardar-recurso-btn">
+                    <button
+                      class="btn btn-primary btn-sm px-4"
+                      id="guardar-recurso-btn"
+                    >
                       Guardar
                     </button>
                   </div>
@@ -536,7 +584,6 @@
               </div>
               <div id="recursos-list"></div>
             </div>
-
           </div>
         </div>
       </div>
@@ -553,54 +600,187 @@
       // ============================================================
       const threads = [
         {
-          id: 1, student: "Ana Méndez", initials: "AM", course: "Flask con Python", unread: 2,
+          id: 1,
+          student: "Ana Méndez",
+          initials: "AM",
+          course: "Flask con Python",
+          unread: 2,
           messages: [
-            { from: "student", text: "Profesor, tengo una duda sobre el módulo 3. ¿Me puede orientar sobre el uso de blueprints?", time: "09:14" },
-            { from: "student", text: "Adjunté mi código en el foro pero no he recibido respuesta aún.", time: "09:16" },
+            {
+              from: "student",
+              text: "Profesor, tengo una duda sobre el módulo 3. ¿Me puede orientar sobre el uso de blueprints?",
+              time: "09:14",
+            },
+            {
+              from: "student",
+              text: "Adjunté mi código en el foro pero no he recibido respuesta aún.",
+              time: "09:16",
+            },
           ],
         },
         {
-          id: 2, student: "Carlos Vega", initials: "CV", course: "React Avanzado", unread: 1,
+          id: 2,
+          student: "Carlos Vega",
+          initials: "CV",
+          course: "React Avanzado",
+          unread: 1,
           messages: [
-            { from: "student", text: "Buenos días, ¿cuándo estará disponible la corrección de la tarea 2?", time: "Ayer" },
+            {
+              from: "student",
+              text: "Buenos días, ¿cuándo estará disponible la corrección de la tarea 2?",
+              time: "Ayer",
+            },
           ],
         },
         {
-          id: 3, student: "Sofía Reyes", initials: "SR", course: "Flask con Python", unread: 0,
+          id: 3,
+          student: "Sofía Reyes",
+          initials: "SR",
+          course: "Flask con Python",
+          unread: 0,
           messages: [
-            { from: "student", text: "Muchas gracias por la retroalimentación en mi proyecto final, fue muy útil.", time: "Lun" },
-            { from: "instructor", text: "Con gusto, Sofía. Fue un trabajo muy bien estructurado.", time: "Lun" },
+            {
+              from: "student",
+              text: "Muchas gracias por la retroalimentación en mi proyecto final, fue muy útil.",
+              time: "Lun",
+            },
+            {
+              from: "instructor",
+              text: "Con gusto, Sofía. Fue un trabajo muy bien estructurado.",
+              time: "Lun",
+            },
           ],
         },
         {
-          id: 4, student: "Diego Torres", initials: "DT", course: "React Avanzado", unread: 0,
+          id: 4,
+          student: "Diego Torres",
+          initials: "DT",
+          course: "React Avanzado",
+          unread: 0,
           messages: [
-            { from: "student", text: "¿El examen final será presencial o en línea?", time: "Dom" },
-            { from: "instructor", text: "Será en línea, les enviaré el enlace la semana previa al examen.", time: "Dom" },
+            {
+              from: "student",
+              text: "¿El examen final será presencial o en línea?",
+              time: "Dom",
+            },
+            {
+              from: "instructor",
+              text: "Será en línea, les enviaré el enlace la semana previa al examen.",
+              time: "Dom",
+            },
           ],
         },
       ];
       let activeThreadId = null;
 
       const announcements = [
-        { id: 1, title: "Cambio de horario — Sesión del viernes", body: "Por motivos académicos, la clase del viernes 27 se traslada al sábado 28 a las 10:00 hrs. El enlace de conexión es el mismo.", audience: "Todos mis cursos", date: "18 Jun 2026", status: "publicado" },
-        { id: 2, title: "Material adicional módulo 4", body: "Subí nuevos recursos en el aula virtual. Les recomiendo revisarlos antes de la próxima sesión sincrónica.", audience: "Flask con Python", date: "15 Jun 2026", status: "publicado" },
+        {
+          id: 1,
+          title: "Cambio de horario — Sesión del viernes",
+          body: "Por motivos académicos, la clase del viernes 27 se traslada al sábado 28 a las 10:00 hrs. El enlace de conexión es el mismo.",
+          audience: "Todos mis cursos",
+          date: "18 Jun 2026",
+          status: "publicado",
+        },
+        {
+          id: 2,
+          title: "Material adicional módulo 4",
+          body: "Subí nuevos recursos en el aula virtual. Les recomiendo revisarlos antes de la próxima sesión sincrónica.",
+          audience: "Flask con Python",
+          date: "15 Jun 2026",
+          status: "publicado",
+        },
       ];
       let nextAnuncioId = 3;
 
       const forumQuestions = [
-        { id: 1, student: "Luis Ortega", course: "Flask con Python", question: "¿Cuál es la diferencia entre render_template y redirect en Flask? ¿En qué casos conviene usar cada uno?", time: "Hace 2 horas", replies: [], expanded: false },
-        { id: 2, student: "María Paz Silva", course: "React Avanzado", question: "Tengo un problema con useEffect al hacer fetch. El componente se renderiza antes de que lleguen los datos y obtengo undefined.", time: "Hace 5 horas", replies: [{ from: "Instructor", text: "Hola María Paz, inicializa el estado con un valor válido (null o []) y maneja el estado de carga con una variable loading.", time: "Hace 3 horas" }], expanded: false },
-        { id: 3, student: "Roberto Campos", course: "Flask con Python", question: "¿Cómo configuro SQLAlchemy para usar PostgreSQL en lugar de SQLite en un proyecto Flask?", time: "Ayer", replies: [], expanded: false },
-        { id: 4, student: "Valentina Cruz", course: "React Avanzado", question: "Para una app de tamaño mediano, ¿es mejor Context API o Redux para manejar el estado global?", time: "Hace 2 días", replies: [], expanded: false },
+        {
+          id: 1,
+          student: "Luis Ortega",
+          course: "Flask con Python",
+          question:
+            "¿Cuál es la diferencia entre render_template y redirect en Flask? ¿En qué casos conviene usar cada uno?",
+          time: "Hace 2 horas",
+          replies: [],
+          expanded: false,
+        },
+        {
+          id: 2,
+          student: "María Paz Silva",
+          course: "React Avanzado",
+          question:
+            "Tengo un problema con useEffect al hacer fetch. El componente se renderiza antes de que lleguen los datos y obtengo undefined.",
+          time: "Hace 5 horas",
+          replies: [
+            {
+              from: "Instructor",
+              text: "Hola María Paz, inicializa el estado con un valor válido (null o []) y maneja el estado de carga con una variable loading.",
+              time: "Hace 3 horas",
+            },
+          ],
+          expanded: false,
+        },
+        {
+          id: 3,
+          student: "Roberto Campos",
+          course: "Flask con Python",
+          question:
+            "¿Cómo configuro SQLAlchemy para usar PostgreSQL en lugar de SQLite en un proyecto Flask?",
+          time: "Ayer",
+          replies: [],
+          expanded: false,
+        },
+        {
+          id: 4,
+          student: "Valentina Cruz",
+          course: "React Avanzado",
+          question:
+            "Para una app de tamaño mediano, ¿es mejor Context API o Redux para manejar el estado global?",
+          time: "Hace 2 días",
+          replies: [],
+          expanded: false,
+        },
       ];
 
-      const tipoIconos = { PDF: "📄", Video: "🎬", Presentación: "📊", Enlace: "🔗" };
+      const tipoIconos = {
+        PDF: "📄",
+        Video: "🎬",
+        Presentación: "📊",
+        Enlace: "🔗",
+      };
       const recursos = [
-        { id: 1, nombre: "Guía de inicio rápido — Flask", tipo: "PDF", curso: "Flask con Python", visible: true, fecha: "10 Jun 2026" },
-        { id: 2, nombre: "Introducción a Blueprints", tipo: "Video", curso: "Flask con Python", visible: true, fecha: "12 Jun 2026" },
-        { id: 3, nombre: "Slides Módulo 3 — Hooks avanzados", tipo: "Presentación", curso: "React Avanzado", visible: false, fecha: "14 Jun 2026" },
-        { id: 4, nombre: "Repositorio de ejemplos del curso", tipo: "Enlace", curso: "React Avanzado", visible: true, fecha: "16 Jun 2026" },
+        {
+          id: 1,
+          nombre: "Guía de inicio rápido — Flask",
+          tipo: "PDF",
+          curso: "Flask con Python",
+          visible: true,
+          fecha: "10 Jun 2026",
+        },
+        {
+          id: 2,
+          nombre: "Introducción a Blueprints",
+          tipo: "Video",
+          curso: "Flask con Python",
+          visible: true,
+          fecha: "12 Jun 2026",
+        },
+        {
+          id: 3,
+          nombre: "Slides Módulo 3 — Hooks avanzados",
+          tipo: "Presentación",
+          curso: "React Avanzado",
+          visible: false,
+          fecha: "14 Jun 2026",
+        },
+        {
+          id: 4,
+          nombre: "Repositorio de ejemplos del curso",
+          tipo: "Enlace",
+          curso: "React Avanzado",
+          visible: true,
+          fecha: "16 Jun 2026",
+        },
       ];
       let nextRecursoId = 5;
 
@@ -624,7 +804,8 @@
             headerBadge.textContent = "Sin mensajes nuevos";
             headerBadge.className = "badge bg-secondary rounded-pill px-3 py-2";
           } else {
-            headerBadge.textContent = count + " no leído" + (count !== 1 ? "s" : "");
+            headerBadge.textContent =
+              count + " no leído" + (count !== 1 ? "s" : "");
             headerBadge.className = "badge bg-danger rounded-pill px-3 py-2";
           }
         }
@@ -633,7 +814,9 @@
       function renderThreadList() {
         const container = document.getElementById("thread-list-container");
         if (!container) return;
-        container.innerHTML = threads.map(t => `
+        container.innerHTML = threads
+          .map(
+            (t) => `
           <button
             class="btn btn-link text-start w-100 d-flex align-items-start gap-3 p-3 text-decoration-none border-bottom rounded-0 ${activeThreadId === t.id ? "bg-primary bg-opacity-10" : "bg-white"}"
             onclick="openThread(${t.id})"
@@ -653,12 +836,14 @@
             </div>
             ${t.unread > 0 ? `<span class="badge bg-danger rounded-pill align-self-center">${t.unread}</span>` : ""}
           </button>
-        `).join("");
+        `,
+          )
+          .join("");
       }
 
       function openThread(id) {
         activeThreadId = id;
-        const t = threads.find(x => x.id === id);
+        const t = threads.find((x) => x.id === id);
         t.unread = 0;
         updateUnreadBadges();
         renderThreadList();
@@ -676,7 +861,9 @@
           <div class="text-center text-muted mb-3" style="font-size:0.75rem">
             Conversación con ${t.student} &mdash; ${t.course}
           </div>
-          ${t.messages.map(m => `
+          ${t.messages
+            .map(
+              (m) => `
             <div class="d-flex ${m.from === "instructor" ? "justify-content-end" : "justify-content-start"} mb-2">
               <div
                 class="p-2 px-3 rounded-3 small ${m.from === "instructor" ? "bg-primary text-white" : "bg-light text-dark border"}"
@@ -687,7 +874,9 @@
                 <div class="mt-1 ${m.from === "instructor" ? "text-white-50" : "text-muted"}" style="font-size:0.65rem;text-align:right">${m.time}</div>
               </div>
             </div>
-          `).join("")}
+          `,
+            )
+            .join("")}
         `;
         container.scrollTop = container.scrollHeight;
       }
@@ -696,12 +885,13 @@
         const input = document.getElementById("reply-input");
         const text = input ? input.value.trim() : "";
         if (!text || activeThreadId === null) return;
-        const t = threads.find(x => x.id === activeThreadId);
+        const t = threads.find((x) => x.id === activeThreadId);
         const now = new Date();
         t.messages.push({
           from: "instructor",
           text,
-          time: now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0"),
+          time:
+            now.getHours() + ":" + String(now.getMinutes()).padStart(2, "0"),
         });
         input.value = "";
         renderThreadMessages(t);
@@ -718,7 +908,11 @@
           list.innerHTML = `<div class="text-center text-muted py-4 bg-light rounded-3 border">No hay anuncios publicados.</div>`;
           return;
         }
-        list.innerHTML = announcements.slice().reverse().map(a => `
+        list.innerHTML = announcements
+          .slice()
+          .reverse()
+          .map(
+            (a) => `
           <div class="card border border-light-subtle rounded-3 shadow-sm mb-3 p-3">
             <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
               <div class="flex-grow-1">
@@ -735,7 +929,9 @@
               <button class="btn btn-outline-danger btn-sm" onclick="archivarAnuncio(${a.id})">Archivar</button>
             </div>
           </div>
-        `).join("");
+        `,
+          )
+          .join("");
       }
 
       function previewAnuncio() {
@@ -744,9 +940,12 @@
         const audiencia = document.getElementById("anuncio-audiencia").value;
         const previewEl = document.getElementById("anuncio-preview");
         if (!titulo && !cuerpo) return;
-        document.getElementById("preview-meta").textContent = "Para: " + audiencia;
-        document.getElementById("preview-titulo").textContent = titulo || "(sin título)";
-        document.getElementById("preview-cuerpo").textContent = cuerpo || "(sin contenido)";
+        document.getElementById("preview-meta").textContent =
+          "Para: " + audiencia;
+        document.getElementById("preview-titulo").textContent =
+          titulo || "(sin título)";
+        document.getElementById("preview-cuerpo").textContent =
+          cuerpo || "(sin contenido)";
         previewEl.classList.remove("d-none");
       }
 
@@ -764,7 +963,11 @@
           title: titulo,
           body: cuerpo,
           audience: audiencia,
-          date: now.toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" }),
+          date: now.toLocaleDateString("es-CL", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
           status,
         });
         document.getElementById("anuncio-titulo").value = "";
@@ -774,8 +977,11 @@
       }
 
       function archivarAnuncio(id) {
-        const idx = announcements.findIndex(a => a.id === id);
-        if (idx !== -1) { announcements.splice(idx, 1); renderAnuncios(); }
+        const idx = announcements.findIndex((a) => a.id === id);
+        if (idx !== -1) {
+          announcements.splice(idx, 1);
+          renderAnuncios();
+        }
       }
 
       // ============================================================
@@ -785,12 +991,16 @@
         if (filter === undefined) filter = "all";
         const list = document.getElementById("foro-list");
         if (!list) return;
-        const visible = forumQuestions.filter(q => filter === "all" || q.course === filter);
+        const visible = forumQuestions.filter(
+          (q) => filter === "all" || q.course === filter,
+        );
         if (visible.length === 0) {
           list.innerHTML = `<div class="text-center text-muted py-4 bg-light rounded-3 border">No hay preguntas para este curso.</div>`;
           return;
         }
-        list.innerHTML = visible.map(q => `
+        list.innerHTML = visible
+          .map(
+            (q) => `
           <div class="card border border-light-subtle rounded-3 shadow-sm mb-3">
             <div class="card-body p-3">
               <div class="d-flex justify-content-between align-items-start gap-2 flex-wrap">
@@ -809,9 +1019,15 @@
                   </button>
                 </div>
               </div>
-              ${q.expanded ? `
+              ${
+                q.expanded
+                  ? `
                 <div class="mt-3 border-top pt-3">
-                  ${q.replies.length > 0 ? q.replies.map(r => `
+                  ${
+                    q.replies.length > 0
+                      ? q.replies
+                          .map(
+                            (r) => `
                     <div class="d-flex ${r.from === "Instructor" ? "justify-content-end" : "justify-content-start"} mb-2">
                       <div
                         class="p-2 px-3 rounded-3 small ${r.from === "Instructor" ? "bg-primary text-white" : "bg-light text-dark border"}"
@@ -822,20 +1038,28 @@
                         <div class="mt-1 ${r.from === "Instructor" ? "text-white-50" : "text-muted"}" style="font-size:0.65rem;text-align:right">${r.time}</div>
                       </div>
                     </div>
-                  `).join("") : '<p class="text-muted small mb-2">Aún no hay respuestas.</p>'}
+                  `,
+                          )
+                          .join("")
+                      : '<p class="text-muted small mb-2">Aún no hay respuestas.</p>'
+                  }
                   <div class="d-flex gap-2 mt-2">
                     <input type="text" class="form-control form-control-sm" id="foro-reply-${q.id}" placeholder="Escribe tu respuesta..." />
                     <button class="btn btn-primary btn-sm px-3" onclick="submitForumReply(${q.id})">Enviar</button>
                   </div>
                 </div>
-              ` : ""}
+              `
+                  : ""
+              }
             </div>
           </div>
-        `).join("");
+        `,
+          )
+          .join("");
       }
 
       function toggleForo(id) {
-        const q = forumQuestions.find(x => x.id === id);
+        const q = forumQuestions.find((x) => x.id === id);
         if (q) {
           q.expanded = !q.expanded;
           const filterEl = document.getElementById("foro-filter");
@@ -847,7 +1071,7 @@
         const input = document.getElementById("foro-reply-" + id);
         const text = input ? input.value.trim() : "";
         if (!text) return;
-        const q = forumQuestions.find(x => x.id === id);
+        const q = forumQuestions.find((x) => x.id === id);
         q.replies.push({ from: "Instructor", text, time: "Ahora" });
         const filterEl = document.getElementById("foro-filter");
         renderForo(filterEl ? filterEl.value : "all");
@@ -877,7 +1101,9 @@
                 </tr>
               </thead>
               <tbody>
-                ${recursos.map(r => `
+                ${recursos
+                  .map(
+                    (r) => `
                   <tr>
                     <td class="small fw-semibold">${tipoIconos[r.tipo] || "📁"} ${r.nombre}</td>
                     <td><span class="badge bg-secondary bg-opacity-10 text-secondary border small">${r.tipo}</span></td>
@@ -897,7 +1123,9 @@
                       </div>
                     </td>
                   </tr>
-                `).join("")}
+                `,
+                  )
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -905,26 +1133,41 @@
       }
 
       function toggleVisibilidadRecurso(id) {
-        const r = recursos.find(x => x.id === id);
-        if (r) { r.visible = !r.visible; renderRecursos(); }
+        const r = recursos.find((x) => x.id === id);
+        if (r) {
+          r.visible = !r.visible;
+          renderRecursos();
+        }
       }
 
       function eliminarRecurso(id) {
-        const idx = recursos.findIndex(x => x.id === id);
-        if (idx !== -1) { recursos.splice(idx, 1); renderRecursos(); }
+        const idx = recursos.findIndex((x) => x.id === id);
+        if (idx !== -1) {
+          recursos.splice(idx, 1);
+          renderRecursos();
+        }
       }
 
       function addRecurso() {
         const nombre = document.getElementById("recurso-nombre").value.trim();
         const tipo = document.getElementById("recurso-tipo").value;
         const curso = document.getElementById("recurso-curso").value;
-        if (!nombre) { alert("Ingresa un nombre para el recurso."); return; }
+        if (!nombre) {
+          alert("Ingresa un nombre para el recurso.");
+          return;
+        }
         const now = new Date();
         recursos.unshift({
           id: nextRecursoId++,
-          nombre, tipo, curso,
+          nombre,
+          tipo,
+          curso,
           visible: false,
-          fecha: now.toLocaleDateString("es-CL", { day: "numeric", month: "short", year: "numeric" }),
+          fecha: now.toLocaleDateString("es-CL", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
         });
         document.getElementById("recurso-nombre").value = "";
         document.getElementById("add-recurso-form").classList.add("d-none");
@@ -938,30 +1181,56 @@
         // Mensajes
         renderThreadList();
         updateUnreadBadges();
-        document.getElementById("send-reply-btn").addEventListener("click", sendReply);
-        document.getElementById("reply-input").addEventListener("keydown", function (e) {
-          if (e.key === "Enter") sendReply();
-        });
+        document
+          .getElementById("send-reply-btn")
+          .addEventListener("click", sendReply);
+        document
+          .getElementById("reply-input")
+          .addEventListener("keydown", function (e) {
+            if (e.key === "Enter") sendReply();
+          });
 
         // Anuncios
         renderAnuncios();
-        document.getElementById("preview-anuncio-btn").addEventListener("click", previewAnuncio);
-        document.getElementById("publicar-anuncio-btn").addEventListener("click", function () { publicarAnuncio("publicado"); });
-        document.getElementById("guardar-borrador-btn").addEventListener("click", function () { publicarAnuncio("borrador"); });
+        document
+          .getElementById("preview-anuncio-btn")
+          .addEventListener("click", previewAnuncio);
+        document
+          .getElementById("publicar-anuncio-btn")
+          .addEventListener("click", function () {
+            publicarAnuncio("publicado");
+          });
+        document
+          .getElementById("guardar-borrador-btn")
+          .addEventListener("click", function () {
+            publicarAnuncio("borrador");
+          });
 
         // Foro
         renderForo("all");
-        document.getElementById("foro-filter").addEventListener("change", function (e) { renderForo(e.target.value); });
+        document
+          .getElementById("foro-filter")
+          .addEventListener("change", function (e) {
+            renderForo(e.target.value);
+          });
 
         // Recursos
         renderRecursos();
-        document.getElementById("toggle-add-recurso-btn").addEventListener("click", function () {
-          document.getElementById("add-recurso-form").classList.toggle("d-none");
-        });
-        document.getElementById("cancel-add-recurso-btn").addEventListener("click", function () {
-          document.getElementById("add-recurso-form").classList.add("d-none");
-        });
-        document.getElementById("guardar-recurso-btn").addEventListener("click", addRecurso);
+        document
+          .getElementById("toggle-add-recurso-btn")
+          .addEventListener("click", function () {
+            document
+              .getElementById("add-recurso-form")
+              .classList.toggle("d-none");
+          });
+        document
+          .getElementById("cancel-add-recurso-btn")
+          .addEventListener("click", function () {
+            document.getElementById("add-recurso-form").classList.add("d-none");
+          });
+        document
+          .getElementById("guardar-recurso-btn")
+          .addEventListener("click", addRecurso);
       });
     </script>
   </body>

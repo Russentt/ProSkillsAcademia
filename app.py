@@ -211,6 +211,282 @@ def change_password(token):
         return redirect(url_for('password-recover')) 
         
         
+#Perfil administrador
+@app.route('/admin', methods=['GET'])
+@jwt_required()
+def admin_panel():
+    admin_id = get_jwt_identity()
+    claims   = get_jwt()
+
+    if claims.get("rol") != 'admin':
+        flash("Acceso denegado")
+        return redirect(url_for('home'))
+
+    cursor     = conexion_db.cursor()
+    admin_info = None
+    stats      = {"total_estudiantes": 0, "total_instructores": 0,
+                  "total_cursos": 0, "total_matriculas": 0}
+    usuarios      = []
+    instructores  = []
+
+    try:
+        # ── Datos del administrador ──────────────────────────────────────
+        cursor.execute(
+            "SELECT u.nombre, u.apellido, u.correo, a.nivel_acceso "
+            "FROM usuarios u JOIN administrador a ON a.id_administrador = u.id "
+            "WHERE u.id = %s::int;",
+            (admin_id,)
+        )
+        row = cursor.fetchone()
+        if row:
+            admin_info = {
+                "nombre": row[0], "apellido": row[1],
+                "correo": row[2], "nivel_acceso": row[3],
+            }
+    except Exception as ex:
+        print(f"[admin] datos admin: {ex}")
+        conexion_db.rollback()
+
+    try:
+        # ── Estadísticas ─────────────────────────────────────────────────
+        cursor.execute("SELECT COUNT(*) FROM estudiante;")
+        stats["total_estudiantes"] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM instructor;")
+        stats["total_instructores"] = cursor.fetchone()[0]
+
+        cursor.execute("SELECT COUNT(*) FROM curso;")
+        stats["total_cursos"] = cursor.fetchone()[0]
+
+        # Matrículas: contar filas en la vista de cursos inscritos
+        cursor.execute("SELECT COUNT(*) FROM v_curso;")
+        stats["total_matriculas"] = cursor.fetchone()[0]
+    except Exception as ex:
+        print(f"[admin] stats: {ex}")
+        conexion_db.rollback()
+
+    try:
+        # ── Lista de usuarios ────────────────────────────────────────────
+        cursor.execute(
+            "SELECT id, nombre, apellido, correo, estado, fecha_registro "
+            "FROM usuarios ORDER BY id DESC;"
+        )
+        for fila in cursor.fetchall():
+            usuarios.append({
+                "id":             fila[0],
+                "nombre":         fila[1],
+                "apellido":       fila[2],
+                "correo":         fila[3],
+                "estado":         fila[4],
+                "fecha_registro": fila[5].strftime('%d/%m/%Y') if fila[5] else '—',
+                "rol":            "estudiante",   # default; enriched below
+            })
+
+        # Marcar admins e instructores en una sola pasada
+        cursor.execute("SELECT id_administrador FROM administrador;")
+        admin_ids = {r[0] for r in cursor.fetchall()}
+        cursor.execute("SELECT id_instructor FROM instructor;")
+        instructor_ids = {r[0] for r in cursor.fetchall()}
+
+        for u in usuarios:
+            if u["id"] in admin_ids:
+                u["rol"] = "admin"
+            elif u["id"] in instructor_ids:
+                u["rol"] = "instructor"
+    except Exception as ex:
+        print(f"[admin] usuarios: {ex}")
+        conexion_db.rollback()
+
+    try:
+        # ── Lista de instructores ─────────────────────────────────────────
+        cursor.execute(
+            "SELECT u.nombre, u.apellido, u.correo, i.especialidad, u.estado, u.id "
+            "FROM usuarios u JOIN instructor i ON i.id_instructor = u.id;"
+        )
+        filas_inst = cursor.fetchall()
+
+        cursor.execute(
+            "SELECT id_instructor, COUNT(*) FROM vista_curso GROUP BY id_instructor;"
+        )
+        cursos_por_instructor = {r[0]: r[1] for r in cursor.fetchall()}
+
+        for fila in filas_inst:
+            instructores.append({
+                "nombre":           f"{fila[0]} {fila[1]}",
+                "correo":           fila[2],
+                "especialidad":     fila[3],
+                "estado":           fila[4],
+                "cursos_asignados": cursos_por_instructor.get(fila[5], 0),
+            })
+    except Exception as ex:
+        print(f"[admin] instructores: {ex}")
+        conexion_db.rollback()
+
+    cursos = []
+    try:
+        # ── Lista de cursos ───────────────────────────────────────────────────
+        cursor.execute(
+            "SELECT DISTINCT vc.id_curso, vc.titulo, vc.fecha_inicio, "
+            "u.nombre || ' ' || u.apellido "
+            "FROM vista_curso vc "
+            "JOIN instructor i ON i.id_instructor = vc.id_instructor "
+            "JOIN usuarios u ON u.id = i.id_instructor "
+            "ORDER BY vc.id_curso;"
+        )
+        for fila in cursor.fetchall():
+            cursos.append({
+                "id_curso":     fila[0],
+                "titulo":       fila[1],
+                "fecha_inicio": fila[2].strftime('%d/%m/%Y') if fila[2] else 'Sin fecha',
+                "instructor":   fila[3],
+            })
+    except Exception as ex:
+        print(f"[admin] cursos: {ex}")
+        conexion_db.rollback()
+
+    estudiantes = []
+    try:
+        cursor.execute(
+            "SELECT u.id, u.nombre, u.apellido, u.correo "
+            "FROM usuarios u JOIN estudiante e ON e.id_estudiante = u.id "
+            "ORDER BY u.nombre;"
+        )
+        for fila in cursor.fetchall():
+            estudiantes.append({
+                "id":     fila[0],
+                "nombre": f"{fila[1]} {fila[2]}",
+                "correo": fila[3],
+            })
+    except Exception as ex:
+        print(f"[admin] estudiantes: {ex}")
+        conexion_db.rollback()
+
+    cursor.close()
+
+    return render_template(
+        'acc-admin.html',
+        admin=admin_info,
+        stats=stats,
+        usuarios=usuarios,
+        instructores=instructores,
+        cursos=cursos,
+        estudiantes=estudiantes,
+    )
+
+
+@app.route('/admin/export/usuarios')
+@jwt_required()
+def export_usuarios_csv():
+    claims = get_jwt()
+    if claims.get("rol") != 'admin':
+        flash("Acceso denegado")
+        return redirect(url_for('home'))
+    try:
+        import csv, io
+        cursor = conexion_db.cursor()
+        cursor.execute(
+            "SELECT id, nombre, apellido, correo, estado, fecha_registro FROM usuarios ORDER BY id;"
+        )
+        filas = cursor.fetchall()
+        cursor.close()
+        output = io.StringIO()
+        writer = csv.writer(output)
+        writer.writerow(["ID", "Nombre", "Apellido", "Correo", "Estado", "Fecha Registro"])
+        for f in filas:
+            writer.writerow([
+                f[0], f[1], f[2], f[3], f[4],
+                f[5].strftime('%d/%m/%Y') if f[5] else ''
+            ])
+        from flask import Response
+        return Response(
+            output.getvalue(),
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment; filename=usuarios.csv"}
+        )
+    except Exception as ex:
+        print(f"[admin] export csv: {ex}")
+        flash("Error al exportar usuarios.")
+        return redirect(url_for('admin_panel'))
+
+
+@app.route('/admin/crear-usuario', methods=['POST'])
+@jwt_required()
+def admin_crear_usuario():
+    if get_jwt().get("rol") != 'admin':
+        flash("Acceso denegado")
+        return redirect(url_for('home'))
+    try:
+        nombre     = request.form.get("nombre", "").strip()
+        apellido   = request.form.get("apellido", "").strip()
+        correo     = request.form.get("correo", "").strip()
+        password   = request.form.get("password", "").strip()
+        rol        = request.form.get("rol", "").strip()
+        especialidad = request.form.get("especialidad", "")
+        biografia    = request.form.get("biografia", "")
+
+        if not nombre or not apellido or not correo or not password or not rol:
+            flash("Todos los campos son obligatorios.")
+            return redirect(url_for('admin_panel'))
+
+        cursor = conexion_db.cursor()
+        cursor.execute(
+            "INSERT INTO usuarios (nombre, apellido, correo, password, estado) "
+            "VALUES (%s, %s, %s, %s, 'Activo') RETURNING id;",
+            (nombre, apellido, correo, password)
+        )
+        new_id = cursor.fetchone()[0]
+
+        if rol == 'instructor':
+            cursor.execute(
+                "INSERT INTO instructor (id_instructor, especialidad, biografia) VALUES (%s, %s, %s);",
+                (new_id, especialidad, biografia)
+            )
+        elif rol == 'estudiante':
+            cursor.execute(
+                "INSERT INTO estudiante (id_estudiante, fecha_ingreso, id_pago) VALUES (%s, %s, 1);",
+                (new_id, datetime.now().date())
+            )
+        elif rol == 'administrador':
+            cursor.execute(
+                "INSERT INTO administrador (id_administrador, nivel_acceso) VALUES (%s, 'Completo');",
+                (new_id,)
+            )
+
+        conexion_db.commit()
+        cursor.close()
+        flash(f"Usuario '{nombre} {apellido}' creado correctamente.")
+    except Exception as ex:
+        conexion_db.rollback()
+        print(f"[admin] crear usuario: {ex}")
+        flash("Error al crear el usuario. Verifica que el correo no esté duplicado.")
+    return redirect(url_for('admin_panel'))
+
+
+@app.route('/admin/asignar-curso', methods=['POST'])
+@jwt_required()
+def admin_asignar_curso():
+    if get_jwt().get("rol") != 'admin':
+        flash("Acceso denegado")
+        return redirect(url_for('home'))
+    try:
+        id_estudiante = int(request.form.get("id_estudiante"))
+        id_curso      = int(request.form.get("id_curso"))
+        cursor = conexion_db.cursor()
+        cursor.execute(
+            "INSERT INTO inscripcion (id_estudiante, id_curso, fecha_matricula) "
+            "VALUES (%s, %s, %s);",
+            (id_estudiante, id_curso, datetime.now().date())
+        )
+        conexion_db.commit()
+        cursor.close()
+        flash("Curso asignado correctamente.")
+    except Exception as ex:
+        conexion_db.rollback()
+        print(f"[admin] asignar curso: {ex}")
+        flash(f"Error al asignar el curso: {ex}")
+    return redirect(url_for('admin_panel'))
+
+
 #Perfil profesor
 @app.route('/accTeacher', methods=['GET'])
 @jwt_required() 
@@ -352,8 +628,8 @@ def login():
                 token = create_access_token(identity=str(user_id), additional_claims=rol_token)
                 
                 # Redireccion dependiendo del rol
-                if rol == 'administrador':
-                    respuesta = redirect(url_for('cuenta')) 
+                if rol == 'admin':
+                    respuesta = redirect(url_for('admin_panel'))
                     
                 elif rol == 'instructor':
                     respuesta = redirect(url_for('instructor'))
@@ -383,13 +659,28 @@ def ob_curso(usuario_id): # Estoy chambeando jefe
         cursor.execute(sql, [int(usuario_id)])
         filas = cursor.fetchall()
         
+        aulas_map = {
+            'java': 'java',
+            'marketing': 'marketing',
+            'diseño': 'diseno',
+            'diseno': 'diseno',
+            'flask': 'flask',
+        }
+
         cursos = []
         for fila in filas:
+            titulo = fila[1] or ''
+            titulo_lower = titulo.lower()
+            nombre_aula = next(
+                (slug for keyword, slug in aulas_map.items() if keyword in titulo_lower),
+                None
+            )
             cursos.append({
-                "titulo": fila[1],        
+                "titulo": titulo,
                 "fecha_inicio": fila[2].strftime('%d/%m/%Y') if fila[2] else 'Por definir', 
                 "instructor": fila[3],    
-                "id_curso": fila[0]       
+                "id_curso": fila[0],
+                "nombre_aula": nombre_aula
             })
         return cursos
         
@@ -490,9 +781,10 @@ def aula_virtual(nombre_curso):
             return redirect(url_for('home'))
 
         plantillas_validas = {
-            'java': 'aula-java.html',  
+            'java': 'aula-java.html',
             'marketing': 'aula-marketing.html',
-            'diseno': 'aula-diseno.html'
+            'diseno': 'aula-diseno.html',
+            'flask': 'aula-java.html',
         }
 
         if nombre_curso in plantillas_validas:
