@@ -37,6 +37,8 @@ app.config["JWT_COOKIE_SECURE"] = os.environ.get("FLASK_ENV") == "production"
 app.config["JWT_COOKIE_CSRF_PROTECT"] = True
 app.config["JWT_CSRF_IN_COOKIES"] = True
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
+app.config["JWT_TOKEN_LOCATION"] = ["cookies", "headers"]
+app.config["JWT_COOKIE_CSRF_PROTECT"] = False
 jwt = JWTManager(app)
 
 # Si no tiene token los redirige al login
@@ -372,7 +374,7 @@ def admin_panel():
         cursos=cursos,
         estudiantes=estudiantes,
     )
-
+    
 
 @app.route('/admin/export/usuarios')
 @jwt_required()
@@ -408,6 +410,146 @@ def export_usuarios_csv():
         flash("Error al exportar usuarios.")
         return redirect(url_for('admin_panel'))
 
+@app.route('/usuario/editar/<int:usuario_id>', methods=['GET'])
+@jwt_required()
+def vista_editar_usuario(usuario_id):
+    # Si no es admin no puede acceder
+    if get_jwt().get("rol") != "admin":
+        flash("Acceso denegado")
+        return redirect(url_for('home'))
+        
+    cursor = None
+    try:
+        cursor = conexion_db.cursor()
+        
+        # Consultar usuarios
+        sql = "SELECT id, nombre, apellido, correo, estado FROM usuarios WHERE id = %s::int;"
+        cursor.execute(sql, (usuario_id,))
+        datos = cursor.fetchone()
+        
+        # Si no encuentra 
+        if not datos:
+            flash("Usuario no encontrado")
+            return redirect(url_for('admin_panel'))
+        
+        # Estructura de distintos usuarios    
+        encontrado = {
+            "id": datos[0],
+            "nombre": datos[1],
+            "apellido": datos[2],
+            "correo": datos[3],
+            "estado": datos[4],
+            "rol": "", 
+            "especialidad": "", 
+            "biografia": "",
+            "fecha_ingreso": "",
+            "nivel_acceso": ""
+        }
+        
+        # Consulta a instructor
+        cursor.execute("SELECT especialidad, biografia FROM instructor WHERE id_instructor = %s::int;", (usuario_id,))
+        extra_inst = cursor.fetchone()
+        if extra_inst:
+            encontrado["rol"] = "instructor"
+            encontrado["especialidad"] = extra_inst[0]
+            encontrado["biografia"] = extra_inst[1]
+        
+        # Otra consulta pero a estudiante
+        else:
+            cursor.execute("SELECT fecha_ingreso FROM estudiante WHERE id_estudiante = %s::int;", (usuario_id,))
+            extra_est = cursor.fetchone()
+            if extra_est:
+                encontrado["rol"] = "estudiante"
+                encontrado["fecha_ingreso"] = extra_est[0].strftime('%Y-%m-%d') if extra_est[0] else ""
+            
+            # Y a administrador    
+            else:
+                cursor.execute("SELECT nivel_acceso FROM administrador WHERE id_administrador = %s::int;", (usuario_id,))
+                extra_adm = cursor.fetchone()
+                if extra_adm:
+                    encontrado["rol"] = "admin"
+                    encontrado["nivel_acceso"] = extra_adm[0]
+
+        return render_template('update-user.html', usuario_editado=encontrado)
+
+    except Exception as ex:
+        if conexion_db:
+            conexion_db.rollback() 
+        print(f"Error al cargar vista de edición: {ex}")
+        flash("Error al obtener la información del usuario.")
+        return redirect(url_for('admin_panel'))
+    finally:
+        if cursor:
+            cursor.close()
+
+
+@app.route('/usuario/editar/<int:usuario_id>', methods=['POST'])
+@jwt_required()
+def editarAdmin(usuario_id):
+    if get_jwt().get("rol") != "admin":
+        flash("acceso denegado")
+        return redirect(url_for('home'))
+    
+    cursor = None
+    
+    try:
+        cursor = conexion_db.cursor() # Conexion a BD
+        
+        # Recibir parametros de formulario
+        nombre = request.form.get('nombre')
+        apellido = request.form.get('apellido')
+        correo = request.form.get('correo')
+        estado = request.form.get('estado')
+        rol_dep = request.form.get('rol')
+        
+        # Actualizar tabla usuarios y ejecucion del update
+        sql_usuario = """ update usuarios set nombre = %s, apellido = %s, correo = %s, estado = %s  WHERE id = %s::int;"""
+        cursor.execute(sql_usuario, (nombre, apellido, correo, estado, usuario_id))
+        
+        
+        if rol_dep == 'instructor':
+            # Recibir parametros en formulario de campos de profesor
+            especialidad = request.form.get('especialidad')
+            biografia = request.form.get('biografia')
+            
+            # Actualizar datos de profesor y ejecutarlos en la BD
+            sql_instructor = """ UPDATE instructor set especialidad = %s, biografia = %s WHERE id_instructor = %s::int;"""
+            cursor.execute(sql_instructor, (especialidad, biografia, usuario_id))
+            
+        elif rol_dep == 'estudiante':
+            fecha_inicio = request.form.get('fecha_ingreso')
+            fecha_final = fecha_inicio if fecha_inicio else None
+            
+            # UPDATE directo y tradicional
+            sql_estudiante = """ 
+                UPDATE estudiante 
+                SET fecha_ingreso = %s::date 
+                WHERE id_estudiante = %s::int; 
+            """
+            cursor.execute(sql_estudiante, (fecha_final, usuario_id))
+        
+        elif rol_dep == 'admin' or rol_dep == 'administrador':
+            nivel_acceso = request.form.get('nivel_acceso')
+            
+            sql_admin = """ UPDATE administrador set nivel_acceso = %s WHERE id_administrador = %s::int;"""
+            cursor.execute(sql_admin, (nivel_acceso, usuario_id))
+            
+        conexion_db.commit()
+        flash("Usuario actualizado correctamente")
+        return redirect(url_for('admin_panel'))
+        
+    except Exception as ex:
+        if conexion_db:
+            conexion_db.rollback() 
+        print(f" Error al editar usuario: {ex}")
+        flash("Error interno al procesar la actualización.")
+        return redirect(url_for('admin_panel'))
+        
+    finally:
+        if cursor:
+            cursor.close()
+    
+    
 
 @app.route('/admin/crear-usuario', methods=['POST'])
 @jwt_required()

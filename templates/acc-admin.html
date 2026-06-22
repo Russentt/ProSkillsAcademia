@@ -398,7 +398,9 @@
                           </td>
                           <td class="text-end">
                             <button class="btn btn-outline-secondary btn-sm">
-                              Editar
+                              <a href="{{ url_for('vista_editar_usuario', usuario_id=u.id) }}">
+                                Editar
+                              </a>
                             </button>
                           </td>
                         </tr>
